@@ -1,0 +1,98 @@
+<%- include('../includes/head/index.ejs') %>
+    <body>
+        <!-- <body class="bg-gray-100"> -->
+
+        <div id="wrapper" class="flex flex-col justify-between h-screen">
+            <!-- header-->
+            <div class="bg-white py-4 shadow dark:bg-gray-800">
+                <div class="max-w-6xl mx-auto">
+                    <div class="flex items-center lg:justify-between justify-around">
+                        <a class="w-32">
+                            <img alt="" class="w-32" />
+                        </a>
+                        <div class="capitalize flex font-semibold hidden lg:block my-2 space-x-3 text-center text-sm">
+                            <!-- <a
+                                href="#"
+                                onclick="lookingForSmallScaleCompany()" 
+                                class="bg-blue-500 blue-500 px-6 py-3 rounded-md shadow text-white blue-white-hover"
+                                >Register</a
+                            > -->
+                            <!-- <button
+                                type="button"
+                                onclick="lookingForSmallScaleCompany()" 
+                                class="bg-blue-500 blue-500 px-6 py-3 rounded-md shadow text-white blue-white-hover"
+                            >
+                            Registera
+                            </button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content-->
+            <div>
+                <div class="lg:p-12 max-w-xl lg:my-0 my-12 mx-auto p-6 space-y-">
+                    <div class="pb-12">
+                        <img src="uploads/logo/rectangle-logo2.png" alt="" style="width: 1000px; height: 150px" />
+                    </div>
+                    <form
+                        action="javascript:void(0);"
+                        method="POST"
+                        id="formLogin"
+                        name="formLogin"
+                        enctype="multipart/form-data"
+                        accept-charset="utf-8"
+                        class="lg:p-10 p-6 space-y-3 relative bg-white2 shadow-xl rounded-md"
+                    >
+                        <h1 class="lg:text-2xl text-xl text-center font-semibold mb-6 orbitron">Help and Support Login</h1>
+                        <div>
+                            <label class="mb-0"> Email Address </label>
+                            <input
+                                type="email"
+                                placeholder="info@example.com"
+                                class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full"
+                                id="loginEmailAddress"
+                                name="loginEmailAddress"
+                            />
+                        </div>
+                        <div>
+                            <label class="mb-0"> Password </label>
+                            <input
+                                type="password"
+                                placeholder=""
+                                class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full"
+                                id="loginPassword"
+                                name="loginPassword"
+                            />
+                        </div>
+                        <div>
+                            <button
+                                type="submit"
+                                class="bg-blue-600 font-semibold p-2 mt-5 rounded-md text-center text-white w-full orbitron"
+                            >
+                                Login
+                            </button>
+                        </div>
+                        <!-- <a href="#" class="block text-center pb-4 font-medium text-blue-500" onclick="goToForgotPasswordPage();"> Forgot password. </a> -->
+                        <a href="#" class="block text-center pb-4 font-medium text-blue-500"> Forgot password. </a>
+     
+                    </form>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <%- include('../includes/footer/index.ejs') %>
+        </div>
+
+        <script  src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js"></script>
+        <%- include('../includes/scripts/index.ejs') %>
+        <script src="assets/js/help-and-support-login.js"></script>
+        <script >
+            // function goToForgotPasswordPage () {
+            //   location.replace(host + '/forgot-password');
+            // }
+
+           
+        </script>
+    </body>
+</html>

@@ -1,0 +1,74 @@
+<ul class="flex ">
+    <li class="" uk-tooltip="title: Home; pos: bottom">
+        <a
+            class="text-center block border-white rounded-custom hover:border-gray-100 hover:bg-gray-100 py-3 px-14"
+            href="#"
+            onclick="goToHomePage()" 
+        >
+            <span class="icon-feather-home" style="font-size: 24px; font-family: inherit"> </span>
+        </a>
+    </li>
+    <li class="" uk-tooltip="title: Event Calendar; pos: bottom">
+        <a
+            class="text-center block border-white rounded-custom hover:border-gray-100 hover:bg-gray-100 py-3 px-14"
+            href="#eventCalendar"
+        >
+            <span class="icon-feather-calendar" style="font-size: 24px; font-family: inherit"> </span>
+        </a>
+    </li>
+    <li class="" uk-tooltip="title: Traders Videos; pos: bottom">
+        <a
+            class="text-center block border-white rounded-custom hover:border-gray-100 hover:bg-gray-100 py-3 px-14"
+            href="#tradersVideos"
+        >
+            <span class="icon-feather-video" style="font-size: 24px; font-family: inherit"> </span>
+        </a>
+    </li>
+    <li class="" uk-tooltip="title: Traders Webinars; pos: bottom">
+        <a
+            class="text-center block border-white rounded-custom hover:border-gray-100 hover:bg-gray-100 py-3 px-14"
+            href="#tradersWebinars"
+        >
+            <span class="icon-feather-info" style="font-size: 24px; font-family: inherit"> </span>
+        </a>
+    </li>
+    <li class="" uk-tooltip="title: Sponsors Videos; pos: bottom">
+        <a
+            class="text-center block border-white rounded-custom hover:border-gray-100 hover:bg-gray-100 py-3 px-14"
+            href="#sponsors"
+        >
+            <span class="icon-feather-users" style="font-size: 24px; font-family: inherit"> </span>
+        </a>
+    </li>
+    <li class="" uk-tooltip="title: Selections; pos: bottom">
+        <a
+            class="text-center block border-white rounded-custom hover:border-gray-100 hover:bg-gray-100 py-3 px-14"
+            href="#"
+            onclick="goToSelectionPage()"
+        >
+            <span class="icon-feather-users" style="font-size: 24px; font-family: inherit"> </span>
+        </a>
+    </li>
+    <li class="" uk-tooltip="title: Help / Suggestion; pos: bottom">
+        <a
+            class="text-center block border-white rounded-custom hover:border-gray-100 hover:bg-gray-100 py-3 px-14"
+            href="#"
+            onclick="goToHelpSuggestionPage()"
+        >
+            <span class="icon-feather-message-square" style="font-size: 24px; font-family: inherit"> </span>
+        </a>
+    </li>
+</ul>
+
+<%- include('../../modal/email-if-help-and-suggest-link-not-available.ejs') %>
+
+<script >
+function goToHomePage() {
+    location.replace(host + '/');
+}
+
+
+function goToSelectionPage() {
+    location.replace(host + '/selection');
+}
+</script>

@@ -1,0 +1,268 @@
+<%- include('../includes/head/index.ejs') %>
+
+  <body>
+     <!-- Navbar goes here -->
+     <%- include('../includes/nav/primary-navigation.ejs') %>
+
+    <div id="wrapper" class="is-collapse is-active">
+      <!-- === HEADER - START === -->
+  
+      <!-- === HEADER - END === -->
+
+        <!-- Main Contents -->
+        <div class="main_content">
+          <div class="mcontainer">
+            <!-- ===============================  -->
+            <!-- BANNER LOGO AND NAV DIV - START  -->
+            <!-- ===============================  -->
+            <!-- Profile cover -->
+            <div class="profile user-profile">
+              <div class="profiles_banner image-upload">
+                <form action="javascript:void(0);" method="POST" id="editcompanyBanner"
+                  name="editcompanyBanner" enctype="multipart/form-data" accept-charset="utf-8">
+                  <label for="companyBanner">
+                    <img id="companyBannerPreview" src="uploads/placeholder/banner-placeholder2.jpg" />
+                  </label>
+                  <input type="file" id="companyBanner" name="companyBanner" />
+                  <input type="text" id="companyBannerId" name="companyBannerId" />
+                </form>
+              </div>
+              <div class="profiles_content">
+                <form action="javascript:void(0);" method="POST" id="editcompanyLogo" name="editcompanyLogo"
+                  enctype="multipart/form-data" accept-charset="utf-8">
+                  <div class="profile_avatar image-upload">
+                    <div class="profile_avatar_holder">
+                      <label for="companyLogo">
+                        <img id="companyLogoPreview" src="uploads/placeholder/logo-placeholder2.jpg" />
+                      </label>
+                    </div>
+                    <input type="file" id="companyLogo" name="companyLogo" />
+                    <input type="text" id="companyLogoId" name="companyLogoId" />
+                    <div class="user_status status_online"></div>
+                    <div class="icon_change_photo" hidden>
+                      <ion-icon name="camera" class="text-xl"></ion-icon>
+                    </div>
+                  </div>
+                </form>
+                <div class="profile_info">
+                  <h1 id="displayBusinessNameH1" class="orbitron"> </h1>
+                  <p class="orbitron" style="text-align: center;" id="displayBusinessTagLineH1"> </p>
+                  <h1 id="userType" class="orbitron" style="text-align: center;"></h1>
+                </div>
+              </div>
+
+              <div class="flex justify-between lg:border-t border-gray-100 flex-col-reverse lg:flex-row pt-2">
+                <nav class="responsive-nav pl-3">
+                  <ul uk-switcher="connect: #timeline-tab; animation: uk-animation-fade">
+                    <li class="active orbitron" id="liTabCompanyDetails"><a href="#" id="tabCompanyDetails">About</a></li>
+                    <!-- <li id="liTabMediaFiles"><a href="#" id="tabMediaFiles">Brochure </a></li>
+                    <li id="liTabVideos"><a href="#" id="tabVideos">Videos</a></li>
+                    <li><a href="#0">Dashboard</a></li>
+                    <li id="liTabSettings"><a href="#0" id="tabSettings">Settings</a></li> -->
+                  </ul>
+                </nav>
+
+                <!-- button actions -->
+                <!-- === button_action.ejs - START === -->
+                <%- include('../includes/profile/button_action.ejs') %>
+                <!-- === button_action.ejs - END === -->
+              </div>
+            </div>
+            <!-- =============================  -->
+            <!-- BANNER LOGO AND NAV DIV - END  -->
+            <!-- =============================  -->
+            <form action="javascript:void(0);" method="POST" id="traderRegistrationForm" name="traderRegistrationForm"
+              enctype="multipart/form-data" accept-charset="utf-8">
+              <div class="lg:flex lg:space-x-10 mt-2.5">
+                <!-- ===============================  -->
+                <!-- Company Details Display - START  -->
+                <!-- ===============================  -->
+                <div class="lg:w-2/4 w-full mb-2">
+                  <div class="bg-white rounded-md lg:shadow-md shadow">
+                    <div class="border-b flex items-center justify-between p-4">
+                      <div>
+                        <h2 class="text-lg font-semibold">Company Details
+                          <a class="hover:border-gray-100" href="#">
+                            <span class="icon-feather-info" style="font-size: 16px; font-family: inherit"
+                              uk-tooltip="title: Company Details Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.; pos: right">
+                            </span>
+                          </a>
+                        </h2>
+                      </div>
+                      <div class="text-right">
+                      </div>
+                    </div>
+                    <div class="flex-1 space-y-4 p-6">
+                      <p class="text-xs text-gray-400 mb-2 orbitron">Company Name</p>
+                      <p class="orbitron" id="businessName"></p>
+
+                      <p class="text-xs text-gray-400 mb-2 orbitron">Company Tag Line</p>
+                      <p class="orbitron" id="businessTagline"></p>
+
+                      <p class="text-xs text-gray-400 mb-2 orbitron">Business Website</p>
+                      <p class="orbitron" id="businessWebsite"></p>
+
+                      <p class="text-xs text-gray-400 mb-2 orbitron">Business Email Address</p>
+                      <p class="orbitron" id="businessEmailAddress"></p>
+
+                      <p class="text-xs text-gray-400 mb-2 orbitron">Business Contact Number</p>
+                      <p class="orbitron" id="businessContactNumber"></p>
+
+                      <p class="text-xs text-gray-400 mb-2 orbitron">Business Social Media / Messaging App</p>
+                      <div class="flex flex-wrap gap-2 orbitron" id="businessSocialMediaContactType"></div>
+
+                      <p class="text-xs text-gray-400 mb-2 orbitron">Business Social Media / Messaging App Mobile Number</p>
+                      <div class="flex flex-wrap gap-2 orbitron" id="businessSocialMediaContactNumber"></div>
+
+                      <p class="text-xs text-gray-400 mb-2 orbitron">Address</p>
+                      <p class="orbitron" id="businessAddress"></p>
+                      <p class="orbitron" id=""> 
+                        <span id="businessCity"></span>
+                        <span id="businessStates"></span>
+                        <span id="businessCountry"></span>
+                      </p>
+
+                      <p class="text-xs text-gray-400 mb-2 orbitron"> Language Of Communication </p>
+                      <div class="flex flex-wrap gap-2 orbitron" id="languageOfComm"></div>
+
+                      <p class="text-xs text-gray-400 mb-2 orbitron"> Trade Category </p>
+                      <p class="orbitron" id="displayBusinessTradeCategory"> </p>
+                  
+                      <p class="text-xs text-gray-400 mb-2 orbitron"> Sub Category </p>
+                      <p class="orbitron" id="displayBusinessSubCategory"> </p>
+                    
+                      <p class="text-xs text-gray-400 mb-2 orbitron"> Minor Sub Category (Optional) </p>
+                      <p class="orbitron" id="displayBusinessMinorCategory"> </p>
+                    </div>
+                    <!-- =============================  -->
+                    <!-- Company Details Display - END  -->
+                    <!-- =============================  -->
+                  </div>
+                </div>
+                <!-- ===============================  -->
+                <!-- Company Details Display - END  -->
+                <!-- ===============================  -->
+
+                <!-- ===============================  -->
+                <!-- Company Representative - START  -->
+                <!-- ===============================  -->
+                <div class="lg:w-2/4 w-full" id="">
+                  <!-- <div class="card mb-2" style="height: 1160px;"> -->
+                  <!-- <div class="card mb-2" id="companyRepresentativeDiv"> -->
+                  <div class="bg-white rounded-md lg:shadow-md shadow">
+                    <div class="border-b flex items-center justify-between p-4">
+                      <div>
+                        <h2 class="text-lg font-semibold">Representative
+                          <a class="hover:border-gray-100" href="#">
+                            <span class="icon-feather-info" style="font-size: 16px; font-family: inherit"
+                              uk-tooltip="title: Representative Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.; pos: right">
+                            </span>
+                          </a>
+                        </h2>
+                      </div>
+                      <div class="text-right">
+                        <button class="button blue-white-hover orbitron" type="button" id="btnCompanyDetailsEdit"
+                          style="display: none;">Edit</button>
+                        <button class="button blue-white-hover orbitron" type="button" onclick="editProfile()"> Update Profile </button>
+                        <!-- <button class="button blue-white-hover orbitron" type="button"> Update Profile </button> -->
+                      </div>
+                    </div>
+                    <div class="flex-1 space-y-4 p-6">
+                      <p class="text-xs text-gray-400 mb-2">First Name</p>
+                      <p class="orbitron" id="firstName"></p>
+              
+                      <p class="text-xs text-gray-400 mb-2">Last Name</p>
+                      <p class="orbitron" id="lastName"></p>
+              
+                      <p class="text-xs text-gray-400 mb-2">Middle Name</p>
+                      <p class="orbitron" id="middleName"></p>
+
+                      <p class="text-xs text-gray-400 mb-2">Address</p>
+                      <p class="orbitron" id=""> 
+                        <span id="city"></span>
+                        <span id="states"></span>
+                        <span id="country"></span>
+                      </p>
+
+                      <p class="text-xs text-gray-400 mb-2">Email Address</p>
+                      <div class="flex flex-wrap gap-2 orbitron" id="emailAddress"></div>
+  
+                      <p class="text-xs text-gray-400 mb-2">Social Media / Messaging App</p>
+                      <div class="flex flex-wrap gap-2 orbitron" id="socialMediaContactType"></div>
+  
+                      <p class="text-xs text-gray-400 mb-2">Social Media / Messaging App Mobile Number</p>
+                      <div class="flex flex-wrap gap-2 orbitron" id="socialMediaContactNumber"></div>
+                    </div>
+                  </div>
+                </div>
+                <!-- ===============================  -->
+                <!-- Company Representative - END  -->
+                <!-- ===============================  -->
+              </div>
+
+
+
+
+            </form>
+          </div>
+        </div>
+
+
+    </div>
+    <%- include('../modal/email-if-help-and-suggest-link-not-available.ejs') %>
+    <%- include('../includes/scripts/index.ejs') %>
+      <script  src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js"></script>
+      <script  src="assets/js/large-scale-profile.js"></script>
+      <script  src="assets/js/global-countries.js"></script>
+      <script  src="assets/js/large-scale-medias.js"></script>
+      <script  src="assets/js/getStatesNameToBeDisplayUsingCode.js"></script>
+      <script  src="assets/js/getCityNameToBeDisplayUsingCode.js"></script>
+      <!-- <script src="assets/js/getBusinessCountryLocationToBeEditAndOptions.js"></script>
+      <script src="assets/js/getBusinessStatesLocationToBeEditAndOptions.js"></script>
+      <script src="assets/js/getBusinessCityLocationToBeEditAndOptions.js"></script>
+      
+       -->
+      
+       <script >
+        // ----------------------------------------------------
+        // for profile_dropdown [START]
+        // ----------------------------------------------------
+        // let sessionUuid =  `<%= data.uuid %>`;
+        let sessionType =  `<%= data.type %>`;
+        let sessionFirstName =  `<%= data.first_name %>`;
+        let sessionLastName =  `<%= data.last_name %>`;
+        let sessionEmail =  `<%= data.email %>`;
+        
+        sessionFirstName ? document.getElementById('user-name').innerHTML = sessionFirstName + ' ' + sessionLastName : '';
+        if (sessionType == 1) {
+            $('#upgrade-account').prop('disabled', true);
+            document.getElementById('upgrade-account').style.display = 'none';
+            document.getElementById('user-type').innerHTML = 'Trader';
+            document.getElementById('userType').innerHTML = 'Trader';
+        }
+        if (sessionType == 2) {
+            $('#upgrade-account').prop('disabled', false);
+            document.getElementById('upgrade-account').style.display = 'block';
+            document.getElementById('user-type').innerHTML = 'Large Scale';
+            document.getElementById('userType').innerHTML = 'Large Scale';
+        }
+        if (sessionType == 3) {
+            $('#upgrade-account').prop('disabled', false);
+            document.getElementById('upgrade-account').style.display = 'block';
+            document.getElementById('user-type').innerHTML = 'Medium Scale';
+            document.getElementById('userType').innerHTML = 'Medium Scale';
+        }
+        if (sessionType == 4) {
+            document.getElementById('user-type').innerHTML = 'Small Scale';
+            document.getElementById('userType').innerHTML = 'Small Scale';
+        }
+
+        // ----------------------------------------------------
+        // for profile_dropdown [END]
+        // ----------------------------------------------------
+      </script>
+
+
+  </body>
+
+  </html>

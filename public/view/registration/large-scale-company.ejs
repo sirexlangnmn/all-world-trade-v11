@@ -1,0 +1,314 @@
+<%- include('../includes/head/index.ejs') %>
+
+<body>
+  <div id="wrapper" class="is-collapse is-active">
+    <!-- === HEADER - START === -->
+    <%- include('../includes/header-for-registration-page/index.ejs') %>
+    <!-- === HEADER - END === -->
+
+    <!-- Main Contents -->
+    <div class="main_content_custom_v3">
+
+    <!-- === REGISTRATION NAV - START === -->
+    <%- include('../includes/registration/registration_nav.ejs') %>
+    <!-- === REGISTRATION NAV - END === -->
+
+      <div class="mcontainer">
+        <form action="javascript:void(0);" method="POST" id="traderRegistrationForm" name="traderRegistrationForm" enctype="multipart/form-data" accept-charset="utf-8">
+          <div class="profile ">
+            <div class="profiles_banner profile_avatar image-upload">
+              <label for="companyBanner">
+                <img id="companyBannerPreview" src="uploads/placeholder/banner-placeholder2.jpg" />
+              </label>
+              <input type="file" id="companyBanner" name="companyBanner" accept=".jpg, .png, .jpg" />
+            </div>
+            <p class="text-red-500" style="text-align: center;" id="companyBannerValidation"></p>
+            <div class="profiles_content">
+              <div class="profile_avatar image-upload">
+                <label for="companyLogo">
+                  <img id="companyLogoPreview" src="uploads/placeholder/logo-placeholder2.jpg" />
+                </label>
+                <input type="file" id="companyLogo" name="companyLogo" accept=".jpg, .png, .jpg" />
+                <p class="text-red-500" style="text-align: center; " id="companyLogoValidation"></p>
+              </div>
+              <div class="profile_info">
+                <h1 class="orbitron">Visitor Members Looking For Large Scale Company</h1>
+                <h1 class="orbitron">(Exhaustive Company Information)</h1>
+              </div>
+            </div>
+            <nav class="responsive-nav border-t -mb-0.5 lg:pl-2">
+              <ul>
+                <li class="active orbitron" id=""><a href="#" id="">About</a></li>
+                <li><a href="#0" class="orbitron">Media Files </a></li>
+                <li><a href="#0" class="orbitron">Reviews</a></li>
+                <li><a href="#0" class="orbitron">Discussion</a></li>
+                <li><a href="#0" class="orbitron">Videos</a></li>
+                <li><a href="#0" class="orbitron">Dashboard</a></li>
+                <li><a href="#0" class="orbitron">Settings</a></li>
+              </ul>
+            </nav>
+          </div>
+
+
+          <div class="lg:flex lg:space-x-10 mt-2.5">
+            <!-- ===============================  -->
+            <!-- Company Details Display - START  -->
+            <!-- ===============================  -->
+            <div class="lg:w-2/4 w-full mb-2">
+              <div class="bg-white rounded-md lg:shadow-md shadow">
+                <div class="border-b flex items-center justify-between p-4">
+                  <div>
+                    <h2 class="text-lg font-semibold">Company Details
+                      <a class="hover:border-gray-100" href="#">
+                        <span class="icon-feather-info" style="font-size: 16px; font-family: inherit" uk-tooltip="title: Company Details Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.; pos: right">
+                        </span>
+                      </a>
+                    </h2>
+                  </div>
+                  <div class="text-right">
+                  </div>
+                </div>
+                <div class="flex-1 space-y-4 p-6">
+                  <div id="new">
+                    <label for="" class="orbitron"> Company Name: </label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="traderCompanyName" name="traderCompanyName">
+                    <p class="text-red-500" id="traderCompanyNameValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron"> Company Tag Line: </label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="traderCompanyTagline" name="traderCompanyTagline">
+                    <p class="text-red-500" id="traderCompanyTaglineValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron"> Business Website: </label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="traderWebsite" name="traderWebsite">
+                    <p class="text-red-500" id="traderWebsiteValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron"> Business Email Address: </label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="traderBusinessEmailAddress" name="traderBusinessEmailAddress">
+                    <p class="text-red-500" id="traderBusinessEmailAddressValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron"> Business Contact Number: </label>
+                    <input type="text" placeholder="" class="shadow-none with-border" 
+                    id="traderBusinessContactNumber" name="traderBusinessContactNumber"
+                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                    <p class="text-red-500" id="traderBusinessContactNumberValidation"></p>
+                  </div>
+                  <label for="" class="orbitron"> Social Media / Messaging App </label>
+                  <div>
+                    <select id="traderBusinessSocialMediaContactType" name="traderBusinessSocialMediaContactType" class="shadow-none selectpicker with-border ">
+                      <option value="1">Viber</option>
+                      <option value="2">Wechat</option>
+                      <option value="3">Whatsapp</option>
+                    </select>
+                  </div>
+                  <label for="" class="orbitron"> Social Media / Messaging App Contact Number</label>
+                  <div>
+                    <input type="text" placeholder="Mobile Number" class="shadow-none with-border" 
+                    id="traderBusinessSocialMediaContactNumber" name="traderBusinessSocialMediaContactNumber"
+                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                    <p class="text-red-500" id="traderBusinessSocialMediaContactNumberValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron"> Business Address: </label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="traderBusinessAddress" name="traderBusinessAddress">
+                    <p class="text-red-500" id="traderBusinessAddressValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron">Business Country Location: </label>
+                    <select id="traderBusinessCountryLocation" name="traderBusinessCountryLocation" class="shadow-none selectpicker with-border ">
+                    </select>
+                    <p class="text-red-500" id="traderBusinessCountryLocationValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron">Business States Location: </label>
+                    <select id="traderBusinessCityLocation" name="traderBusinessCityLocation" class="shadow-none selectpicker with-border ">
+                    </select>
+                    <p class="text-red-500" id="traderBusinessCityLocationValidation"></p>
+                  </div>
+                  <div>
+                    <label for="">Business City Location: </label>
+                    <select id="traderBusinessCityLocations" name="traderBusinessCityLocations" class="shadow-none selectpicker with-border ">
+                    </select>
+                    <p class="text-red-500" id="traderBusinessCityLocationsValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron"> Languages of communication: </label>
+                    <select class="selectpicker" id="traderLanguagesOfCommunication" name="traderLanguagesOfCommunication" multiple>
+                    </select>
+                    <p class="text-red-500" id="traderLanguagesOfCommunicationValidation"></p>
+                  </div>
+                  
+                  <div>
+                    <label for="" class="orbitron"> Trade Category: </label>
+                    <select class="selectpicker" id="traderTradeCategory" name="traderTradeCategory">
+                    </select>
+                    <p class="text-red-500" id="traderTradeCategoryValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron"> Sub Category: </label>
+                    <select class="selectpicker-custom" id="traderSubCategoryToggleField1" name="traderSubCategoryToggleField" disabled="disabled">
+                      <option></option>
+                      <option value="customOption">Other (Type a custom value)</option><input id="traderSubCategoryToggleField2" name="traderSubCategoryToggleField" style="display:none;" disabled="disabled">
+                    </select>
+                    <p class="text-red-500" id="traderSubCategoryValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron"> Minor Sub Category (Optional): </label>
+                    <select id="traderMinorSubCategoryToggleField1" name="traderMinorSubCategoryToggleField">
+                      <option></option>
+                      <option value="customOption">Other (Type a custom value)</option><input id="traderMinorSubCategoryToggleField2" name="traderMinorSubCategoryToggleField" style="display:none;" disabled="disabled">
+                      <p class="text-red-500" id="traderMinorSubCategoryValidation"></p>
+                  </div>
+                </div>
+                <!-- =============================  -->
+                <!-- Company Details Display - END  -->
+                <!-- =============================  -->
+              </div>
+            </div>
+            <!-- ===============================  -->
+            <!-- Company Details Display - END  -->
+            <!-- ===============================  -->
+
+            <!-- ===============================  -->
+            <!-- Company Representative - START  -->
+            <!-- ===============================  -->
+            <div class="lg:w-2/4 w-full" id="">
+              <!-- <div class="card mb-2" style="height: 1160px;"> -->
+              <!-- <div class="card mb-2" id="companyRepresentativeDiv"> -->
+              <div class="bg-white rounded-md lg:shadow-md shadow">
+                <div class="border-b flex items-center justify-between p-4">
+                  <div>
+                    <h2 class="text-lg font-semibold">Representative
+                      <a class="hover:border-gray-100" href="#">
+                        <span class="icon-feather-info" style="font-size: 16px; font-family: inherit" uk-tooltip="title: Representative Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.; pos: right">
+                        </span>
+                      </a>
+                    </h2>
+                  </div>
+                  <div class="text-right">
+                  </div>
+                </div>
+                <div class="flex-1 space-y-4 p-6">
+                  <div>
+                    <label for="" class="orbitron"> Last Name </label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="traderSurnameOfRepresentative" name="traderSurnameOfRepresentative">
+                    <p class="text-red-500" id="traderSurnameOfRepresentativeValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron"> First Name </label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="traderGivenNameOfRepresentative" name="traderGivenNameOfRepresentative">
+                    <p class="text-red-500" id="traderGivenNameOfRepresentativeValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron"> Middle Name </label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="traderMiddleNameOfRepresentative" name="traderMiddleNameOfRepresentative">
+                    <p class="text-red-500" id="traderMiddleNameOfRepresentativeValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron">Country of Residence: </label>
+                    <select id="traderCountryofResidence" name="traderCountryofResidence" class="shadow-none selectpicker with-border ">
+                    </select>
+                    <p class="text-red-500" id="traderCountryofResidenceValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron"> States of Residence: </label>
+                    <select id="traderCityOfResidence" name="traderCityOfResidence" class="shadow-none selectpicker with-border ">
+                    </select>
+                    <p class="text-red-500" id="traderCityOfResidenceValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron"> City of Residence: </label>
+                    <select id="traderCityOfResidences" name="traderCityOfResidences" class="shadow-none selectpicker with-border ">
+                    </select>
+                    <p class="text-red-500" id="traderCityOfResidencesValidation"></p>
+                  </div>
+                  <label for="" class="orbitron"> Social Media / Messaging App (Optional)</label>
+                  <div>
+                    <select id="personalSocialMediaContactNumber" name="personalSocialMediaContactNumber" class="shadow-none selectpicker with-border ">
+                      <option value="1">Viber</option>
+                      <option value="2">Wechat</option>
+                      <option value="3">Whatsapp</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron"> Social Media / Messaging App Mobile Number (Optional) </label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="traderCellphone" name="traderCellphone">
+                    <p class="text-red-500" id="traderCellphoneValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron"> Representative Email Address (same as Registration/Login email): </label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="emailAddress" name="emailAddress">
+                    <p class="text-red-500" id="emailAddressValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron"> Password: </label>
+                    <input type="password" placeholder="" class="shadow-none with-border" id="traderPassword" name="traderPassword">
+                    <p class="text-red-500" id="traderPasswordValidation"></p>
+                  </div>
+                  <div>
+                    <label for=""> Confirm Password: </label>
+                    <input type="password" placeholder="" class="shadow-none with-border" id="traderConfirmPassword" name="traderConfirmPassword">
+                    <p class="text-red-500" id="traderConfirmPasswordValidation"></p>
+                  </div>
+                  <div id="traderHashedPasswordInput">
+                    <label for="" class="orbitron"> Hashed Password: </label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="traderHashedPassword" name="traderHashedPassword">
+                    <p class="text-red-500" id="Validation">asd</p>
+                  </div>
+                  <div id="traderPlainPasswordInput">
+                    <label for="" class="orbitron"> Plain Password: </label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="traderPlainPassword" name="traderPlainPassword">
+                    <p class="text-red-500" id="Validation">asd</p>
+                  </div>
+                  <div class="flex items-center">
+                    <input checked id="checked-checkbox" type="checkbox" id="agreeInTermsAndConditions" name="agreeInTermsAndConditions"
+                      class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+
+                    <label for="checked-checkbox"
+                      class="ml-2 text-xs font-medium text-gray-900 dark:text-gray-300"> I agree to the <a
+                        href="/terms-and-conditions" class="no-underline hover:underline text-blue-600">Terms &
+                        Conditions</a>, <a href="/data-privacy-notice"
+                        class="no-underline hover:underline text-blue-600">Data Privacy Notice</a> and <a
+                        href="/cookie-policy" class="no-underline hover:underline text-blue-600">Cookie Policy</a>
+                    </label>
+
+                  </div>
+                  <br />
+                </div>
+                <div class="bg-gray-10 p-6 pt-0 flex justify-end space-x-3">
+                  <button class="p-2 px-4 rounded bg-gray-50 text-red-500 orbitron"> Cancel </button>
+                  <button type="button" class="button bg-blue-700 orbitron" id="btnTraderRegistrationForm"> Save </button>
+                </div>
+              </div>
+            </div>
+            <!-- ===============================  -->
+            <!-- Company Representative - END  -->
+            <!-- ===============================  -->
+          </div>
+
+
+
+
+        </form>
+      </div>
+    </div>
+
+
+  </div>
+  <%- include('../includes/scripts/index.ejs') %>
+  <script  src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js"></script>
+  <script  src="assets/js/registration-location-replace.js"></script>
+  <script  src="assets/js/large-scale-company-registration-countries.js"></script>
+  <script  src="assets/js/getStatesAndCitiesOptions.js"></script>
+  <script  src="assets/js/large-scale-company-registration-validation.js"></script>
+  <script  src="assets/js/large-scale-company-registration.js"></script>
+  <script  src="assets/js/large-scale-company-registration-upload-medias.js"></script>
+  <script  src="assets/js/registration-email-verification.js"></script>
+  <script src="assets/js/media-validation.js"></script>
+
+</body>
+
+</html>

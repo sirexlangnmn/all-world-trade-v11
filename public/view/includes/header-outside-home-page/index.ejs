@@ -1,0 +1,71 @@
+<style >
+    .rightSide {
+        display: none; 
+        margin-top: -40px;
+    }
+  </style>
+<header>
+    <div class="header_wrap">
+        <div class="header_inner mcontainer">
+            <div class="left_side">
+                <div id="logo">
+                    <a href="" style="vertical-align: middle;">
+                        <!-- === LOGO - START === -->
+                        <%- include('../header_logo/index.ejs') %>
+                        <!-- === LOGO - END === -->
+                    </a>
+                </div>
+            </div>
+            <!-- === NAVIGATION - START === -->
+            <div class="header_search">
+                <!-- === NAVIGATION ICON - START === -->
+                <%- include('../nav/primary-navigation.ejs') %>
+                <!-- === NAVIGATION ICON - END === -->
+            </div>
+            <!-- === NAVIGATION - END === -->
+            <div class="right_side rightSide" id="right_side_with_session" >
+                <div class="header_widgets">
+                    <!-- === CART - START === -->
+                    
+                    <!-- === CART - END === -->
+
+                    <!-- === NOTIFICATIONS - START === -->
+                   
+                    <!-- === NOTIFICATIONS - END === -->
+
+                    <!-- === MESSAGES - START === -->
+                 
+                    <!-- === MESSAGES - END === -->
+
+                    <!-- === AVATAR - START === -->
+                    <%- include('../header_avatar/index.ejs') %>
+                    <!-- === AVATAR - END === -->
+                </div>
+            </div>
+            <div class="right_side rightSide" id="right_side_with_no_session" >
+                <div class="header_widgets">
+                    <div class="capitalize flex font-semibold hidden lg:block my-2 space-x-3 text-center text-sm">
+                        <a href="#" onclick="goToLoginPage()" class="bg-blue-500 blue-500 px-6 py-3 rounded-md shadow text-white blue-white-hover">Login</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<script >
+    let sessionUuid = `<%= data.uuid %>`;
+    if (sessionUuid) {
+        document.getElementById('right_side_with_session').style.display = 'block';
+        document.getElementById('right_side_with_no_session').style.display = 'none';
+    } else {
+        document.getElementById('right_side_with_session').style.display = 'none';
+        document.getElementById('right_side_with_no_session').style.display = 'block';
+    }
+
+    function goToLoginPage() {
+      location.replace(host + '/login');
+    }
+</script> 

@@ -1,0 +1,143 @@
+<%- include('../includes/head/index.ejs') %>
+<style >
+.h-35px {
+    height: 35px;
+}
+
+.login-image {
+    width: 1000px;
+    height: 150px;
+}
+</style>
+    <body>
+            
+        <div id="wrapper" class="flex flex-col justify-between h-screen">
+            <!-- nav -->
+            <nav class="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
+                <div class="flex flex-wrap items-center justify-between mx-auto ">
+                <!-- <img src="" class="h-35px" id="navLogo" alt="All World Trade" /> -->
+                <a href="/" class="flex items-center text-2xl text-gray-900 dark:text-white">
+                    <img class="w-16 h-16 mr-2" src="/uploads/logo/all-world-trade-circle-logo-mar-07-0946.png" alt="logo">
+                    All World Trade
+                </a>
+                <div class="flex md:order-2">
+                    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 orbitron" onclick="lookingForSmallScaleCompany()" >Register</button>
+                </div>
+                <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
+                  <ul class="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                    
+                  </ul>
+                </div>
+                </div>
+            </nav>
+
+  
+
+            <!-- Content-->
+            <div class="mt-32">
+                <div class="max-w-xl p-6 mx-auto my-12 lg:p-12 lg:my-0 space-y-">
+                    <div class="pb-12">
+                        <!-- <img src="uploads/logo/rectangle-logo2.png" alt="" class="login-image" /> -->
+                    </div>
+                    <form
+                        action="javascript:void(0);"
+                        method="POST"
+                        id="formLogin"
+                        name="formLogin"
+                        enctype="multipart/form-data"
+                        accept-charset="utf-8"
+                        class="relative p-6 space-y-3 rounded-md shadow-xl lg:p-10 bg-white2"
+                    >
+                        <h1 class="mb-6 text-xl font-semibold lg:text-2xl orbitron">Login</h1>
+                        <!-- <div>
+                            <label class="mb-0 orbitron"> Email Address </label>
+                            <input
+                                type="email"
+                                placeholder=""
+                                class="flex-1 w-full h-12 px-3 py-2 mt-2 text-gray-700 bg-gray-100 rounded-md rounded-l-lg with-border focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                id="loginEmailAddress"
+                                name="loginEmailAddress"
+                                style="-webkit-box-shadow: 0 0 0 30px #323332 inset !important;
+                                -moz-box-shadow: 0 0 0 30px #323332 inset !important;
+                                -o-box-shadow: 0 0 0 30px #323332 inset !important;
+                                box-shadow: 0 0 0 30px #323332 inset !important;
+                                -webkit-text-fill-color: #ffffff !important;"
+                            />
+                        </div> -->
+                        <!-- <div class="relative">
+                            <label class="mb-0 orbitron"> Password </label>
+                            <input
+                                type="password"
+                                placeholder=""
+                                class="flex-1 w-full h-12 px-3 py-2 mt-2 text-gray-700 bg-gray-100 rounded-md rounded-l-lg with-border focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                id="loginPassword"
+                                name="loginPassword"
+                                style="-webkit-box-shadow: 0 0 0 30px #323332 inset !important;
+                                -moz-box-shadow: 0 0 0 30px #323332 inset !important;
+                                -o-box-shadow: 0 0 0 30px #323332 inset !important;
+                                box-shadow: 0 0 0 30px #323332 inset !important;
+                                -webkit-text-fill-color: #ffffff !important;"
+                                
+                            />
+                            <span class="absolute top-0 pt-2 mt-8 mr-2 right-1" onclick="showPassword('loginPassword')">
+                                <i id="passEyeId1" class="text-gray-600 cursor-pointer icon-feather-eye hover:text-blue-600" style="display: none; font-size: 25px;"></i>
+                                <i id="passEyeId2" class="text-gray-600 cursor-pointer icon-feather-eye-off hover:text-blue-600" style="font-size: 25px;"></i>
+                            </span>
+                        </div> -->
+
+                        <div>
+                            <label class="mb-0 orbitron"> Email Address </label>
+                            <input
+                                type="email"
+                                placeholder=""
+                                class="flex-1 w-full h-12 px-3 py-2 mt-2 text-gray-700 bg-gray-100 rounded-md rounded-l-lg with-border focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                id="loginEmailAddress"
+                                name="loginEmailAddress"
+                            />
+                        </div>
+                        <div  class="relative">
+                            <label class="mb-0 orbitron"> Password </label>
+                            <input
+                                type="password"
+                                placeholder=""
+                                class="flex-1 w-full h-12 px-3 py-2 mt-2 text-gray-700 bg-gray-100 rounded-md rounded-l-lg with-border focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                id="loginPassword"
+                                name="loginPassword"
+                            />
+                            <span class="absolute top-0 pt-2 mt-8 mr-2 right-1" onclick="showPassword('loginPassword')" >
+                                <i id="passEyeId1" class="cursor-pointer icon-feather-eye" style="display: none; font-size: 25px;"></i>
+                                <i id="passEyeId2" class="cursor-pointer icon-feather-eye-off" style="font-size: 25px;"></i>
+                            </span>
+                        </div>
+                        <div>
+                            <button
+                                type="submit"
+                                class="w-full p-2 mt-5 font-semibold text-center text-white bg-blue-600 rounded-md orbitron"
+                            >
+                                Login
+                            </button>
+                        </div>
+                        <a href="#" class="block pb-4 font-medium text-center text-blue-500 orbitron" onclick="goToForgotPasswordPage();"> Forgot password. </a>
+     
+                    </form>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <!-- include('../includes/footer/index.ejs') -->
+        </div>
+        <script >
+            let ourGenerateNonce = `<%= data.ourGenerateNonce %>`;
+            console.log('ourGenerateNonce: ', ourGenerateNonce);
+        </script>
+        
+        <script  src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js"></script>
+        <%- include('../includes/scripts/index.ejs') %>
+        <script  src="assets/js/login.js"></script>
+        <script >
+            function goToForgotPasswordPage () {
+              location.replace(host + '/forgot-password');
+            }
+        </script>
+    </body>
+</html>

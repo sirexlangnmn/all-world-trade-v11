@@ -1,0 +1,214 @@
+<%- include('../includes/head/index.ejs') %>
+
+  <body>
+    <div id="wrapper" class="is-collapse is-active">
+      <!-- === HEADER - START === -->
+      <%- include('../includes/header-for-registration-page/index.ejs') %>
+        <!-- === HEADER - END === -->
+
+        <!-- Main Contents -->
+        <div class="main_content_custom mt-8">
+
+          <!-- === REGISTRATION NAV - START === -->
+          <%- include('../includes/registration/registration_nav.ejs') %>
+            <!-- === REGISTRATION NAV - END === -->
+
+            <div class="mcontainer">
+              <form action="javascript:void(0);" method="POST" id="lookingForSmallScaleCompanyForm"
+                name="lookingForSmallScaleCompanyForm" enctype="multipart/form-data" accept-charset="utf-8">
+                <!-- Main Contents -->
+                <div class="profile ">
+                  <div class="profiles_banner profile_avatar image-upload">
+                    <label for="companyBanner">
+                      <img id="companyBannerPreview" src="uploads/placeholder/banner-placeholder2.jpg" />
+                    </label>
+                    <input type="file" id="companyBanner" name="companyBanner" accept=".jpg, .png, .jpg" />
+                  </div>
+                  <p class="text-red-500" style="text-align: center;" id="companyBannerValidation"></p>
+                  <div class="profiles_content">
+                    <div class="profile_avatar image-upload">
+                      <label for="companyLogo">
+                        <img id="companyLogoPreview" src="uploads/placeholder/logo-placeholder2.jpg" />
+                      </label>
+                      <input type="file" id="companyLogo" name="companyLogo" accept=".jpg, .png, .jpg" />
+                      <p class="text-red-500" style="text-align: center; " id="companyLogoValidation">
+                      </p>
+                    </div>
+                    <div class="profile_info">
+                      <h1 class="orbitron">Visitor Members Looking For Small Scale Company </h1>
+                      <h1 class="orbitron">(Individual Information Only)</h1>
+                    </div>
+                  </div>
+                  <nav class="responsive-nav border-t -mb-0.5 lg:pl-2">
+                    <ul>
+                      <li class="active orbitron" id=""><a href="#" id="">About</a></li>
+                      <li><a href="#0" class="orbitron">Media Files </a></li>
+                      <li><a href="#0" class="orbitron">Reviews</a></li>
+                      <li><a href="#0" class="orbitron">Discussion</a></li>
+                      <li><a href="#0" class="orbitron">Videos</a></li>
+                      <li><a href="#0" class="orbitron">Dashboard</a></li>
+                      <li><a href="#0" class="orbitron">Settings</a></li>
+                    </ul>
+                  </nav>
+                </div>
+                <!-- ===========================  -->
+                <!-- Member Details Div - START  -->
+                <!-- ===========================  -->
+                <div class="bg-white rounded-md lg:shadow-md shadow">
+                  <div class="border-b flex items-center justify-between p-4">
+                    <div>
+                      <h2 class="text-lg font-semibold">Member Details
+                        <a class="hover:border-gray-100" href="#">
+                          <span class="icon-feather-info" style="font-size: 16px; font-family: inherit"
+                            uk-tooltip="title: Member Details Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.; pos: right">
+                          </span>
+                        </a>
+                      </h2>
+                    </div>
+                    <div class="text-right">
+                    </div>
+                  </div>
+                  <div class="flex-1 space-y-4 p-6">
+                    <!-- ===============================  -->
+                    <!-- Member Details - START  -->
+                    <!-- ===============================  -->
+                    <div>
+                      <label for="" class="orbitron">First Name</label>
+                      <input type="text" placeholder="" class="shadow-none with-border" id="firstName" name="firstName">
+                      <p class="text-red-500" id="firstNameValidation"></p>
+                    </div>
+                    <div>
+                      <label for="" class="orbitron">Last Name</label>
+                      <input type="text" placeholder="" class="shadow-none with-border" id="lastName" name="lastName">
+                      <p class="text-red-500" id="lastNameValidation"></p>
+                    </div>
+                    <div>
+                      <label for="" class="orbitron">Middle Name</label>
+                      <input type="text" placeholder="" class="shadow-none with-border" id="middleName"
+                        name="middleName">
+                      <p class="text-red-500" id="middleNameValidation"></p>
+                    </div>
+                    <div>
+                      <label for="" class="orbitron">Country of Residence</label>
+                      <select id="country" name="country" class="shadow-none selectpicker with-border ">
+                      </select>
+                      <p class="text-red-500" id="countryValidation"></p>
+                    </div>
+                    <div>
+                      <label for="" class="orbitron">States of Residence</label>
+                      <select id="states" name="states" class="shadow-none selectpicker with-border ">
+                      </select>
+                      <p class="text-red-500" id="statesValidation"></p>
+                    </div>
+                    <div>
+                      <label for="" class="orbitron">City of Residence</label>
+                      <select id="city" name="city" class="shadow-none selectpicker with-border ">
+                      </select>
+                      <p class="text-red-500" id="cityValidation"></p>
+                    </div>
+                    <div>
+                      <label for="" class="orbitron">Languages of communication (Multiple) </label>
+                      <select id="language" name="language" class="shadow-none selectpicker with-border" multiple>
+                      </select>
+                      <p class="text-red-500" id="languageValidation"></p>
+                    </div>
+                    <div>
+                      <label for="" class="orbitron">Email Address</label>
+                      <input type="email" placeholder="" class="shadow-none with-border" id="emailAddress"
+                        name="emailAddress">
+                      <p class="text-red-500" id="emailAddressValidation"></p>
+                    </div>
+                    <label for="" class="orbitron"> Social Media / Messaging App </label>
+                    <div class="grid grid-cols-2 gap-3">
+                      <div>
+                        <select id="socialMediaContactType" name="socialMediaContactType"
+                          class="shadow-none selectpicker with-border ">
+                          <option value="1">Viber</option>
+                          <option value="2">Wechat</option>
+                          <option value="3">Whatsapp</option>
+                        </select>
+                      </div>
+                      <div>
+                        <input type="text" placeholder="Mobile Number" class="shadow-none with-border"
+                          id="socialMediaContactNumber" name="socialMediaContactNumber"
+                          oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                        <p class="text-red-500" id="socialMediaContactNumberValidation"></p>
+                      </div>
+                    </div>
+                    <div>
+                      <label for="" class="orbitron">Password</label>
+                      <input type="password" placeholder="" class="shadow-none with-border" id="password"
+                        name="password">
+                      <p class="text-red-500" id="passwordValidation"></p>
+                    </div>
+                    <div>
+                      <label for="" class="orbitron">Confirm Password</label>
+                      <input type="password" placeholder="" class="shadow-none with-border" id="confirmPassword"
+                        name="confirmPassword">
+                      <p class="text-red-500" id="confirmPasswordValidation"></p>
+                    </div>
+                    <div id="hashedPasswordInput">
+                      <label for="" class="orbitron"> Hashed Password: </label>
+                      <input type="text" placeholder="" class="shadow-none with-border" id="hashedPassword"
+                        name="hashedPassword">
+                    </div>
+                    <div id="plainPasswordInput">
+                      <label for="" class="orbitron"> Plain Password: </label>
+                      <input type="text" placeholder="" class="shadow-none with-border" id="plainPassword"
+                        name="plainPassword">
+                    </div>
+                    <div class="flex items-center">
+                      <input checked id="checked-checkbox" type="checkbox" id="agreeInTermsAndConditions" name="agreeInTermsAndConditions"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                      <div class=" ">
+                        <label for="checked-checkbox" class="ml-2 text-xs font-medium text-gray-900 dark:text-gray-300">
+                          I agree to the <a href="/terms-and-conditions"
+                            class="no-underline hover:underline text-blue-600">Terms & Conditions</a>, <a
+                            href="/data-privacy-notice" class="no-underline hover:underline text-blue-600">Data Privacy
+                            Notice</a> and <a href="/cookie-policy"
+                            class="no-underline hover:underline text-blue-600">Cookie Policy</a> </label>
+                      </div>
+                    </div>
+                    <!-- =============================  -->
+                    <!-- Member Details - END     -->
+                    <!-- =============================  -->
+
+                    <div class="bg-gray-10 p-6 pt-0 flex justify-end space-x-3">
+                      <button class="p-2 px-4 rounded bg-gray-50 text-red-500 orbitron"> Cancel </button>
+                      <button type="button" class="button bg-blue-700 orbitron" id="btnRegistration"> Save </button>
+                    </div>
+                  </div>
+                </div>
+                <!-- ===========================  -->
+                <!-- Member Details Div - END  -->
+                <!-- ===========================  -->
+              </form>
+            </div>
+        </div>
+
+
+    </div>
+    <%- include('../includes/scripts/index.ejs') %>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js"></script>
+      <script src="assets/js/small-scale-company-registration-countries.js"></script>
+      <script src="assets/js/getStatesAndCitiesOptions.js"></script>
+      <script src="assets/js/small-scale-company-registration.js"></script>
+      <script src="assets/js/small-scale-company-registration-validation.js"></script>
+      <script src="assets/js/registration-location-replace.js"></script>
+      <script src="assets/js/small-scale-company-registration-upload-medias.js"></script>
+      <script src="assets/js/registration-email-verification.js"></script>
+      <script src="assets/js/email-validations.js"></script>
+      <script src="assets/js/media-validation.js"></script>
+      <script>
+
+
+        document.getElementById('emailAddress').onkeyup = function () {
+          let input = document.getElementById('emailAddress').value;
+          validateEmail(input, 'emailAddressValidation');
+        };
+
+
+      </script>
+  </body>
+
+  </html>

@@ -1,0 +1,249 @@
+<%- include('../includes/head/index.ejs') %>
+
+  <body>
+    <!-- Navbar goes here -->
+    <%- include('../includes/nav/primary-navigation.ejs') %>
+
+    <div id="wrapper" class="is-collapse is-active">
+      <!-- === HEADER - START === -->
+
+      <!-- === HEADER - END === -->
+
+        <!-- Main Contents -->
+        <div class="main_content">
+          <div class="mcontainer">
+            <!-- ===============================  -->
+            <!-- BANNER LOGO AND NAV DIV - START  -->
+            <!-- ===============================  -->
+            <!-- Profile cover -->
+            <div class="profile user-profile">
+              <div class="profiles_banner image-upload">
+                <form action="javascript:void(0);" method="POST" id="editcompanyBanner"
+                  name="editcompanyBanner" enctype="multipart/form-data" accept-charset="utf-8">
+                  <label for="companyBanner">
+                    <img id="companyBannerPreview" src="uploads/placeholder/banner-placeholder2.jpg" />
+                  </label>
+                  <input type="file" id="companyBanner" name="companyBanner" />
+                  <input type="text" id="companyBannerId" name="companyBannerId" />
+                </form>
+              </div>
+              <div class="profiles_content">
+                <form action="javascript:void(0);" method="POST" id="editcompanyLogo" name="editcompanyLogo"
+                  enctype="multipart/form-data" accept-charset="utf-8">
+                  <div class="profile_avatar image-upload">
+                    <div class="profile_avatar_holder">
+                      <label for="companyLogo">
+                        <img id="companyLogoPreview" src="uploads/placeholder/logo-placeholder2.jpg" />
+                      </label>
+                    </div>
+
+                    <input type="file" id="companyLogo" name="companyLogo" />
+                    <input type="text" id="companyLogoId" name="companyLogoId" />
+                    <div class="user_status status_online"></div>
+                    <div class="icon_change_photo" hidden>
+                      <ion-icon name="camera" class="text-xl"></ion-icon>
+                    </div>
+                  </div>
+                </form>
+
+                <div class="profile_info">
+                  <h1 id="displayBusinessNameH1" class="orbitron"> </h1>
+                  <p class="orbitron" style="text-align: center;" id="displayBusinessTagLineH1"> </p>
+                  <h1 id="userType" class="orbitron" style="text-align: center;"></h1>
+                </div>
+
+              </div>
+
+              <div class="flex justify-between lg:border-t border-gray-100 flex-col-reverse lg:flex-row pt-2">
+                <nav class="responsive-nav pl-3">
+                  <ul uk-switcher="connect: #timeline-tab; animation: uk-animation-fade">
+                    <li class="active orbitron" id="#"><a href="#" id="">About</a></li>
+                    <!-- <li id="#"><a href="#" id="#">Brochure </a></li>
+                    <li id="#"><a href="#" id="#">Videos</a></li>
+                    <li><a href="" onclick="return false;">Dashboard</a></li>
+                    <li id="#"><a href="#" id="tabSettings">Settings</a></li> -->
+                  </ul>
+                </nav>
+
+                <!-- button actions -->
+                <!-- === button_action.ejs - START === -->
+                <%- include('../includes/profile/button_action.ejs') %>
+                <!-- === button_action.ejs - END === -->
+              </div>
+            </div>
+            <!-- =============================  -->
+            <!-- BANNER LOGO AND NAV DIV - END  -->
+            <!-- =============================  -->
+
+          <!-- ===========================  -->
+          <!-- Member Details Div - START  -->
+          <!-- ===========================  -->
+          
+            <form action="javascript:void(0);" method="POST" id="editSmallScaleForm" name="editSmallScaleForm"
+            enctype="multipart/form-data" accept-charset="utf-8">
+              <div class="bg-white rounded-md lg:shadow-md shadow">
+                <div class="border-b flex items-center justify-between p-4">
+                  <div>
+                    <h2 class="text-lg font-semibold">Member Details
+                      <a class="hover:border-gray-100" href="#">
+                        <span class="icon-feather-info" style="font-size: 16px; font-family: inherit" uk-tooltip="title: Member Details Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.; pos: right">
+                        </span>
+                      </a>
+                    </h2>
+                  </div>
+                  <div class="text-right">
+                    <button class="p-2 px-4 rounded bg-gray-50 text-red-500 orbitron" onclick="backProfile();"> Cancel
+                    </button>
+                    <button type="button" class="button blue-white-hover orbitron" id="btnUpdateSmallScale"> Save </button>
+                  </div>
+                </div>
+                <div class="flex-1 space-y-4 p-6">
+                  <!-- ===============================  -->
+                  <!-- Member Details - START  -->
+                  <!-- ===============================  -->
+                  <div>
+                    <label for="" class="orbitron">First Name</label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="firstName" name="firstName">
+                    <p class="text-red-500" id="firstNameValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron">Last Name</label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="lastName" name="lastName">
+                    <p class="text-red-500" id="lastNameValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron">Middle Name</label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="middleName" name="middleName">
+                    <p class="text-red-500" id="middleNameValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron">Country of Residence</label>
+                    <select id="country" name="country" class="shadow-none selectpicker with-border ">
+                    </select>
+                    <p class="text-red-500" id="countryValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron">States of Residence</label>
+                    <select id="states" name="states" class="shadow-none selectpicker with-border ">
+                    </select>
+                    <p class="text-red-500" id="statesValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron">City of Residence</label>
+                    <select id="city" name="city" class="shadow-none selectpicker with-border ">
+                    </select>
+                    <p class="text-red-500" id="cityValidation"></p>
+                  </div>
+                  <div>
+                    <label for="" class="orbitron">Languages of communication (Multiple) </label>
+                    <select id="language" name="language" class="shadow-none selectpicker with-border" multiple>
+                    </select>
+                    <p class="text-red-500" id="languageValidation"></p>
+                  </div>
+                  <div class="col-span-2" style="display:none;">
+                    <label for="" class="mb-0 ml-2 text-gray-600 text-sm"> Languages of communication </label>
+                    <textarea type="text" rows="5" class="shadow-none with-border"
+                      id="currentLanguagesOfCommunication" name="currentLanguagesOfCommunication" placeholder=""
+                      class=""></textarea>
+                  </div>
+                  <!-- <div>
+                    <label for="">Email Address</label>
+                    <input type="text" placeholder="" class="shadow-none with-border" id="emailAddress" name="emailAddress">
+                    <p class="text-red-500" id="emailAddressValidation"></p>
+                  </div> -->
+                  <label for="" class="orbitron"> Social Media / Messaging App </label>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <select id="socialMediaContactType" name="socialMediaContactType" class="shadow-none selectpicker with-border ">
+                      </select>
+                    </div>
+                    <div>
+                      <input type="text" placeholder="Mobile Number" class="shadow-none with-border" id="socialMediaContactNumber" name="socialMediaContactNumber">
+                      <p class="text-red-500" id="socialMediaContactNumberValidation"></p>
+                    </div>
+                  </div>
+                  <!-- =============================  -->
+                  <!-- Member Details - END     -->
+                  <!-- =============================  -->
+                </div>
+              </div>
+            </form>
+          <!-- ===========================  -->
+          <!-- Member Details Div - END  -->
+          <!-- ===========================  -->
+
+          </div>
+        </div>
+
+
+    </div>
+    <%- include('../includes/scripts/index.ejs') %>
+      <script  src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js"></script>
+      <!-- <script src="assets/js/traders-profile.js"></script>
+      <script src="assets/js/global-countries.js"></script> -->
+    
+      <script  type="text/javascript">
+        function calcTime(city, offset) {
+          var b = new Date()
+          var utc = b.getTime() + (b.getTimezoneOffset() * 60000);
+          var nd = new Date(utc + (3600000 * offset));
+          return "the local time of " + city + " is" + nd.toLocaleString();
+
+        }
+
+        //get specific country time
+        console.log(calcTime('argentina', '-3'))
+        console.log(calcTime('afganistan', '+4.3'))
+        console.log(calcTime('Denmark', '+2'))
+        console.log(calcTime('japan', '+9'))
+
+
+        // ----------------------------------------------------
+        // for profile_dropdown [START]
+        // ----------------------------------------------------
+        // let sessionUuid =  `<%= data.uuid %>`;
+        let sessionType =  `<%= data.type %>`;
+        let sessionFirstName =  `<%= data.first_name %>`;
+        let sessionLastName =  `<%= data.last_name %>`;
+        let sessionEmail =  `<%= data.email %>`;
+        
+        sessionFirstName ? document.getElementById('user-name').innerHTML = sessionFirstName + ' ' + sessionLastName : '';
+        if (sessionType == 1) {
+            $('#upgrade-account').prop('disabled', true);
+            document.getElementById('upgrade-account').style.display = 'none';
+            document.getElementById('user-type').innerHTML = 'Trader';
+            document.getElementById('userType').innerHTML = 'Trader';
+            
+        }
+        if (sessionType == 2) {
+            $('#upgrade-account').prop('disabled', false);
+            document.getElementById('upgrade-account').style.display = 'block';
+            document.getElementById('user-type').innerHTML = 'Large Scale';
+            document.getElementById('userType').innerHTML = 'Large Scale';
+        }
+        if (sessionType == 3) {
+            $('#upgrade-account').prop('disabled', false);
+            document.getElementById('upgrade-account').style.display = 'block';
+            document.getElementById('user-type').innerHTML = 'Medium Scale';
+            document.getElementById('userType').innerHTML = 'Medium Scale';
+        }
+        if (sessionType == 4) {
+            document.getElementById('upgrade-account').style.display = 'block';
+            document.getElementById('user-type').innerHTML = 'Small Scale';
+            document.getElementById('userType').innerHTML = 'Small Scale';
+        }
+
+        // ----------------------------------------------------
+        // for profile_dropdown [END]
+        // ----------------------------------------------------
+      </script>
+      
+      <script  src="assets/js/edit-small-scale-profile.js"></script>
+      <script  src="assets/js/small-scale-medias.js"></script>
+      <script  src="assets/js/edit-small-scale-profile-countries.js"></script>
+      <script  src="assets/js/getBusinessCountryLocationToBeEditAndOptions.js"></script>
+      <script  src="assets/js/getBusinessStatesLocationToBeEditAndOptions.js"></script>
+      <script  src="assets/js/getBusinessCityLocationToBeEditAndOptions.js"></script>
+      <script  src="assets/js/image-link-checker.js"></script>
+  </body>
+  </html>

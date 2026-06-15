@@ -1,0 +1,140 @@
+<%- include('../includes/head/index.ejs') %>
+    <body>
+        <!-- <body class="bg-gray-100"> -->
+
+        <div id="wrapper" class="flex flex-col justify-between h-screen">
+            <!-- header-->
+            <div class="bg-white py-4 shadow dark:bg-gray-800">
+                <div class="max-w-6xl mx-auto">
+                    <div class="flex items-center lg:justify-between justify-around">
+                        <a class="w-32">
+                            <img alt="" class="w-32" />
+                        </a>
+                        <div class="capitalize flex font-semibold hidden lg:block my-2 space-x-3 text-center text-sm">
+                            <!-- <a
+                                href="#"
+                                onclick="lookingForSmallScaleCompany()" 
+                                class="bg-blue-500 blue-500 px-6 py-3 rounded-md shadow text-white blue-white-hover"
+                                >Register</a
+                            > -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content-->
+            <div>
+                <div class="lg:p-12 max-w-xl lg:my-0 my-12 mx-auto p-6 space-y-">
+                    <div class="pb-12">
+                        <img src="uploads/logo/rectangle-logo2.png" alt="" style="width: 1000px; height: 150px" />
+                    </div>
+                    <form
+                        action="javascript:void(0);"
+                        method="POST"
+                        id="helpAndSupportRegistrationForm"
+                        name="helpAndSupportRegistrationForm"
+                        enctype="multipart/form-data"
+                        accept-charset="utf-8"
+                        class="lg:p-10 p-6 space-y-3 relative bg-white2 shadow-xl rounded-md"
+                    >
+                        <h1 class="text-center text-xl font-semibold mb-6 orbitron">Help And Support Registration</h1>
+                        <div>
+                            <label class="mb-0"> Firstname </label>
+                            <input
+                                type="text"
+                                placeholder=""
+                                class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full"
+                                id="hasrFirstname"
+                                name="hasrFirstname"
+                            />
+                            <p class="text-red-500" id="hasrFirstnameValidation"></p>
+                        </div>
+                        <div>
+                            <label class="mb-0"> Lastname </label>
+                            <input
+                                type="text"
+                                placeholder=""
+                                class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full"
+                                id="hasrLastname"
+                                name="hasrLastname"
+                            />
+                            <p class="text-red-500" id="hasrLastnameValidation"></p>
+                        </div>
+                        <div>
+                            <label class="mb-0"> Email Address </label>
+                            <input
+                                type="email"
+                                placeholder=""
+                                class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full"
+                                id="hasrEmailAddress"
+                                name="hasrEmailAddress"
+                            />
+                            <p class="text-red-500" id="hasrEmailAddressValidation"></p>
+                        </div>
+                        <div>
+                            <label class="mb-0"> Password </label>
+                            <input
+                                type="password"
+                                placeholder=""
+                                class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full"
+                                id="hasrPassword"
+                                name="hasrPassword"
+                            />
+                            <p class="text-red-500" id="hasrPasswordValidation"></p>
+                        </div>
+                        <div>
+                            <label class="mb-0"> Confirm Password </label>
+                            <input
+                                type="password"
+                                placeholder=""
+                                class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full"
+                                id="hasrConfirmPassword"
+                                name="hasrConfirmPassword"
+                            />
+                            <p class="text-red-500" id="hasrConfirmPasswordValidation"></p>
+                        </div>
+                        <div style="display: none;">
+                            <label class="mb-0"> Hashed Password </label>
+                            <input
+                                type="text"
+                                placeholder=""
+                                class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full"
+                                id="hasrHashedPassword"
+                                name="hasrHashedPassword"
+                            />
+                        </div>
+                        <div style="display: none;">
+                            <label class="mb-0"> Plain Password </label>
+                            <input
+                                type="text"
+                                placeholder=""
+                                class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full"
+                                id="hasrPlainPassword"
+                                name="hasrPlainPassword"
+                            />
+                        </div>
+                        <div>
+                            <button
+                                type="submit"
+                                class="bg-blue-600 font-semibold p-2 mt-5 rounded-md text-center text-white w-full orbitron"
+                            >
+                                Submit
+                            </button>
+                        </div>
+                        
+     
+                    </form>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <%- include('../includes/footer/index.ejs') %>
+        </div>
+
+        <script  src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js"></script>
+        <%- include('../includes/scripts/index.ejs') %>
+        <script  src="assets/js/help-and-support-registration.js"></script>
+        <script  src="assets/js/email-validations.js"></script>
+        
+    </body>
+</html>

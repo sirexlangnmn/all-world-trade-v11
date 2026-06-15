@@ -1,0 +1,977 @@
+<%- include('../includes/head/index.ejs') %>
+
+  <body>
+    <div id="wrapper" class="is-collapse is-active">
+      <!-- === HEADER - START === -->
+      <%- include('../includes/nav/primary-navigation.ejs') %>
+      <!-- === HEADER - END === -->
+
+        <!-- Main Contents -->
+        <div class="main_content">
+          <div class="mcontainer">
+            <!-- ===============================  -->
+            <!-- BANNER LOGO AND NAV DIV - START  -->
+            <!-- ===============================  -->
+            <!-- Profile cover -->
+            <div class="profile user-profile">
+              <div class="profiles_banner image-upload">
+                <form action="javascript:void(0);" method="POST" id="editcompanyBanner" name="editcompanyBanner"
+                  enctype="multipart/form-data" accept-charset="utf-8">
+                  <label for="companyBanner">
+                    <img id="companyBannerPreview" src="uploads/placeholder/banner-placeholder2.jpg" />
+                  </label>
+                  <input type="file" id="companyBanner" name="companyBanner" />
+                  <input type="text" id="companyBannerId" name="companyBannerId" />
+                </form>
+              </div>
+              <div class="profiles_content">
+                <form action="javascript:void(0);" method="POST" id="editcompanyLogo" name="editcompanyLogo"
+                  enctype="multipart/form-data" accept-charset="utf-8">
+                  <div class="profile_avatar image-upload">
+                    <div class="profile_avatar_holder">
+                      <label for="companyLogo">
+                        <img id="companyLogoPreview" src="uploads/placeholder/logo-placeholder2.jpg" />
+                      </label>
+                    </div>
+                    <input type="file" id="companyLogo" name="companyLogo" />
+                    <input type="text" id="companyLogoId" name="companyLogoId" />
+                    <div class="user_status status_online"></div>
+                    <div class="icon_change_photo" hidden>
+                      <ion-icon name="camera" class="text-xl"></ion-icon>
+                    </div>
+                  </div>
+                </form>
+                <div class="profile_info">
+                  <h1 id="displayBusinessNameH1" class="orbitron"> </h1>
+                  <p class="orbitron" style="text-align: center;" id="displayBusinessTagLineH1"> </p>
+                </div>
+              </div>
+              <div class="flex justify-between lg:border-t border-gray-100 flex-col-reverse lg:flex-row pt-2">
+                <nav class="responsive-nav pl-3">
+                  <ul uk-switcher="connect: #timeline-tab; animation: uk-animation-fade">
+                    <li class="active orbitron" id="liTabCompanyDetails"><a href="#" id="tabCompanyDetails">About</a></li>
+                    <li id="liTabMediaFilesx"><a href="#" class="orbitron" id="tabMediaFilesx">Brochure </a></li>
+                    <li id="liTabVideosx"><a href="#" class="orbitron" id="tabVideosx">Videos</a></li>
+                    <li><a href="#0" class="orbitron">Dashboard</a></li>
+                    <li id="liTabSettingsx"><a href="#0" class="orbitron" id="tabSettingsx">Settings</a></li>
+                  </ul>
+                </nav>
+
+                <!-- button actions -->
+                <!-- === button_action.ejs - START === -->
+                <%- include('../includes/profile/upgradeAsTraders.ejs') %>
+                  <!-- === button_action.ejs - END === -->
+              </div>
+            </div>
+            <!-- =============================  -->
+            <!-- BANNER LOGO AND NAV DIV - END  -->
+            <!-- =============================  -->
+
+            <form action="javascript:void(0);" method="POST" id="upgradeToTradersForm" name="upgradeToTradersForm"
+              enctype="multipart/form-data" accept-charset="utf-8">
+              <div class="lg:flex lg:space-x-10 mt-2.5">
+                <!-- ===============================  -->
+                <!-- Company Details Display - START  -->
+                <!-- ===============================  -->
+                <div class="lg:w-2/3 w-full mb-2">
+                  <div class="bg-white rounded-md lg:shadow-md shadow">
+                    <div class="border-b flex items-center justify-between p-4">
+                      <div>
+                        <h2 class="text-lg font-semibold">Company Details
+                          <a class="hover:border-gray-100" href="#">
+                            <span class="icon-feather-info" style="font-size: 16px; font-family: inherit"
+                              uk-tooltip="title: Company Details Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.; pos: right">
+                            </span>
+                          </a>
+                        </h2>
+                      </div>
+                      <!-- <div class="text-right">
+                        <button class="button blue-white-hover" type="button" id="btnCompanyDetailsEdit"
+                          style="display: none;">Edit</button>
+                      </div>
+                      <div class="text-right" id="btnForUpdateCompanyDetails">
+                        <button class="p-2 px-4 rounded bg-gray-50 text-red-500" id="btnCompanyDetailsCancelEdit"
+                          style="display: none;"> Cancel </button>
+                        <button class="p-2 px-4 rounded bg-gray-50 text-red-500" onclick="backProfile();"> Cancel
+                        </button>
+                        <button type="button" class="button bg-blue-700" id="btnUpgradeToTraders"> Upgrade as Traders </button>
+                      </div> -->
+                    </div>
+                    <div class="flex-1 space-y-4 p-6">
+                      <div>
+                        <label for="" class="orbitron">Company Name</label>
+                        <input type="text" placeholder="" class="shadow-none with-border" id="traderCompanyName"
+                          name="traderCompanyName">
+                        <p class="text-red-500" id="traderCompanyNameValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Company Tag Line</label>
+                        <input type="text" placeholder="" class="shadow-none with-border" id="tagline" name="tagline">
+                        <p class="text-red-500" id="taglineValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Business Website</label>
+                        <input type="text" placeholder="" class="shadow-none with-border" id="website" name="website">
+                        <p class="text-red-500" id="websiteValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Business Email Address</label>
+                        <input type="text" placeholder="" class="shadow-none with-border" id="businessEmailAddress"
+                          name="businessEmailAddress">
+                        <p class="text-red-500" id="businessEmailAddressValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Business Contact Number</label>
+                        <input type="text" placeholder="" class="shadow-none with-border" id="businessContactNumber"
+                          name="businessContactNumber">
+                        <p class="text-red-500" id="businessContactNumberValidation"></p>
+                      </div>
+                      <label for="" class="orbitron">Social Media / Messaging App</label>
+                      <div class="grid grid-cols-2 gap-3">
+                        <div>
+                          <select id="businessSocialMediaContactType" name="businessSocialMediaContactType"
+                            class="shadow-none selectpicker with-border ">
+                            <option value="1">Viber</option>
+                            <option value="2">Wechat</option>
+                            <option value="3">Whatsapp</option>
+                          </select>
+                          <p class="text-red-500" id="businessSocialMediaContactTypeValidation"></p>
+                        </div>
+                        <div>
+                          <input type="text" placeholder="Mobile Number" class="shadow-none with-border"
+                            id="businessSocialMediaContactNumber" name="businessSocialMediaContactNumber">
+                          <p class="text-red-500" id="businessSocialMediaContactNumberValidation"></p>
+                        </div>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Business Address</label>
+                        <input type="text" placeholder="" class="shadow-none with-border" id="businessAddress"
+                          name="businessAddress">
+                        <p class="text-red-500" id="businessAddressValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Business Country Location</label>
+                        <select id="editBusinessCountryLocation" name="editBusinessCountryLocation"
+                          class="shadow-none selectpicker with-border ">
+                        </select>
+                        <p class="text-red-500" id="editBusinessCountryLocationValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Business States Location</label>
+                        <select id="editBusinessStatesLocation" name="editBusinessStatesLocation"
+                          class="shadow-none selectpicker with-border ">
+                        </select>
+                        <p class="text-red-500" id="editBusinessStatesLocationValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Business City Location</label>
+                        <select id="editBusinessCityLocation" name="editBusinessCityLocation"
+                          class="shadow-none selectpicker with-border ">
+                        </select>
+                        <p class="text-red-500" id="editBusinessCityLocationValidation"></p>
+                      </div>
+                      <div class="grid grid-cols-2 gap-3">
+                        <div>
+                          <label for="" class="orbitron">Start of Operating Hour (Local)</label>
+                          <input type="time" class="shadow-none selectpicker with-border" placeholder=""
+                            id="startOperatingHour" name="startOperatingHour">
+                          <p class="text-red-500" id="startOperatingHourValidation"></p>
+                        </div>
+                        <div>
+                          <label for="" class="orbitron">End of Operating Hour (Local)</label>
+                          <input type="time" class="shadow-none selectpicker with-border" placeholder=""
+                            id="endOperatingHour" name="endOperatingHour">
+                          <p class="text-red-500" id="endOperatingHourValidation"></p>
+                        </div>
+                      </div>
+                      <label for="" class="orbitron">Languages of communication (Status Quo)</label>
+                      <select class="selectpicker" id="editLanguagesOfCommunication" name="editLanguagesOfCommunication"
+                        multiple>
+                      </select>
+                      <div class="col-span-2" style="display:none;">
+                        <label for="" class="mb-0 ml-2 text-gray-600 text-sm"> Languages of communication </label>
+                        <textarea type="text" rows="5" class="shadow-none with-border"
+                          id="currentLanguagesOfCommunication" name="currentLanguagesOfCommunication" placeholder=""
+                          class=""></textarea>
+                      </div>
+                      <!-- <div>
+                        <label for="">Trade Category</label>
+                        <select class="selectpicker" id="editTradeCategory" name="editTradeCategory">
+                        </select>
+                        <p class="text-red-500" id="editTradeCategoryValidation"></p>
+                      </div>
+                      <div>
+                        <label for="">Sub Category</label>
+                        <select class="selectpicker-custom" id="traderSubCategoryToggleField1"
+                          name="traderSubCategoryToggleField" disabled="disabled">
+                          <option></option>
+                          <option value="customOption">Other (Type a custom value)</option><input
+                            id="traderSubCategoryToggleField2" name="traderSubCategoryToggleField" style="display:none;"
+                            disabled="disabled">
+                        </select>
+                        <p class="text-red-500" id="traderSubCategoryValidation"></p>
+                      </div>
+                      <div>
+                        <label for="">Minor Sub Category (Optional)</label>
+                        <select id="traderMinorSubCategoryToggleField1" name="traderMinorSubCategoryToggleField">
+                          <option></option>
+                          <option value="customOption">Other (Type a custom value)</option><input
+                            id="traderMinorSubCategoryToggleField2" name="traderMinorSubCategoryToggleField"
+                            style="display:none;" disabled="disabled">
+                          <p class="text-red-500" id="traderMinorSubCategoryValidation"></p>
+                      </div> -->
+
+                      <div>
+                        <label for="" class="orbitron">Trade Category</label>
+                        <select class="selectpicker" id="editTradeCategory" name="editTradeCategory">
+                        </select>
+                        <p class="text-red-500" id="editTradeCategoryValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Sub Category</label>
+                        <select class="selectpicker-custom" id="traderSubCategoryToggleField1"
+                          name="traderSubCategoryToggleField" disabled="disabled">
+                          <option></option>
+                          <option value="customOption">Other (Type a custom value)</option><input
+                            id="traderSubCategoryToggleField2" name="traderSubCategoryToggleField" style="display:none;"
+                            disabled="disabled">
+                        </select>
+                        <p class="text-red-500" id="traderSubCategoryValidation"></p>
+                      </div>
+                      <!-- <div>
+                        <label for="">Minor Sub Category (Optional)</label>
+                        <select id="traderMinorSubCategoryToggleField1" name="traderMinorSubCategoryToggleField">
+                          <option></option>
+                          <option value="customOption">Other (Type a custom value)</option><input
+                            id="traderMinorSubCategoryToggleField2" name="traderMinorSubCategoryToggleField"
+                            style="display:none;" disabled="disabled">
+                          <p class="text-red-500" id="traderMinorSubCategoryValidation"></p>
+                      </div> -->
+                      <div>
+                        <label for="minorSubCategory" class="orbitron">Minor Sub Category (Optional)</label>
+                        <input list="minorSubCategories" name="minorSubCategory" id="minorSubCategory" autocomplete="off">
+                        <datalist id="minorSubCategories">
+                        </datalist>
+                      </div>
+                      <div style="display: none;">
+                        <label for="minorSubCategory" class="orbitron">Minor Sub Category Input</label>
+                        <input type="hidden" name="minorSubCategoryInput" id="minorSubCategoryInput" >
+                      </div>
+
+                      <div>
+                        <label for="" class="orbitron">Search Keywords (Maximum of 10)</label>
+                        <div class="keywords-container flow-root">
+                          <div class="keyword-input-container">
+                            <input type="text" class="keyword-input" placeholder="Add Keywords" id="inputAddKeyword"
+                              name="inputAddKeyword" />
+                            <button class="keyword-input-button ripple-effect" id="btnAddKeyword"><i
+                                class="icon-material-outline-add"></i></button>
+                          </div>
+                          <div class="keywords-list">
+                            <!-- keywords go here -->
+                          </div>
+                          <div class="clearfix"></div>
+                        </div>
+                        <p class="text-red-500" id="traderTagsValidation"></p>
+                      </div>
+                      <div class="col-span-2" style="display:none;">
+                        <label for="" class="mb-0 ml-2 text-gray-600 text-sm">Tag List</label>
+                        <textarea type="text" rows="5" class="shadow-none with-border" id="textAreaAddKeywords"
+                          name="textAreaAddKeywords" placeholder="" class=""></textarea>
+                      </div>
+                      <div class="col-span-2" style="display:none;">
+                        <label for="" class="mb-0 ml-2 text-gray-600 text-sm">Current Tag List</label>
+                        <textarea type="text" rows="5" class="shadow-none with-border" id="textAreaCurrentKeywords"
+                          name="textAreaCurrentKeywords" placeholder="" class=""></textarea>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">How do you rank your own company</label>
+                        <select id="editBusinessScale" name="editBusinessScale"
+                          class="shadow-none selectpicker with-border ">
+                        </select>
+                        <p class="text-red-500" id="editBusinessScaleValidation"></p>
+                      </div>
+                    </div>
+                    <!-- =============================  -->
+                    <!-- Company Details Display - END  -->
+                    <!-- =============================  -->
+                  </div>
+                </div>
+                <!-- ===============================  -->
+                <!-- Company Details Display - END  -->
+                <!-- ===============================  -->
+
+                <!-- ===============================  -->
+                <!-- Company Representative - START  -->
+                <!-- ===============================  -->
+                <div class="lg:w-1/3 w-full" id="">
+                  <!-- <div class="card mb-2" style="height: 1160px;"> -->
+                  <!-- <div class="card mb-2" id="companyRepresentativeDiv"> -->
+                  <div class="bg-white rounded-md lg:shadow-md shadow">
+                    <div class="border-b flex items-center justify-between p-4">
+                      <div>
+                        <h2 class="text-lg font-semibold">Representative
+                          <a class="hover:border-gray-100" href="#">
+                            <span class="icon-feather-info" style="font-size: 16px; font-family: inherit"
+                              uk-tooltip="title: Representative Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.; pos: right">
+                            </span>
+                          </a>
+                        </h2>
+                      </div>
+                      <div class="text-right">
+                      </div>
+                    </div>
+                    <div class="flex-1 space-y-4 p-6">
+                      <h4 class="text-base text-gray-500 font-medium mb-2 orbitron" id="displayReprestativeFullname"> </h4>
+                      <p class="orbitron" style="text-align: justify; text-justify: inter-word;" id="displayReprestativeEmailAddress">
+                      </p>
+                      <p class="orbitron" style="text-align: justify; text-justify: inter-word;" id="displayReprestativeContactNumber">
+                      </p>
+                      <p class="orbitron">
+                        <span id="displayReprestativeAddress"> </span>
+                        <span id="displayReprestativeAddressCity"> </span>
+                        <span id="displayReprestativeAddressStates"> </span>
+                        <span id="displayReprestativeAddressCountry"> </span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <!-- ===============================  -->
+                <!-- Company Representative - END  -->
+                <!-- ===============================  -->
+              </div>
+
+              <!-- ===============================  -->
+              <!-- Region of Operation - START  -->
+              <!-- ===============================  -->
+              <div class="lg:flex lg:space-x-10 mt-2.5">
+                <div class="lg:w-2/3 w-full mb-2">
+                  <!-- <div class="card mb-2" style="height: 600px;"> -->
+                  <div class="bg-white rounded-md lg:shadow-md shadow">
+                    <div class="border-b flex items-center justify-between p-4">
+                      <div>
+                        <h2 class="text-lg font-semibold">Global Region of Operation
+                          <a class="hover:border-gray-100" href="#">
+                            <span class="icon-feather-info" style="font-size: 16px; font-family: inherit"
+                              uk-tooltip="title: Global Region of Operation Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.; pos: right">
+                            </span>
+                          </a>
+                        </h2>
+                      </div>
+                      <div class="text-right">
+                      </div>
+                    </div>
+                    <div class="flex-1 space-y-4 p-6">
+                      <div class="space-y-3">
+    
+                        <div class="flex justify-between items-center">
+                          <div>
+                            <h4>I operate on a World Wide Level</h4>
+                            <!-- <p class="text-xs text-gray-400 mb-2">I do not operate on a Global Level.</p> -->
+                          </div>
+                          <div class="switches-list -mt-8 is-large">
+                            <div class="switch-container">
+                              <label class="switch">
+                                <input type="checkbox" id="iOperateOnAWorldWideLevelRadioButton"
+                                  name="iOperateOnAWorldWideLevelRadioButton">
+                                <span class="switch-button"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <hr>
+    
+                        <div id="editRegionOfOperationDiv">
+                          <label for="">Global Region of Operation</label>
+                          <!-- <span class="icon-feather-info" style="font-size: 16px; font-family: inherit"
+                              uk-tooltip="title: Leave this part if you dont cater in global regional level.; pos: right">
+                            </span> -->
+    
+    
+                          <div id="iOperateOnAGlobalRegionalLevelDiv">
+                            <div class="flex justify-between items-center">
+                              <div>
+                                <h4>I operate on a Global Regional Level</h4>
+                                <!-- <p class="text-xs text-gray-400 mb-2">I do not operate on a global regional level.</p> -->
+                              </div>
+                              <div class="switches-list -mt-8 is-large">
+                                <div class="switch-container">
+                                  <label class="switch">
+                                    <input type="checkbox" id="iOperateOnAGlobalRegionalLevelRadioButton"
+                                      name="iOperateOnAGlobalRegionalLevelRadioButton">
+                                    <span class="switch-button"></span>
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+    
+                          <label for=""></label>
+                          <div id="editRegionOfOperationInput">
+                            <select id="traderRegionOfOperation" name="traderRegionOfOperation"
+                              class="shadow-none selectpicker with-border" multiple>
+                            </select>
+                          </div>
+                          <div id="editRegionOfOperationPlaceholder" style="display: none;">
+                            <input type="text" placeholder="Not Applicable" class="shadow-none with-border" disabled>
+                          </div>
+                          <p class="text-red-500" id="traderRegionOfOperationValidation"></p>
+                        </div>
+                        <div id="countryOfOperationDiv">
+                          <label for="">Country of Operation</label>
+    
+                          <div class="" id="iOperateOnANationalLevelDiv">
+                            <div class="flex justify-between items-center">
+                              <div>
+                                <h4>I operate on a National Level</h4>
+                                <!-- <p class="text-xs text-gray-400 mb-2">I do not operate on a national level.</p> -->
+                              </div>
+                              <div class="switches-list -mt-8 is-large">
+                                <div class="switch-container">
+                                  <label class="switch">
+                                    <input type="checkbox" id="iOperateOnANationalLevelRadioButton"
+                                      name="iOperateOnANationalLevelRadioButton">
+                                    <span class="switch-button"></span>
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+    
+                          <label for=""></label>
+                          <div id="countryOfOperationInput">
+                            <select id="traderCountryOfOperation" name="traderCountryOfOperation"
+                              class="shadow-none selectpicker with-border " multiple>
+                            </select>
+                          </div>
+                          <div id="countryOfOperationPlaceholder" style="display: none;">
+                            <input type="text" placeholder="Not Applicable" class="shadow-none with-border" disabled>
+                          </div>
+                          <p class="text-red-500" id="traderCountryOfOperationValidation"></p>
+                        </div>
+    
+                        <div id="statesOfOperationDiv">
+                          <label for="">State / Province of Operation</label>
+    
+                          <div id="iOperateOnAProvincialLevelDiv">
+                            <div class="flex justify-between items-center">
+                              <div>
+                                <h4>I operate on a Provincial/State Level</h4>
+                                <!-- <p class="text-xs text-gray-400 mb-2">I do not operate on a provincial/state level.</p> -->
+                              </div>
+                              <div class="switches-list -mt-8 is-large">
+                                <div class="switch-container">
+                                  <label class="switch">
+                                    <input type="checkbox" id="iOperateOnAStateLevelRadioButton"
+                                      name="iOperateOnAStateLevelRadioButton" checked="checked">
+                                    <span class="switch-button"></span>
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+    
+                          <label for=""></label>
+                          <div id="countryOfOperationInput2" style="display: none;">
+                            <select id="traderCountryOfOperation2" name="traderCountryOfOperation2"
+                              class="shadow-none selectpicker with-border ">
+                            </select>
+                          </div>
+                          <label for=""></label>
+                          <div id="statesOfOperationInput">
+                            <select id="traderStatesOfOperation" name="traderStatesOfOperation"
+                              class="shadow-none selectpicker with-border ">
+                            </select>
+                          </div>
+                          <div id="statesOfOperationPlaceholder" style="display: none;">
+                            <input type="text" placeholder="Not Applicable" class="shadow-none with-border" disabled>
+                          </div>
+                          <p class="text-red-500" id="traderStatesOfOperationValidation"></p>
+                        </div>
+    
+                        <div id="cityOfOperationDiv">
+                          <label for="">City of Operation</label>
+                          <div id="cityOfOperationInput">
+                            <select id="traderCityOfOperation" name="traderCityOfOperation"
+                              class="shadow-none selectpicker with-border ">
+                            </select>
+                          </div>
+                          <div id="cityOfOperationPlaceholder" style="display: none;">
+                            <input type="text" placeholder="Not Applicable" class="shadow-none with-border" disabled>
+                          </div>
+                          <p class="text-red-500" id="cityOfOperationValidation"></p>
+                          <p class="text-red-500" id="traderCityOfOperationValidation"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="lg:w-1/3 w-full">
+    
+                </div>
+              </div>
+              <!-- ===============================  -->
+              <!-- Region of Operation - END  -->
+              <!-- ===============================  -->
+
+
+
+
+              <!-- ===============================  -->
+              <!-- Company Visibility - START  -->
+              <!-- ===============================  -->
+              <div class="lg:flex lg:space-x-10 mt-2.5">
+                <div class="lg:w-2/3 w-full mb-2" id="">
+                  <div class="card mb-2">
+                    <div class="border-b flex items-center justify-between p-4">
+                      <div>
+                        <h2 class="text-lg font-semibold">Visibility
+                          <a class="hover:border-gray-100" href="#">
+                            <span class="icon-feather-info" style="font-size: 16px; font-family: inherit"
+                              uk-tooltip="title: Visibility Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.; pos: right">
+                            </span>
+                          </a>
+                        </h2>
+                      </div>
+                      <div class="text-right">
+                      </div>
+                    </div>
+                    <div class="flex-1 space-y-4 p-6">
+                      <div class="space-y-3">
+                        <!-- <div class="flex justify-between items-center">
+                          <div>
+                            <h4>Visible to your own Global Region?</h4>
+                          </div>
+                          <div class="switches-list -mt-8 is-large">
+                            <div class="switch-container">
+                              <label class="switch">
+                                <input type="checkbox" id="traderVisibleToYourOwnGlobalRegion" name="traderVisibleToYourOwnGlobalRegion" checked>
+                                <span class="switch-button"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <hr> -->
+                        <!-- <div class="flex justify-between items-center">
+                          <div>
+                            <h4>Visible to your own Country?</h4>
+                          </div>
+                          <div class="switches-list -mt-8 is-large">
+                            <div class="switch-container">
+                              <label class="switch">
+                                <input type="checkbox" id="traderVisibleToYourOwnCountryOnly" name="traderVisibleToYourOwnCountryOnly" checked>
+                                <span class="switch-button"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <hr> -->
+                        <!-- <div class="flex justify-between items-center">
+                          <div>
+                            <h4>Visible to your own Province / State?</h4>
+                          </div>
+                          <div class="switches-list -mt-8 is-large">
+                            <div class="switch-container">
+                              <label class="switch">
+                                <input type="checkbox" id="traderVisibleToYourOwnStates" name="traderVisibleToYourOwnStates" checked>
+                                <span class="switch-button"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <hr> -->
+                        <!-- <div class="flex justify-between items-center">
+                          <div>
+                            <h4>Visible to your own City?</h4>
+                          </div>
+                          <div class="switches-list -mt-8 is-large">
+                            <div class="switch-container">
+                              <label class="switch">
+                                <input type="checkbox" id="traderVisibleToYourOwnCity" name="traderVisibleToYourOwnCity" checked>
+                                <span class="switch-button"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <hr> -->
+                        <div class="flex justify-between items-center">
+                          <div>
+                            <h4> Visible to Small Scale Business, B2C, Micro, Retailer. Searcher? </h4>
+                          </div>
+                          <div class="switches-list -mt-8 is-large">
+                            <div class="switch-container">
+                              <label class="switch">
+                                <input type="checkbox" id="traderVisibleToMicroSmallRetailers"
+                                  name="traderVisibleToMicroSmallRetailers" checked>
+                                <span class="switch-button"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <hr>
+                        <div class="flex justify-between items-center">
+                          <div>
+                            <h4> Visible to Medium Scale Business, B2B, Searcher?</h4>
+                          </div>
+                          <div class="switches-list -mt-8 is-large">
+                            <div class="switch-container">
+                              <label class="switch">
+                                <input type="checkbox" id="traderVisibleToBtbMediumLargeWholesaleHighEnd"
+                                  name="traderVisibleToBtbMediumLargeWholesaleHighEnd" checked>
+                                <span class="switch-button"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <hr>
+                        <div class="flex justify-between items-center">
+                          <div>
+                            <h4> Visible to Large Scale / High End Business Searcher?</h4>
+                          </div>
+                          <div class="switches-list -mt-8 is-large">
+                            <div class="switch-container">
+                              <label class="switch">
+                                <input type="checkbox" id="traderVisibleToLargeScaleAndHighEndBusiness"
+                                  name="traderVisibleToLargeScaleAndHighEndBusiness" checked>
+                                <span class="switch-button"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="lg:w-1/3 w-full" id="divCompanyRepresentative" style="display: block;">
+
+                </div>
+              </div>
+              <!-- ===============================  -->
+              <!-- Company Visibility - END  -->
+              <!-- ===============================  -->
+
+
+
+              <!-- ===============================  -->
+              <!-- Company Videos - START  -->
+              <!-- ===============================  -->
+              <div class="lg:flex lg:space-x-10 mt-2.5">
+                <div class="lg:w-2/3 w-full mb-2">
+                  <div class="card mb-2">
+                    <div class="border-b flex items-center justify-between p-4">
+                        <h2 class="text-lg font-semibold">Video
+                          <a class="hover:border-gray-100" href="#">
+                            <span class="icon-feather-info" style="font-size: 16px; font-family: inherit" uk-tooltip="title: Video Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.; pos: right">
+                            </span>
+                          </a>
+                        </h2>
+                      <div class="text-right">
+                        <button
+                            type="button"
+                            class="bg-blue-600 font-semibold p-2 rounded-md text-center text-white w-full"
+                            id="btnWantToUploadCompanyVideo"
+                        >
+                        Upload Company Video
+                        </button>
+                        <button
+                            type="button"
+                            class="bg-blue-600 font-semibold p-2 rounded-md text-center text-white w-full"
+                            id="btnCancelUploadCompanyVideo"
+                            style="display: none"
+                        >
+                        Upload Later
+                        </button>
+                        <input type="hidden" id="inputWantToUploadCompanyVideo" name="inputWantToUploadCompanyVideo" >
+                      </div>
+                    </div>
+                    <div class="flex-1 space-y-4 p-6" id="formWantToUploadCompanyVideo" style="display: none">
+                      <div class="space-y-3">
+                        <label> Video </label>
+                        <!-- <div class="relative uk-transition-toggle overflow-hidden">
+                          <div class="bg-gray-100 border-2 border-dashed flex flex-col h-40 items-center justify-center relative w-full rounded-lg dark:bg-gray-800 dark:border-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-12">
+                              <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z" />
+                              <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
+                            </svg>
+                          </div>
+                          <div class="w-full" uk-form-custom>
+                            <div class="uk-position-bottom uk-transition-bottom-small">
+                              <input type="file" id="videoInput" name="videoInput">
+                              <a href="#" class="flex font-medium h-9 items-center justify-center px-5 rounded-b-xl text-blue-600 text-white" id="videoName" style="margin-bottom: 25px;">
+                                Choose file</a>
+                            </div>
+                            <p class="text-red-500" id="traderVideoValidation"></p>
+                          </div>
+                        </div> -->
+                        <div>
+                          <label> Video Link </label>
+                          <input type="text" class="with-border" placeholder="" id="videoLink" name="videoLink">
+                          <p class="text-red-500" id="videoLinkValidation"></p>
+                        </div>
+    
+                        <label> Thumbnail </label>
+                        <div class="relative uk-transition-toggle overflow-hidden">
+                          <div class="bg-gray-100 border-2 border-dashed flex flex-col h-40 items-center justify-center relative w-full rounded-lg dark:bg-gray-800 dark:border-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-12">
+                              <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z" />
+                              <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
+                            </svg>
+                          </div>
+                          <div class="w-full" uk-form-custom>
+                            <div class="uk-position-bottom uk-transition-bottom-small">
+                              <input type="file" id="thumbnailInput" name="thumbnailInput">
+                              <a href="#" class="flex font-medium h-9 items-center justify-center px-5 rounded-b-xl text-blue-600 text-white" id="thumbnailName" style="margin-bottom: 25px;">
+                                Choose file</a>
+                            </div>
+                            <p class="text-red-500" id="traderVideoThumbnailValidation"></p>
+                          </div>
+                        </div>
+    
+                        <div class="font-semibold text-lg"> Details </div>
+                        <div>
+                          <label> Title </label>
+                          <input type="text" class="with-border" placeholder="" id="videoTitle" name="videoTitle">
+                          <p class="text-red-500" id="videoTitleValidation"></p>
+                        </div>
+                        <div>
+                          <label> Description </label>
+                          <textarea rows="3" class="with-border w-full p-4" placeholder="Video Description." id="videoDescription" name="videoDescription"></textarea>
+                          <p class="text-red-500" id="videoDescriptionValidation"></p>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- ===============================  -->
+                    <!-- Company Videos - END  -->
+                    <!-- ===============================  -->
+                  </div>
+                </div>
+                <div class="lg:w-1/3 w-full">
+    
+                </div>
+              </div>
+              <!-- ===============================  -->
+              <!-- Company Videos - END  -->
+              <!-- ===============================  -->
+
+              <!-- ===============================  -->
+              <!-- Brochure - START  -->
+              <!-- ===============================  -->
+              <div class="lg:flex lg:space-x-10 mt-2.5">
+                <div class="lg:w-2/3 w-full mb-2">
+                  <div class="card mb-2">
+                    <div class="border-b flex items-center justify-between p-4">
+                      <div>
+                        <h2 class="text-lg font-semibold">Brochure
+                          <a class="hover:border-gray-100" href="#">
+                            <span class="icon-feather-info" style="font-size: 16px; font-family: inherit" uk-tooltip="title: Brochure Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.; pos: right">
+                            </span>
+                          </a>
+                        </h2>
+                      </div>
+                      <div class="text-right">
+                        <button
+                            type="button"
+                            class="bg-blue-600 font-semibold p-2 rounded-md text-center text-white w-full"
+                            id="btnWantToUploadCompanyBrochure"
+                        >
+                        Upload Company Brochure
+                        </button>
+                        <button
+                            type="button"
+                            class="bg-blue-600 font-semibold p-2 rounded-md text-center text-white w-full"
+                            id="btnCancelUploadCompanyBrochure"
+                            style="display: none"
+                        >
+                        Upload Later
+                        </button>
+                        <input type="hidden" id="inputWantToUploadCompanyBrochure" name="inputWantToUploadCompanyBrochure" >
+                      </div>
+                    </div>
+                    <div class="flex-1 space-y-4 p-6" id="formWantToUploadCompanyBrochure" style="display: none">
+                      <div class="space-y-3">
+                        <label> Brochure </label>
+                        <div class="relative uk-transition-toggle overflow-hidden">
+                          <div class="bg-gray-100 border-2 border-dashed flex flex-col h-40 items-center justify-center relative w-full rounded-lg dark:bg-gray-800 dark:border-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-12">
+                              <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z" />
+                              <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
+                            </svg>
+                          </div>
+                          <div class="w-full" uk-form-custom>
+                            <div class="uk-position-bottom uk-transition-bottom-small">
+                              <input type="file" id="brochureInput" name="brochureInput">
+                              <a href="#" class="flex font-medium h-9 items-center justify-center px-5 rounded-b-xl text-blue-600 text-white" id="brochureName" style="margin-bottom: 25px;">
+                                Choose file</a>
+                            </div>
+                            <p class="text-red-500" id="traderBrochureValidation"></p>
+                          </div>
+                        </div>
+    
+                        <div>
+                          <label> Brochure Title </label>
+                          <input type="text" class="with-border" placeholder="" id="brochureTitle" name="brochureTitle">
+                          <p class="text-red-500" id="brochureTitleValidation"></p>
+                        </div>
+    
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="lg:w-1/3 w-full">
+    
+                </div>
+              </div>
+              <!-- ===============================  -->
+              <!-- Brochure - END  -->
+              <!-- ===============================  -->
+
+
+
+              <!-- ===============================  -->
+              <!-- Webinars - START  -->
+              <!-- ===============================  -->
+              <div class="lg:flex lg:space-x-10 mt-2.5">
+                <div class="lg:w-2/3 w-full mb-2">
+                  <div class="card mb-2">
+                    <div class="border-b flex items-center justify-between p-4">
+                      <div>
+                        <h2 class="text-lg font-semibold">Webinars
+                          <a class="hover:border-gray-100" href="#">
+                            <span class="icon-feather-info" style="font-size: 16px; font-family: inherit" uk-tooltip="title: Webinars Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.; pos: right">
+                            </span>
+                          </a>
+                        </h2>
+                      </div>
+                      <div class="text-right">
+                        <button
+                            type="button"
+                            class="bg-blue-600 font-semibold p-2 rounded-md text-center text-white w-full"
+                            id="btnWantToUploadCompanyWebinar"
+                        >
+                        Upload Company Webinar Details
+                        </button>
+                        <button
+                            type="button"
+                            class="bg-blue-600 font-semibold p-2 rounded-md text-center text-white w-full"
+                            id="btnCancelUploadCompanyWebinar"
+                            style="display: none"
+                        >
+                        Upload Later
+                        </button>
+                        <input type="hidden" id="inputWantToUploadCompanyWebinar" name="inputWantToUploadCompanyWebinar" >
+                      </div>
+                    </div>
+                    <div class="flex-1 space-y-4 p-6" id="formWantToUploadCompanyWebinar" style="display: none">
+                      <div class="space-y-3">
+                        <label> Webinars Thumbnail </label>
+                        <div class="relative uk-transition-toggle overflow-hidden">
+                          <div class="bg-gray-100 border-2 border-dashed flex flex-col h-40 items-center justify-center relative w-full rounded-lg dark:bg-gray-800 dark:border-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-12">
+                              <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z" />
+                              <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
+                            </svg>
+                          </div>
+                          <div class="w-full" uk-form-custom>
+                            <div class="uk-position-bottom uk-transition-bottom-small">
+                              <input type="file" id="webinarsThumbnailInput" name="webinarsThumbnailInput">
+                              <a href="#" class="flex font-medium h-9 items-center justify-center px-5 rounded-b-xl text-blue-600 text-white" id="webinarsThumbnailName" style="margin-bottom: 25px;">
+                                Choose file</a>
+                            </div>
+                            <p class="text-red-500" id="traderWebinarThumbnailValidation"></p>
+                          </div>
+                        </div>
+                        <div class="font-semibold text-lg"> </div>
+                        <div>
+                          <label> Title </label>
+                          <input type="text" class="with-border" placeholder="" id="webinarsTitle" name="webinarsTitle">
+                          <p class="text-red-500" id="webinarsTitleValidation"></p>
+                        </div>
+                        <div>
+                          <label> Description </label>
+                          <textarea rows="3" class="with-border w-full p-4" placeholder="" id="webinarsDescription" name="webinarsDescription"></textarea>
+                          <p class="text-red-500" id="webinarsDescriptionValidation"></p>
+                        </div>
+                        <div>
+                          <label> Link </label>
+                          <input type="text" class="with-border" placeholder="" id="webinarsLink" name="webinarsLink">
+                          <p class="text-red-500" id="webinarsLinkValidation"></p>
+                        </div>
+                        <div>
+                          <label> Schedule of Webinars </label>
+                          <input type="date" class="with-border" placeholder="" id="webinarsSchedule" name="webinarsSchedule">
+                          <p class="text-red-500" id="webinarsScheduleValidation"></p>
+                        </div>
+                        <input type="text" class="shadow-none with-border" id="link_1" name="link_1" style="display: none;" readonly>
+                        <input type="text" class="shadow-none with-border" id="link_2" name="link_2" style="display: none;" readonly>
+                      </div>
+                    </div>
+                  
+                  </div>
+                </div>
+                <div class="lg:w-1/3 w-full">
+    
+                </div>
+              </div>
+              <!-- ===============================  -->
+              <!-- Webinars - END  -->
+              <!-- ===============================  -->
+
+
+            </form>
+          </div>
+        </div>
+
+
+    </div>
+    <%- include('../includes/scripts/index.ejs') %>
+      <script  src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js"></script>
+      <script  src="assets/js/upgrade-to-traders-countries.js"></script>
+      <script  src="assets/js/upgrade-to-traders-dropdowns.js"></script>
+      <script  src="assets/js/getCategoryOptions.js"></script>
+      <script  src="assets/js/upgrade-to-traders.js"></script>
+      <script  src="assets/js/upgrade-to-traders-validation.js"></script>
+      <script  src="assets/js/traders-registration-upload-media-toogle.js"></script>
+      <script  src="assets/js/global-countries.js"></script>
+      <script  src="assets/js/upgrade-to-traders-upload-medias.js"></script>
+      <script  src="assets/js/upgrade-to-traders-operation-toogle.js"></script>
+      
+      <!-- <script src="assets/js/traders-registration-upload-medias.js"></script> -->
+      
+
+      <script >
+        // ----------------------------------------------------
+        // for profile_dropdown [START]
+        // ----------------------------------------------------
+        let sessionUuid =  `<%= data.uuid %>`;
+        let sessionType =  `<%= data.type %>`;
+        let sessionFirstName =  `<%= data.first_name %>`;
+        let sessionLastName =  `<%= data.last_name %>`;
+        let sessionEmail =  `<%= data.email %>`;
+        
+        sessionFirstName ? document.getElementById('user-name').innerHTML = sessionFirstName + ' ' + sessionLastName : '';
+        if (sessionType == 1) {
+            $('#upgrade-account').prop('disabled', true);
+            document.getElementById('upgrade-account').style.display = 'none';
+            document.getElementById('user-type').innerHTML = 'Trader';
+        }
+        if (sessionType == 2) {
+            $('#upgrade-account').prop('disabled', false);
+            document.getElementById('upgrade-account').style.display = 'block';
+            document.getElementById('user-type').innerHTML = 'Large Scale';
+        }
+        if (sessionType == 3) {
+            $('#upgrade-account').prop('disabled', false);
+            document.getElementById('upgrade-account').style.display = 'block';
+            document.getElementById('user-type').innerHTML = 'Medium Scale';
+        }
+        if (sessionType == 4) {
+            document.getElementById('user-type').innerHTML = 'Small Scale';
+        }
+
+        // ----------------------------------------------------
+        // for profile_dropdown [END]
+        // ----------------------------------------------------
+      </script>
+  </body>
+
+  </html>

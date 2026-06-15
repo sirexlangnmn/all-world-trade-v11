@@ -1,0 +1,377 @@
+<%- include('../includes/head/index.ejs') %>
+
+  <body>
+
+     <!-- Navbar goes here -->
+     <%- include('../includes/nav/primary-navigation.ejs') %>
+
+    <div id="wrapper" class="is-collapse is-active">
+      <!-- === HEADER - START === -->
+   
+      <!-- === HEADER - END === -->
+
+        <!-- Main Contents -->
+        <div class="main_content">
+          <div class="mcontainer">
+            <!-- ===============================  -->
+            <!-- BANNER LOGO AND NAV DIV - START  -->
+            <!-- ===============================  -->
+            <!-- Profile cover -->
+            <div class="profile user-profile">
+              <div class="profiles_banner image-upload">
+                <form action="javascript:void(0);" method="POST" id="editcompanyBanner"
+                  name="editcompanyBanner" enctype="multipart/form-data" accept-charset="utf-8">
+                  <label for="companyBanner">
+                    <img id="companyBannerPreview" src="uploads/placeholder/banner-placeholder2.jpg" />
+                  </label>
+                  <input type="file" id="companyBanner" name="companyBanner" />
+                  <input type="text" id="companyBannerId" name="companyBannerId" />
+                </form>
+              </div>
+              <div class="profiles_content">
+                <form action="javascript:void(0);" method="POST" id="editcompanyLogo" name="editcompanyLogo"
+                  enctype="multipart/form-data" accept-charset="utf-8">
+                  <div class="profile_avatar image-upload">
+                    <div class="profile_avatar_holder">
+                      <label for="companyLogo">
+                        <img id="companyLogoPreview" src="uploads/placeholder/logo-placeholder2.jpg" />
+                      </label>
+                    </div>
+                    <input type="file" id="companyLogo" name="companyLogo" />
+                    <input type="text" id="companyLogoId" name="companyLogoId" />
+                    <div class="user_status status_online"></div>
+                    <div class="icon_change_photo" hidden>
+                      <ion-icon name="camera" class="text-xl"></ion-icon>
+                    </div>
+                  </div>
+                </form>
+                <div class="profile_info">
+                  <h1 id="displayBusinessNameH1" class="orbitron"> </h1>
+                  <p class="orbitron" style="text-align: center;" id="displayBusinessTagLineH1"> </p>
+                  <h1 id="userType" class="orbitron" style="text-align: center;"></h1>
+                </div>
+              </div>
+
+              <div class="flex justify-between lg:border-t border-gray-100 flex-col-reverse lg:flex-row pt-2">
+                <nav class="responsive-nav pl-3">
+                  <ul uk-switcher="connect: #timeline-tab; animation: uk-animation-fade">
+                    <li class="active orbitron" id="liTabCompanyDetails"><a href="#" id="tabCompanyDetails">About</a></li>
+                    <!-- <li id="liTabMediaFiles"><a href="#" id="tabMediaFiles">Brochure </a></li>
+                    <li id="liTabVideos"><a href="#" id="tabVideos">Videos</a></li>
+                    <li><a href="#0">Dashboard</a></li>
+                    <li id="liTabSettings"><a href="#0" id="tabSettings">Settings</a></li> -->
+                  </ul>
+                </nav>
+
+                <!-- button actions -->
+                <!-- === button_action.ejs - START === -->
+                <%- include('../includes/profile/button_action.ejs') %>
+                <!-- === button_action.ejs - END === -->
+              </div>
+            </div>
+            <!-- =============================  -->
+            <!-- BANNER LOGO AND NAV DIV - END  -->
+            <!-- =============================  -->
+            <form action="javascript:void(0);" method="POST" id="editLargeScaleForm" name="editLargeScaleForm"
+              enctype="multipart/form-data" accept-charset="utf-8">
+              <div class="lg:flex lg:space-x-10 mt-2.5">
+                <!-- ===============================  -->
+                <!-- Company Details Display - START  -->
+                <!-- ===============================  -->
+                <div class="lg:w-2/4 w-full mb-2">
+                  <div class="bg-white rounded-md lg:shadow-md shadow">
+                    <div class="border-b flex items-center justify-between p-4">
+                      <div>
+                        <h2 class="text-lg font-semibold">Company Details
+                          <a class="hover:border-gray-100" href="#">
+                            <span class="icon-feather-info" style="font-size: 16px; font-family: inherit"
+                              uk-tooltip="title: Company Details Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.; pos: right">
+                            </span>
+                          </a>
+                        </h2>
+                      </div>
+                      <div class="text-right">
+                      </div>
+                    </div>
+                    <div class="flex-1 space-y-4 p-6">
+                      <div>
+                        <label for="" class="orbitron">Company Name</label>
+                        <input type="text" placeholder="" class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600" id="companyName"
+                          name="companyName">
+                        <p class="text-red-500" id="companyNameValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Company Tag Line</label>
+                        <input type="text" placeholder="" class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600" id="tagline" name="tagline">
+                        <p class="text-red-500" id="taglineValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Business Website</label>
+                        <input type="text" placeholder="" class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600" id="website" name="website">
+                        <p class="text-red-500" id="websiteValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Business Email Address</label>
+                        <input type="text" placeholder="" class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600" id="businessEmailAddress"
+                          name="businessEmailAddress">
+                        <p class="text-red-500" id="businessEmailAddressValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Business Contact Number</label>
+                        <input type="text" placeholder="" class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600" id="businessContactNumber" name="businessContactNumber"
+                          oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                        <p class="text-red-500" id="businessContactNumberValidation"></p>
+                      </div>
+                      <label for="" class="orbitron"> Social Media / Messaging App </label>
+                      <div>
+                        <select id="businessSocialMediaContactType" name="businessSocialMediaContactType" class="shadow-none selectpicker with-border ">
+                        </select>
+                      </div>
+                      <label for="" class="orbitron"> Social Media / Messaging App Contact Number</label>
+                      <div>
+                        <input type="text" placeholder="Mobile Number" class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600" id="businessSocialMediaContactNumber" name="businessSocialMediaContactNumber"
+                          oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" >
+                        <p class="text-red-500" id="businessSocialMediaContactNumberValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Business Address</label>
+                        <input type="text" placeholder="" class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600" id="businessAddress"
+                          name="businessAddress">
+                        <p class="text-red-500" id="businessAddressValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Business Country Location</label>
+                        <select id="businessCountryLocation" name="businessCountryLocation"
+                          class="shadow-none selectpicker with-border ">
+                        </select>
+                        <p class="text-red-500" id="businessCountryLocationValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Business States Location</label>
+                        <select id="businessStatesLocation" name="businessStatesLocation"
+                          class="shadow-none selectpicker with-border ">
+                        </select>
+                        <p class="text-red-500" id="businessStatesLocationValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Business City Location</label>
+                        <select id="businessCityLocation" name="businessCityLocation"
+                          class="shadow-none selectpicker with-border ">
+                        </select>
+                        <p class="text-red-500" id="businessCityLocationValidation"></p>
+                      </div>
+                      
+                      <label for="" class="orbitron">Languages of communication (Status Quo)</label>
+                      <select class="selectpicker" id="editLanguagesOfCommunication" name="editLanguagesOfCommunication"
+                        multiple>
+                      </select>
+                      <div class="col-span-2" style="display:none;">
+                        <label for="" class="mb-0 ml-2 text-gray-600 text-sm"> Languages of communication </label>
+                        <textarea type="text" rows="5" class="shadow-none with-border"
+                          id="currentLanguagesOfCommunication" name="currentLanguagesOfCommunication" placeholder=""
+                          class=""></textarea>
+                      </div>
+
+                      <div>
+                        <label for="" class="orbitron">Trade Category</label>
+                        <select class="selectpicker" id="editTradeCategory" name="editTradeCategory">
+                        </select>
+                        <p class="text-red-500" id="editTradeCategoryValidation"></p>
+                      </div>
+
+                      <!-- <div>
+                        <label for="" class="orbitron">Sub Category</label>
+                        <select class="selectpicker-custom" id="traderSubCategoryToggleField1"
+                          name="traderSubCategoryToggleField" disabled="disabled">
+                          <option></option>
+                          <option value="customOption">Other (Type a custom value)</option><input
+                            id="traderSubCategoryToggleField2" name="traderSubCategoryToggleField" style="display:none;"
+                            disabled="disabled">
+                        </select>
+                        <p class="text-red-500" id="traderSubCategoryValidation"></p>
+                      </div>
+                      <div>
+                        <label for="minorSubCategory" class="orbitron">Minor Sub Category (Optional)</label>
+                        <input list="minorSubCategories" name="minorSubCategory" id="minorSubCategory" autocomplete="off">
+                        <datalist id="minorSubCategories">
+                        </datalist>
+                      </div>
+                      <div style="display: none;">
+                        <label for="minorSubCategory">Minor Sub Category Input</label>
+                        <input type="hidden" name="minorSubCategoryInput" id="minorSubCategoryInput" >
+                      </div> -->
+        
+                      <!-- trial start  -->
+											<div>
+												<label for="" class="orbitron">Sub Category</label>
+												<select class="selectpicker" id="sub-category-select"
+													name="subCategorySelect"></select>
+												<input type="text" id="sub-category-manual" name="subCategoryManual"
+													style="display: none;">
+												<p class="text-red-500" id="Validation"></p>
+											</div>
+
+											<div>
+												<label for="" class="orbitron">Minor Sub Category</label>
+												<select class="selectpicker" id="minor-sub-category-select"
+													name="minorSubCategorySelect"></select>
+												<input type="text" id="minor-sub-category-manual"
+													name="minorSubCategoryManual" style="display: none;">
+												<p class="text-red-500" id="Validation"></p>
+											</div>
+											<!-- trial end  -->
+
+                    </div>
+                    <!-- =============================  -->
+                    <!-- Company Details Display - END  -->
+                    <!-- =============================  -->
+                  </div>
+                </div>
+                <!-- ===============================  -->
+                <!-- Company Details Display - END  -->
+                <!-- ===============================  -->
+
+                <!-- ===============================  -->
+                <!-- Company Representative - START  -->
+                <!-- ===============================  -->
+                <div class="lg:w-2/4 w-full" id="">
+                  <!-- <div class="card mb-2" style="height: 1160px;"> -->
+                  <!-- <div class="card mb-2" id="companyRepresentativeDiv"> -->
+                  <div class="bg-white rounded-md lg:shadow-md shadow">
+                    <div class="border-b flex items-center justify-between p-4">
+                      <div>
+                        <h2 class="text-lg font-semibold">Representative
+                          <a class="hover:border-gray-100" href="#">
+                            <span class="icon-feather-info" style="font-size: 16px; font-family: inherit"
+                              uk-tooltip="title: Representative Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.; pos: right">
+                            </span>
+                          </a>
+                        </h2>
+                      </div>
+                      <div class="text-right">
+                        <button class="p-2 px-4 rounded bg-gray-50 text-red-500 orbitron" onclick="backProfile();"> Cancel
+                        </button>
+                        <button type="button" class="button bg-blue-700 orbitron" id="btnUpdateLargeScale"> Save </button>
+                      </div>
+                    </div>
+                    <div class="flex-1 space-y-4 p-6">
+                      <div>
+                        <label for="" class="orbitron"> First Name </label>
+                        <input type="text" placeholder="" class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600" id="firstName" name="firstName">
+                        <p class="text-red-500" id="firstNameValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron"> Last Name </label>
+                        <input type="text" placeholder="" class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600" id="lastName" name="lastName">
+                        <p class="text-red-500" id="lastNameValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron"> Middle Name </label>
+                        <input type="text" placeholder="" class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600" id="middleName" name="middleName">
+                        <p class="text-red-500" id="middleNameValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron">Country of Residence: </label>
+                        <select id="country" name="country" class="shadow-none selectpicker with-border ">
+                        </select>
+                        <p class="text-red-500" id="countryValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron"> States of Residence: </label>
+                        <select id="states" name="states" class="shadow-none selectpicker with-border ">
+                        </select>
+                        <p class="text-red-500" id="statesValidation"></p>
+                      </div>
+                      <div>
+                        <label for="" class="orbitron"> City of Residence: </label>
+                        <select id="city" name="city" class="shadow-none selectpicker with-border ">
+                        </select>
+                        <p class="text-red-500" id="cityValidation"></p>
+                      </div>
+                      <label for="" class="orbitron"> Social Media / Messaging App (Optional) </label>
+                      <div>
+                        <select id="personalSocialMediaContactType" name="personalSocialMediaContactType" class="shadow-none selectpicker with-border ">
+                        </select>
+                      </div>
+                      <label for="" class="orbitron"> Mobile Number (Optional)</label>
+                      <div>
+                        <input type="text" placeholder="Mobile Number" class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600" id="personalSocialMediaContactNumber" name="personalSocialMediaContactNumber"
+                        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" >
+                        <p class="text-red-500" id="personalSocialMediaContactNumberValidation"></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- ===============================  -->
+                <!-- Company Representative - END  -->
+                <!-- ===============================  -->
+              </div>
+
+
+
+
+            </form>
+          </div>
+        </div>
+
+
+    </div>
+    <%- include('../includes/scripts/index.ejs') %>
+      <script  src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js"></script>
+      <script  src="assets/js/edit-large-scale-profile.js"></script>
+      <script  src="assets/js/large-scale-medias.js"></script>
+      <script  src="assets/js/getBusinessCountryLocationToBeEditAndOptions.js"></script>
+      <script  src="assets/js/getBusinessStatesLocationToBeEditAndOptions.js"></script>
+      <script  src="assets/js/getBusinessCityLocationToBeEditAndOptions.js"></script>
+      <!-- old js for categories -->
+      <!-- <script  src="assets/js/getCategoryOptions.js"></script> -->
+      <!-- new js for categories -->
+      <script src="assets/js/categories-dropdown.js"></script>
+      
+      <!--
+      <script src="assets/js/getStatesNameToBeDisplayUsingCode.js"></script>
+      <script src="assets/js/getCityNameToBeDisplayUsingCode.js"></script>
+      -->
+      
+
+      <script >
+        // ----------------------------------------------------
+        // for profile_dropdown [START]
+        // ----------------------------------------------------
+        // let sessionUuid =  `<%= data.uuid %>`;
+        let sessionType =  `<%= data.type %>`;
+        let sessionFirstName =  `<%= data.first_name %>`;
+        let sessionLastName =  `<%= data.last_name %>`;
+        let sessionEmail =  `<%= data.email %>`;
+        
+        sessionFirstName ? document.getElementById('user-name').innerHTML = sessionFirstName + ' ' + sessionLastName : '';
+        if (sessionType == 1) {
+            $('#upgrade-account').prop('disabled', true);
+            document.getElementById('upgrade-account').style.display = 'none';
+            document.getElementById('user-type').innerHTML = 'Trader';
+            document.getElementById('userType').innerHTML = 'Trader';
+        }
+        if (sessionType == 2) {
+            $('#upgrade-account').prop('disabled', false);
+            document.getElementById('upgrade-account').style.display = 'block';
+            document.getElementById('user-type').innerHTML = 'Large Scale';
+            document.getElementById('userType').innerHTML = 'Large Scale';
+        }
+        if (sessionType == 3) {
+            $('#upgrade-account').prop('disabled', false);
+            document.getElementById('upgrade-account').style.display = 'block';
+            document.getElementById('user-type').innerHTML = 'Medium Scale';
+            document.getElementById('userType').innerHTML = 'Medium Scale';
+        }
+        if (sessionType == 4) {
+            document.getElementById('user-type').innerHTML = 'Small Scale';
+            document.getElementById('userType').innerHTML = 'Small Scale';
+        }
+
+        // ----------------------------------------------------
+        // for profile_dropdown [END]
+        // ----------------------------------------------------
+      </script>
+  </body>
+
+  </html>

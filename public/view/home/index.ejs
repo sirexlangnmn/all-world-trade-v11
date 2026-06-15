@@ -1,0 +1,471 @@
+<%- include('../includes/head/index.ejs') %>
+<!-- <script>
+    const ip = window.location.host;
+    const url = 'https://get.geojs.io/v1/ip/geo.json';
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const location = `${data.city}, ${data.region}, ${data.country}`;
+            console.log(`IP address: ${ip}`);
+            console.log(`Location: ${location}`);
+        });
+</script> -->
+
+<style>
+    .ml-15px {
+    margin-left: 15px;
+    }
+    .ml-15px-color-yellow {
+    margin-left: 15px;
+    color: yellow;
+    }
+</style>
+<body>
+    <!-- Navbar goes here -->
+    <%- include('../includes/nav/primary-navigation.ejs') %>
+    <div id="wrapper" class="mt-10 is-collapse is-active">
+        <!-- === HEADER - START === -->
+        <!-- === HEADER - END === -->
+        <div class="main_content_custom">
+            <!-- === HERO IMAGE - START === -->
+            <!-- solution 1 -->
+            <!-- <div class="homepage-background">
+                <img src="../../uploads/landing/all-world-trade-home-page.webp" alt="Home Page Image | All World Trade" class="responsive">
+            </div> -->
+
+            
+            <!-- solution 2 -->
+            <!-- <div class="homepage-background">
+                <img
+                    srcset="../../uploads/landing/landing1-delete.webp 480w,
+                            ../../uploads/landing/landing2-delete.webp 800w,
+                            ../../uploads/landing/landing3-delete.webp 1200w"
+                    sizes="(max-width: 480px) 100vw, (max-width: 800px) 50vw, 25vw"
+                    src="../../uploads/landing/all-world-trade-home-page.webp"
+                    alt="Home Page Image | All World Trade"
+                    class="responsive"
+                    loading="lazy"
+                >
+            </div> -->
+
+            <!-- solution 3 NOt working -->
+            <!-- <div class="homepage-background">
+            <img
+                srcset="../../uploads/landing/landing1-delete.webp 320w,
+                        ../../uploads/landing/landing2-delete.webp 480w,
+                        ../../uploads/landing/landing3-delete.webp 800w,
+                        ../../uploads/landing/landing1-delete.webp 1200w,
+                        ../../uploads/landing/landing2-delete.webp 1600w,
+                        ../../uploads/landing/landing3-delete.webp 2000w"
+                sizes="(max-width: 320px) 280px,
+                        (max-width: 480px) 440px,
+                        (max-width: 800px) 760px,
+                        (max-width: 1200px) 1160px,
+                        (max-width: 1600px) 1560px,
+                        1960px"
+                src="../../uploads/landing/landing1-delete1.webp"
+                alt="Home Page Image | All World Trade"
+                class="responsive"
+                loading="lazy"
+            >
+            </div> -->
+
+            <!-- solution 4 -->
+            <!-- <div class="homepage-background">
+                <picture>
+                    <source
+                        srcset="../../uploads/landing/all-world-trade-home-page-480-2.webp 480w,
+                                ../../uploads/landing/all-world-trade-home-page-800-2.webp 800w,
+                                ../../uploads/landing/all-world-trade-home-page-1200-2.webp 1200w"
+                        sizes="(max-width: 480px) 100vw, (max-width: 800px) 50vw, 25vw"
+                        type="image/webp"
+                    >
+
+                    <img
+                        src="../../uploads/landing/all-world-trade-home-page-480-2.webp"
+                        alt="Home Page Image | All World Trade"
+                        class="responsive"
+                        loading="lazy"
+                    >
+                </picture>
+            </div> -->
+
+            <!-- solution 5 -->
+            <div class="homepage-background">
+                <img src="../../uploads/landing/AWT-Landing-Page-2026-January-26.webp" alt="Image" class="object-cover object-center w-full h-auto">
+
+                <!-- <img src="../../uploads/landing/AWT-Landing-Page-2026-January-26" alt="Image" class="object-cover object-center w-full h-auto"> -->
+
+
+                <!-- <picture>
+                    <source
+                        srcset="../../uploads/landing/AWT-Landing-Page-13-jan-2024-480-x-227.webp 480w,
+                                ../../uploads/landing/AWT-Landing-Page-13-jan-2024-800-x-378.webp 800w,
+                                ../../uploads/landing/AWT-Landing-Page-13-jan-2024-1200-x-567.webp 1200w"
+                        sizes="(max-width: 480px) 100vw, (max-width: 800px) 50vw, 25vw"
+                        type="image/webp"
+                    >
+
+                    <img
+                        src="../../uploads/landing/AWT-Landing-Page-13-jan-2024-1200-x-567.webp"
+                        alt="Home Page Image | All World Trade"
+                        class="responsive"
+                        loading="lazy"
+                    >
+                </picture> -->
+            </div>
+
+
+            <!-- === HERO IMAGE - END === -->
+            <!-- === TRADERS COUNT - START === -->
+             <div> <!--style="display: none" -->
+                <div class="pt-20 mt-20 mb-20 mcontainer-custom-4" style="display: block">
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
+                        <div class="flex p-4 mb-4 text-sm text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
+                            role="alert">
+                            <svg aria-hidden="true" class="inline w-5 h-5 mt-1 mr-3"
+                                fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="sr-only">Info</span>
+                            <div style="display: block">
+                                <span class="text-2xl font-semibold" id="numberOfTraderMembers">Exhibitor Members:
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex p-4 mb-4 text-sm text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
+                            role="alert">
+                            <svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mt-1 mr-3"
+                                fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="sr-only">Info</span>
+                            <div style="display: block">
+                                <span class="text-2xl font-semibold" id="numberOfVisitorMembers">
+                                    Visitor Members:
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- === TRADERS COUNT - END === -->
+
+
+
+            <!-- === 2 BOX - START === -->
+            <!-- <div class="pt-10" id="selections" >
+                <div class="mt-20 mb-20 mcontainer-custom-4" style="display: block">
+                    <div class="relative flex justify-between mb-3 md:mb-4">
+                        <div class="flex-1">
+                            <h2 class="text-2xl font-semibold">Upcoming Events</h2>
+                            <nav class="my-4 border-b"></nav>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
+                        <div class="flex p-4 mb-4 card"
+                            role="alert"  onclick="goToWizardJobFair()">
+                            <img src="../../uploads/wizard/wizard.jpg" alt="Image" >
+                        </div>
+                        <div class="flex p-4 mb-2 card"
+                            role="alert" onclick="goToSelectionPage()">
+                                <img src="../../uploads/landing/all-world-trade-landing-page-15-june-2024.jpg" alt="Image" >
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <!-- === 2 BOX - END === -->
+
+
+            <!-- === EVENTS - START === -->
+            <!-- <section style="display: block" class="pb-20 mb-20 bg-gray-100 dark:bg-gray-800" id="eventCalendar">
+                <div class="pt-20">
+                    <h2
+                        class="pt-10 mt-20 mb-20 text-3xl font-extrabold leading-tight tracking-tight text-center text-gray-900 lg:mb-16 dark:text-white md:text-4xl orbitron">
+                        All About Events
+                    </h2>
+                </div>
+                <div class="mcontainer-custom-4">
+                    <div class="relative flex justify-between mb-3 md:mb-4">
+                        <div class="flex-1">
+                            <h2 class="text-2xl font-semibold">Events Suppliers</h2>
+                            <nav class="my-6 border-b"></nav>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-4" id="signageCardContainer">
+                    </div>
+                </div>
+            </section> -->
+            <!-- === EVENTS - END === -->
+
+
+
+            <!-- === TRADERS VIDEO - START === -->
+            <div class="" id="tradersVideos">
+                <div class="pt-10 mcontainer-custom-4">
+                    <div class="relative flex justify-between mb-3 md:mb-4">
+                        <div class="flex-1">
+                            <h2 class="text-2xl font-semibold">Traders Videos</h2>
+                            <nav class="my-4 border-b"></nav>
+                        </div>
+                    </div>
+                    <!-- === TRADERS VIDEO SLIDES - START === -->
+                    <div class="relative" uk-slider="finite: true">
+                        <div class="px-1 py-3 uk-slider-container">
+                            <ul class="
+                                uk-child-width-1-4@m uk-child-width-1-3@s uk-child-width-1-2 uk-grid-small uk-grid
+                                mr-2
+                                " id="tradersVideoContainer" >
+
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- === TRADERS VIDEO SLIDES - END === -->
+                </div>
+            </div>
+            <!-- === TRADERS VIDEO - END === -->
+            <!-- === EXHIBITOR - START === -->
+            <div class="pt-10 bg-gray-100 dark:bg-gray-800" id="exhibitor">
+                <div class="pt-10 mcontainer-custom-4">
+                    <div class="relative flex justify-between mb-3 md:mb-4">
+                        <div class="flex-1">
+                            <h2 class="text-2xl font-semibold">Exhibitor Members</h2>
+                            <nav class="my-4 border-b"></nav>
+                        </div>
+                    </div>
+                    <div class="relative" uk-slider="finite: true">
+                        <div class="px-1 py-3 uk-slider-container" id="exhibitors">
+                            <ul class="
+                                uk-child-width-1-4@m uk-child-width-1-3@s uk-child-width-1-2 uk-grid-small uk-grid
+                                mr-2"
+                                id="exhibitorList"
+                            >
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- === LAST EXHIBITOR PARTICIPANTS - START === -->
+            <!-- <div class="pt-60" id="exhibitor">
+                <div class="mcontainer-custom-4">
+                    <div class="relative flex justify-between mb-3 md:mb-4">
+                        <div class="flex-1">
+                            <h2 class="text-2xl font-semibold">Last March Exhibitors and Traders Participants</h2>
+                            <nav class="my-4 border-b"></nav>
+                        </div>
+                    </div>
+                    <div class="relative" uk-slider="finite: true">
+                        <div class="px-1 py-3 uk-slider-container" id="previousExhibitor">
+                            <ul class="
+                                uk-child-width-1-4@m uk-child-width-1-3@s uk-child-width-1-2 uk-grid-small uk-grid
+                                mr-2"
+                                id="previousExhibitorList"
+                            >
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- === MEDIA PARTNER - START === -->
+            <div class="pt-10" id="mediaPartner">
+                <div class="pt-10 mcontainer-custom-4">
+                    <div class="relative flex justify-between mb-3 md:mb-4">
+                        <div class="flex-1">
+                            <h2 class="text-2xl font-semibold">Media Partners</h2>
+                            <nav class="my-4 border-b"></nav>
+                        </div>
+                    </div>
+                    <div class="relative" uk-slider="finite: true">
+                        <div class="px-1 py-3 uk-slider-container">
+                            <ul class="
+                                uk-child-width-1-4@m uk-child-width-1-3@s uk-child-width-1-2 uk-grid-small uk-grid
+                                mr-2"
+                                id="mediaPartnerList"
+                            >
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- === SPONSORS - START === -->
+            <div class="pt-10 bg-gray-100 dark:bg-gray-800" id="sponsors">
+                <div class="pt-10 mcontainer-custom-4">
+                    <div class="relative flex justify-between mb-3 md:mb-4">
+                        <div class="flex-1">
+                            <h2 class="text-2xl font-semibold">Sponsors</h2>
+                            <nav class="my-4 border-b"></nav>
+                        </div>
+                    </div>
+                    <div class="relative" uk-slider="finite: true">
+                        <div class="px-1 py-3 uk-slider-container">
+                            <ul class="
+                                uk-child-width-1-4@m uk-child-width-1-3@s uk-child-width-1-2 uk-grid-small uk-grid
+                                mr-2
+                                ">
+                                <li class="px-4 mb-10">
+                                    <div
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/traders-videos-thumbnail/matrix-creation-events-venue-300.webp"
+                                        alt="Matrix Creation Events Venue Traders Sponsors | All World Trade" class="absolute inset-0 object-cover w-full h-full" />
+                                    </div>
+                                </li>
+                                <li class="px-4 mb-10">
+                                    <div
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/sponsors/webp/ltsjs-300.webp" alt="Little Twinkling Star Jewelry Store Traders Sponsors | All World Trade"
+                                        class="absolute inset-0 object-cover w-full h-full" />
+                                    </div>
+                                </li>
+                                <li class="px-4 mb-10">
+                                    <div
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/sponsors/webp/dle-300.webp" alt="Diversified Lighting Enterprises  Traders Sponsors | All World Trade"
+                                        class="absolute inset-0 object-cover w-full h-full" />
+                                    </div>
+                                </li>
+                                <li class="px-4 mb-10">
+                                    <div
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/sponsors/webp/anep-top-300.webp" alt="Anep Top Metal Marketing Traders Sponsors | All World Trade"
+                                        class="absolute inset-0 object-cover w-full h-full" />
+                                    </div>
+                                </li>
+                                <li class="px-4 mb-10">
+                                    <div
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/sponsors/webp/tech-n-300.webp" alt="Tech N Plus Traders Sponsors | All World Trade"
+                                        class="absolute inset-0 object-cover w-full h-full" />
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- === SPONSORS - END === -->
+            <!-- === WEBINARS - START === -->
+            <div class="pt-10" id="tradersWebinars">
+                <div class="pt-10 mcontainer-custom-4">
+                    <div class="relative flex justify-between mb-3 md:mb-4">
+                        <div class="flex-1">
+                            <h2 class="text-2xl font-semibold">Traders Webinars</h2>
+                            <nav class="my-4 border-b"></nav>
+                        </div>
+                    </div>
+                    <!-- === WEBINARS SLIDES - START === -->
+                    <div class="relative" uk-slider="finite: true">
+                        <div class="px-1 py-3 uk-slider-container">
+                            <ul class="
+                                uk-child-width-1-4@m uk-child-width-1-3@s uk-child-width-1-2 uk-grid-small uk-grid
+                                mr-2
+                                ">
+                                <li class="mb-10">
+                                    <a href="https://www.facebook.com/Matrix-Creation-Events-Venue-Events-Place-261606537670432/"
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28"
+                                        target="_blank">
+                                        <img src="uploads/traders-videos-thumbnail/matrix-creation-events-venue-300.webp"
+                                            alt="Matrix Creation Events Venue Traders Webinars | All World Trade" class="absolute inset-0 object-cover w-full h-full" />
+                                        <span class="
+                                            absolute
+                                            bg-black bg-opacity-60
+                                            bottom-1
+                                            font-semibold
+                                            px-1.5
+                                            py-0.5
+                                            right-1
+                                            rounded
+                                            text-white text-xs
+                                            ">
+                                        </span>
+                                    </a>
+                                    <div class="p-5 pt-3">
+                                        <a href="https://www.facebook.com/Matrix-Creation-Events-Venue-Events-Place-261606537670432/"
+                                            class="text-lg font-semibold line-clamp-2" target="_blank">
+                                        Matrix Creation Events Venue
+                                        </a>
+                                        <div class="pt-4">
+                                            <a href="https://www.facebook.com/Matrix-Creation-Events-Venue-Events-Place-261606537670432/"
+                                                class="text-sm" target="_blank">
+                                            Multiple Virtual Reality Scenery on 3 Story High Video Wall at
+                                            Matrix Creation Events Venue
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- === WEBINARS SLIDES - END === -->
+                </div>
+            </div>
+            <!-- === WEBINARS - END === -->
+
+
+            <div class="pt-10 bg-gray-100 dark:bg-gray-800" id="tradersWebinars">
+                <div class="pt-10 mcontainer-custom-4">
+                    <div class="relative flex justify-between mb-3 md:mb-4">
+                        <div class="flex-1">
+                            <h2 class="text-2xl font-semibold">Previous Events</h2>
+                            <nav class="my-4 border-b"></nav>
+                        </div>
+                    </div>
+                    <div class="pt-10">
+                        <img src="../../uploads/landing/all-world-trade-landing-page-15-june-2024.jpg" alt="Image" class="object-cover object-center w-full h-auto">
+                    </div>
+        
+                    <div class="pt-10">
+                        <img src="../../uploads/landing/all-world-trade-landing-page-14-May-2024.jpg" alt="Image" class="object-cover object-center w-full h-auto">
+                    </div>
+        
+                    <div class="pt-10">
+                        <img src="../../uploads/landing/all-world-trade-landing-page-12-May-2024.jpg" alt="Image" class="object-cover object-center w-full h-auto">
+                    </div>
+        
+                    <div class="pt-10">
+                        <img src="../../uploads/landing/all-world-trade-landing-page-07-May-2024.jpg" alt="Image" class="object-cover object-center w-full h-auto">
+                    </div>
+                    <div class="pt-10">
+                        <img src="../../uploads/landing/all-world-trade-landing-april-15-17.webp" alt="Image" class="object-cover object-center w-full h-auto">
+                    </div>
+                    <div class="pt-10">
+                        <img src="../../uploads/landing/AWT-Invite-with-address.webp" alt="Image" class="object-cover object-center w-full h-auto">
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- === modal - START === -->
+            <%- include('../modal/awt_introduction.ejs') %>
+            <!-- === modal - END === -->
+            <%- include('../includes/footer/index.ejs') %>
+            <%- include('../modal/email-if-help-and-suggest-link-not-available.ejs') %>
+        </div>
+    </div>
+    <!-- </div> -->
+		<script src="assets/js/landing-signage.js"></script>
+    <%- include('../includes/scripts/index.ejs') %>
+
+    <!-- comment muna itong home.js code lang ito pang count ng trader at visitors pero pinatanggal muna -->
+    <script src="assets/js/home.js"></script>
+
+    <script >
+        // delete na ito
+        // function goToAllAboutEvents() {
+        //     location.replace(host + '/all-about-events');
+        // }
+
+        // delete na ito
+        // function goToWizardJobFair() {
+        //     location.replace(host + '/job-fair');
+        // }
+    </script>
+
+</body>
+</html>

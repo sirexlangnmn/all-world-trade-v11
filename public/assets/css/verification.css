@@ -1,0 +1,25 @@
+input[type='number'] {
+    /* width: 2.5em; */
+    width: 1.5em;
+    line-height: 1;
+    margin: 0.1em;
+    padding: 8px 0 4px;
+    font-size: 2.65em;
+    text-align: center;
+    appearance: textfield;
+    -webkit-appearance: textfield;
+    border: 2px solid #bbbbff;
+    color: #0056b3 !important;
+    border-radius: 4px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* 2 group of 3 items */
+input[type='number']:nth-child(n + 4) {
+    order: 2;
+}

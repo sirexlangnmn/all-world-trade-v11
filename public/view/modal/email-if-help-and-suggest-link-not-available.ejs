@@ -1,0 +1,87 @@
+<!-- Craete video post modal -->
+<div id="email-if-help-and-suggest-link-not-available-modal" class="create-post" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical shadow-2xl uk-animation-slide-bottom-small">
+      <div class="py-4 border-b flex  justify-between px-6">
+          <h3 class="text-lg font-semibold"> Email Us </h3>
+          <div>
+              <button class="uk-modal-close-default hover:bg-gray-100 rounded-full p-2.5 block uk-icon uk-close mt-0.5"
+                  type="button" uk-close>
+                  <i class="icon-feather-close"></i>
+              </button>
+          </div>
+      </div>
+
+
+      <div class="create-post-modal-body space-x-6 p-5 overflow-x-hidden mr-1" data-simplebar>
+
+          <form 
+            action="javascript:void(0);"
+            method="POST"
+            id="formEmailIfHelpAndSuggestLinkNotAvailable"
+            name="formEmailIfHelpAndSuggestLinkNotAvailable"
+            enctype="multipart/form-data"
+            accept-charset="utf-8"
+            class="space-y-4 g:w-8/12" 
+          >
+              
+            <p class="leading-6 pr-4 line-clamp-2 md:block hidden mb-12"> Currently our line is full, you can try again later or send us an email. </p>
+            <div>
+              <label> Your Email Address </label>
+              <input type="text" class="with-border" placeholder="" id="eihaslna_email_address" name="eihaslna_email_address">
+            </div>
+            <div>
+              <label> Message </label>
+              <textarea rows="7" class="with-border w-full p-4" placeholder=""
+                id="eihaslna_message" name="eihaslna_message">
+              </textarea>
+            </div>
+            <div class="text-sm text-gray-500 text-right mt-1">
+              <span id="eihaslnaCharCount">0</span> / 250 characters
+            </div>
+          </form>
+
+      </div>
+
+      <div class="flex items-center w-full justify-between p-3 border-t">
+
+          <div class="flex items-center space-x-2">
+
+            
+
+          </div>
+
+          <div class="flex space-x-2">
+              
+              <a href="#" id="btnEmailIfHelpAndSuggestLinkNotAvailable"
+                  class="bg-blue-600 flex h-9 items-center justify-center rounded-md text-white px-5 font-medium">
+                  Send </a>
+          </div>
+
+          <a href="#" id="btnHiddenEmailIfHelpAndSuggestLinkNotAvailable" hidden
+              class="bg-blue-600 flex h-9 items-center justify-center rounded-lg text-white px-12 font-semibold">
+              Send </a>
+      </div>
+
+    </div>
+</div>
+
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const textarea = document.getElementById('eihaslna_message');
+    const counter = document.getElementById('eihaslnaCharCount');
+    const maxLength = 250;
+
+    textarea.addEventListener('input', function () {
+      // Enforce max length (extra safety)
+      if (this.value.length > maxLength) {
+        this.value = this.value.substring(0, maxLength);
+      }
+
+      // Update counter
+      counter.textContent = this.value.length;
+    });
+  });
+</script>

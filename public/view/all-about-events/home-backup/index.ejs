@@ -1,0 +1,1953 @@
+<%- include('../includes/head/index.ejs') %>
+<script>
+    const ip = window.location.host;
+    const url = 'https://get.geojs.io/v1/ip/geo.json';
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const location = `${data.city}, ${data.region}, ${data.country}`;
+            console.log(`IP address: ${ip}`);
+            console.log(`Location: ${location}`);
+        });
+</script>
+<!-- <script>
+    const ip = window.location.host;
+    const url = 'https://freegeoip.app/json/';
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const location = `${data.city}, ${data.region_name}, ${data.country_name}`;
+        console.log(`IP address: ${ip}`);
+        console.log(`Location: ${location}`);
+      });
+    </script> -->
+<style>
+    .ml-15px {
+    margin-left: 15px;
+    }
+    .ml-15px-color-yellow {
+    margin-left: 15px;
+    color: yellow;
+    }
+</style>
+<body>
+    <!-- Navbar goes here -->
+    <%- include('../includes/nav/primary-navigation.ejs') %>
+    <div id="wrapper" class="mt-10 is-collapse is-active">
+        <!-- === HEADER - START === -->
+        <!-- === HEADER - END === -->
+        <div class="main_content_custom">
+            <!-- === HERO IMAGE - START === -->
+            <div class="homepage-background">
+                <img src="../../uploads/landing/all-world-trade-home-page.webp" alt="Home Page Image | All World Trade" class="responsive">
+            </div>
+            <!-- === HERO IMAGE - END === -->
+            <!-- === TRADERS COUNT - START === -->
+            <div style="display: none">
+                <div class="mcontainer-custom-4" style="display: block">
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
+                        <div class="flex p-4 mb-4 text-sm text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
+                            role="alert">
+                            <svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3"
+                                fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="sr-only">Info</span>
+                            <div style="display: block">
+                                <span class="font-medium" id="numberOfTraderMembers">Exhibitor Members:
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex p-4 mb-4 text-sm text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
+                            role="alert">
+                            <svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3"
+                                fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="sr-only">Info</span>
+                            <div style="display: block">
+                                <span class="font-medium" id="numberOfVisitorMembers">Numbers of Visitor
+                                Members: </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- === TRADERS COUNT - END === -->
+            <!-- === EVENTS - START === -->
+            <section class="bg-white main_content_custom-4 dark:bg-gray-900" id="eventCalendar">
+                <div class="max-w-screen-xl px-4 pt-8 mx-auto lg:pt-16">
+                    <h2
+                        class="mb-8 text-3xl font-extrabold leading-tight tracking-tight text-center text-gray-900 lg:mb-16 dark:text-white md:text-4xl orbitron">
+                        EVENT CALENDAR
+                    </h2>
+                </div>
+                <div class="mcontainer-custom-4">
+                    <div class="relative flex justify-between mb-6 md:mb-4">
+                        <div class="flex-1">
+                            <nav class="my-4 border-b"></nav>
+                        </div>
+                    </div>
+                    <!-- JANUARY - HUMAN DEVELOPMENT -->
+                    <div class="grid grid-cols-1 gap-1 mb-4 md:grid-cols-2 lg:grid-cols-4">
+                        <div>
+                            <div class="m-1">
+                                <div>
+                                    <img src="uploads/landing/webp/1_human_development.webp" alt="Human Development | All World Trade"
+                                        class="object-cover w-full h-full">
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 border border-gray-200 rounded-lg shadow-md trade-category1-background-color bg-gradient-to-r from-red-600 to-red-500">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="font-semibold text-white">
+                                    <div class="text-2xl font-semibold ">Day 1, 2, 3 </div>
+                                    <div class="text-2xl font-semibold ">Every Month</div>
+                                    <nav class="my-4 border-b"></nav>
+                                    <div class="text-2xl font-semibold ">HUMAN DEVELOPMENT</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 border border-gray-200 rounded-lg shadow-md trade-category1-background-color bg-gradient-to-r from-red-600 to-red-500">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div>BABY, KIDS & MATERNITY</div>
+                                    <div>BOOK & PUBLISHING</div>
+                                    <div>CHURCH</div>
+                                    <div>CULTURE &</div>
+                                    <div class="ml-15px "> LITERATURE</div>
+                                    <div style="color: yellow;">EDUCATION & TRAINING </div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category1-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">EDUCATION & TRAINING</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>E LEARNING</div>
+                                                <div>LINGUISTICS & </div>
+                                                <div class="ml-4"> LANGUAGE</div>
+                                                <div class="text-sm">MATHEMATICAL SCIENCE,</div>
+                                                <div class="ml-4 text-sm">ANALYTICS & STATISTICS</div>
+                                                <div>MEDICAL EDUCATION</div>
+                                                <div>TEACHING & LEARNING</div>
+                                                <div>UNIVERSITY</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="">FAMILY, COMMUNITY and </div>
+                                    <div class="ml-15px"> CIVIC ORGANIZATIONS</div>
+                                    <div>FUNERAL</div>
+                                    <div>GOVERNMENT </div>
+                                    <div class="ml-15px"> INSTITUTIONS</div>
+                                    <div style="color: yellow;">HEALTH</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category1-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">HEALTH</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>ADOLESCENT HEALTH</div>
+                                                <div class="ml-4">& WELLBEING</div>
+                                                <div>ALLERGOLOGY &</div>
+                                                <div class="ml-4">IMMUNOLOGY</div>
+                                                <div>CARDIOLOGY (HEART)</div>
+                                                <div>DENTISTRY (TEETH)</div>
+                                                <div>DERMATOLOGY (SKIN)</div>
+                                                <div>DIAGNOSTICS & </div>
+                                                <div class="ml-4"> RADIOLOGY</div>
+                                                <div>DIETETICS (FOOD)</div>
+                                                <div>DISABILITIES & </div>
+                                                <div class="ml-4"> IMPAIRMENTS</div>
+                                                <div>ELDERLY HEALTH </div>
+                                                <div class="ml-4"> SERVICES</div>
+                                                <div>ENT </div>
+                                                <div class="ml-4"> (EAR NOSE THROAT)</div>
+                                                <div>EPIDEMIOLOGY</div>
+                                                <div class="ml-4"> (INFECTIOUS DISEASE)</div>
+                                                <div>GERONTOLOGY </div>
+                                                <div class="ml-4"> (LONGEVITY)</div>
+                                                <div>GYNECOLOGY & </div>
+                                                <div class="ml-14"> OBSTETRICS</div>
+                                                <div>HEMATOLOGY (BLOOD)</div>
+                                                <div>IMMUNOLOGY</div>
+                                                <div>NEUROLOGY (NERVES)</div>
+                                                <div>ONCOLOGY (CANCER)</div>
+                                                <div>OPTHALMOLOGY & </div>
+                                                <div class="ml-4"> OPTOMETRY (EYES)</div>
+                                                <div>ORTHOPEDICS & </div>
+                                                <div class="ml-4"> RHEUMATOLOGY</div>
+                                                <div>PEDIATRICS (CHILDREN)</div>
+                                                <div>PSYCHIATRY & </div>
+                                                <div class="ml-4"> PSYCHOLOGY</div>
+                                                <div>PULMONOLOGY</div>
+                                                <div>REHABILITATION</div>
+                                                <div>UROLOGY</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="">HOSPITALS &</div>
+                                    <div class="ml-15px"> MEDICAL INSTITUTIONS</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 border border-gray-200 rounded-lg shadow-md trade-category1-background-color bg-gradient-to-r from-red-600 to-red-500">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div style="color: yellow;">
+                                        MEDICAL & PHARMACEUTICALS
+                                    </div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category1-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-md">MEDICAL & PHARMACEUTICALS</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>ALTERNATIVE MEDICINE</div>
+                                                <div>DRUGS & MEDICINE</div>
+                                                <div>MANUFACTURING </div>
+                                                <div class="ml-4"> (PHARMACEUTICALS)</div>
+                                                <div>NANOMEDICINE and </div>
+                                                <div class="ml-4"> BIOTECH</div>
+                                                <div>PATHOLOGY</div>
+                                                <div>PHARMACOLOGY</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>MEDICAL DEVICES & </div>
+                                    <div class="ml-4">EQUIPMENT</div>
+                                    <div>MEDICAL LABORATORY</div>
+                                    <div>NON PROFIT</div>
+                                    <div class="ml-14"> ORGANIZATIONS</div>
+                                    <div>NURSE</div>
+                                    <div>NUTRITION &</div>
+                                    <div class="ml-4">NUTRACEUTICALS</div>
+                                    <div>SPIRITUALITY & MYSTICISM</div>
+                                    <div>VITAMINS & </div>
+                                    <div class="ml-4"> SUPPLEMENTS</div>
+                                    <div style="color: yellow;">WELLNESS & FITNESS</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category1-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg">WELLNESS & FITNESS</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>AEROBICS</div>
+                                                <div>FLEXOGRAPHY</div>
+                                                <div>HERBS</div>
+                                                <div>NATUROPATHY</div>
+                                                <div>YOGA & MEDITATION</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FEBRUARY - FOOD & BEVERAGE -->
+                    <div class="grid grid-cols-1 gap-1 mb-4 md:grid-cols-2 lg:grid-cols-4">
+                        <div>
+                            <div class="m-1">
+                                <div>
+                                    <img src="uploads/landing/webp/2_food_and_beverage.webp" alt="Food and Beverages | All World Trade"
+                                        class="object-cover w-full h-full">
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 border border-gray-200 rounded-lg shadow-md trade-category2-background-color bg-gradient-to-r from-orange-700 to-orange-500">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="font-semibold text-white">
+                                    <div class="text-2xl font-semibold orbitron">Day 4, 5, 6, 7 </div>
+                                    <div class="text-2xl font-semibold">Every Month</div>
+                                    <nav class="my-4 border-b"></nav>
+                                    <div class="text-2xl font-semibold">FOOD & BEVERAGE</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 border border-gray-200 rounded-lg shadow-md trade-category2-background-color bg-gradient-to-r from-orange-700 to-orange-500">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div>BAKERY & CONFECTIONERY</div>
+                                    <div style="color: yellow;">BEVERAGES</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category1-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">BEVERAGES</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>BAR & COCKTAIL</div>
+                                                <div>BEER & BREWING</div>
+                                                <div>TEA & COFFEE</div>
+                                                <div>WINE & SPIRITS</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>CULINARY ARTS</div>
+                                    <div style="color: yellow;">FOOD</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category1-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">FOOD</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>CHOCOLATE</div>
+                                                <div>FINE FOODS</div>
+                                                <div>FOOD WHOLESALE and </div>
+                                                <div class="ml-4"> DISTRIBUTOR</div>
+                                                <div>HERBS & SPICES</div>
+                                                <div>NATURAL PRODUCTS</div>
+                                                <div>ORGANIC FOOD</div>
+                                                <div>SWEETS & SNACKS</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="color: yellow;">FOOD EQUIPMENT &</div>
+                                    <div class="ml-4" style="color: yellow;"> ACCESSORIES</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category1-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">FOOD EQUIPMENT &</div>
+                                                <div class="ml-4" style="color: yellow;"> ACCESSORIES</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>KITCHEN EQUIPMENT</div>
+                                                <div>REFIGERATION (FOOD)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>FOOD INGREDIENT</div>
+                                    <div>FOOD PROCESSING &</div>
+                                    <div class="ml-4"> MANUFACTURING</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 border border-gray-200 rounded-lg shadow-md trade-category2-background-color bg-gradient-to-r from-orange-700 to-orange-500">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div>FOOD RETAILING</div>
+                                    <div>FOOD SAFETY</div>
+                                    <div>FOOD SERVICES</div>
+                                    <div style="color: yellow;">FRANCHISING (FOOD)</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category1-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">FRANCHISING (FOOD)</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>FOOD</div>
+                                                <div>SERVICES</div>
+                                                <div>RETAIL</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>KITCHEN</div>
+                                    <div>NUTRITION INGREDIENT</div>
+                                    <div class="">RESTAURANT, FASTFOOD</div>
+                                    <div class="ml-4">and CAFE</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- MARCH - PLANTS & ANIMALS -->
+                    <div class="grid grid-cols-1 gap-1 mb-4 md:grid-cols-2 lg:grid-cols-4 ">
+                        <div>
+                            <div class="m-1">
+                                <div>
+                                <img src="uploads/landing/webp/3_plants_and_animals.webp" alt="Plant and Animals | All World Trade"
+                                    class="object-cover w-full h-full">
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category3-background-color bg-gradient-to-r from-orange-400 to-yellow-500">
+                            <div class="contact-list a-p-0px m-35px">
+                                <div class="font-semibold text-white">
+                                    <div class="text-2xl font-semibold">Day 8, 9 </div>
+                                    <div class="text-2xl font-semibold">Every Month</div>
+                                    <nav class="my-4 border-b"></nav>
+                                    <div class="text-2xl font-semibold">PLANTS & ANIMALS</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category3-background-color bg-gradient-to-r from-orange-400 to-yellow-500">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div style="color: yellow;">AGRICULURAL, FARM &</div>
+                                    <div style="color: yellow;">FORESTRY</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category3-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">AGRICULTURAL, FARM &</div>
+                                                <div style="color: yellow;">FORESTRY</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>AGRICULTURAL </div>
+                                                <div class="ml-4"> ENGINEERING</div>
+                                                <div class="text-sm">AGRICULTURAL EQUIPMENT </div>
+                                                <div class="ml-4 text-sm"> & MACHINERY</div>
+                                                <div>ANIMAL FEEDSUFF</div>
+                                                <div>CEREALS & GRAINS</div>
+                                                <div>CROP PROTECTION</div>
+                                                <div class="text-sm"> GPS and PRECISION </div>
+                                                <div class="ml-4 text-sm"> AGRICULTURAL PRODUCTS</div>
+                                                <div>GRAIN DRILLS and </div>
+                                                <div class="ml-4"> ACCESSORIES</div>
+                                                <div>GRAIN HANDLING </div>
+                                                <div class="ml-14"> and STORAGE</div>
+                                                <div>ORGANIC FARMING</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>FERTILIZERS and</div>
+                                    <div class="ml-4">CHEMICALS</div>
+                                    <div class="">FLOWERS and </div>
+                                    <div class="ml-4">ORNAMENTAL PLANTS</div>
+                                    <div>GARDENING</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category3-background-color bg-gradient-to-r from-orange-400 to-yellow-500">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div style="color: yellow;">HORTICULTURE & CROPS</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category3-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">HORTICULTURE & CROPS</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>FLOWERS & ORCHIDS</div>
+                                                <div>FRUITS</div>
+                                                <div>GRAPES</div>
+                                                <div>NUTS</div>
+                                                <div>VEGETABLE</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>DAIRY PRODUCTS and</div>
+                                    <div class="ml-4">LIVESTOCK and MEAT</div>
+                                    <div>POULTRY </div>
+                                    <div>SEAFOOD & FISHERIES </div>
+                                    <div>TRACTORS and </div>
+                                    <div class="ml-4"> ACCESSORIES</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- APRIL - BUSINESS & SECURITY -->
+                    <div class="grid grid-cols-1 gap-1 mb-4 md:grid-cols-2 lg:grid-cols-4 ">
+                        <div>
+                            <div class="m-1">
+                                <div>
+                                <img src="uploads/landing/webp/4_business_and_security-2.webp" alt="business and security | All World Trade"
+                                    class="object-cover w-full h-full">
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category4-background-color bg-gradient-to-r from-yellow-400 to-yellow-500">
+                            <div class="contact-list a-p-0px m-35px">
+                                <div class="font-semibold text-white">
+                                    <div class="text-2xl font-semibold">Day 10, 11, 12 </div>
+                                    <div class="text-2xl font-semibold">Every Month</div>
+                                    <nav class="my-4 border-b"></nav>
+                                    <div class="text-2xl font-semibold">BUSINESS & SECURITY</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category4-background-color bg-gradient-to-r from-yellow-400 to-yellow-500">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div>ACCOUNTING, AUDITING and </div>
+                                    <div class="ml-4">BOOKKEEPING</div>
+                                    <div style="color: yellow;">ADVERTISING & SIGNAGE</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category4-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">ADVERTISING & SIGNAGE</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>LED</div>
+                                                <div>PHOTO & VIDEO</div>
+                                                <div>PRINTING & GRAPHICS</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>ARMS (SECURITY)</div>
+                                    <div style="color: yellow;">BANKING & FINANCE</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category4-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">BANKING & FINANCE</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>ASSET MANAGEMENT</div>
+                                                <div>FINANCIAL</div>
+                                                <div class="ml-4">INSTITUTION</div>
+                                                <div>MORTGAGE</div>
+                                                <div>PENSION FUNDS</div>
+                                                <div>RISK MANAGEMENT</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="color: yellow;">BUSINESS PROCESS</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category4-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">BUSINESS PROCESS</div>
+                                                <div class="ml-4" style="color: yellow;">REENGINEERING (BPR)
+                                                </div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>AI & BUSINESS</div>
+                                                <div class="ml-4">AUTOMATION</div>
+                                                <div>AUTOMATED SYSTEM</div>
+                                                <div class="ml-4">OPERATIONS</div>
+                                                <div>CLOUD & BPR</div>
+                                                <div>DATA CENTER & STORAGE</div>
+                                                <div>EMBEDDED & EDGE </div>
+                                                <div class="ml-4"> COMPUTING</div>
+                                                <div>INFORMATION SECURITY</div>
+                                                <div>INTERNET OF THINGS & 5G</div>
+                                                <div>REMOTE WORK SOLUTIONS & </div>
+                                                <div class="ml-4"> HARDWARE</div>
+                                                <div>SALES AUTOMATION</div>
+                                                <div>SOFTWARE & APPS </div>
+                                                <div class="ml-4"> DEVELOPMENT</div>
+                                                <div>WEB & DIGITAL MARKETING </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4" style="color: yellow">REENGINEERING (BPR)</div>
+                                    <div style="color: yellow;">BUSINESS SERVICES</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category4-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">BUSINESS SERVICES</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>BUSINESS CONSULTING</div>
+                                                <div>CORPORATE TRAVEL </div>
+                                                <div class="ml-4"> MANAGEMENT</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="color: yellow;">DEFENSE</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category4-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">DEFENSE</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>DEFENSE TECHNOLOGY</div>
+                                                <div>MARTIAL ARTS</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>E COMMERCE</div>
+                                    <div>ECONOMICS &</div>
+                                    <div class="ml-4">SOCIAL SCIENCE</div>
+                                    <div style="color: yellow;">FINTECH &</div>
+                                    <div class="ml-4" style="color: yellow">PAYMENT GATEWAY</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category4-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div style="color: yellow;">FINTECH</div>
+                                                <div class="text-lg orbitron">PAYMENT GATEWAY</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>CRYPTO CURRENCY </div>
+                                                <div class="ml-4"> PAYMENT</div>
+                                                <div>DIGITAL LENDING </div>
+                                                <div class="ml-4"> AND CREDIT</div>
+                                                <div>MOBILE BANKING </div>
+                                                <div>PAYMENT GATEWAY</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>FORENSIC &</div>
+                                    <div class="ml-4">INVESTIGATION</div>
+                                    <div>FRANCHISING (BUSINESS)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category4-background-color bg-gradient-to-r from-yellow-400 to-yellow-500">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div>GIVEAWAYS &</div>
+                                    <div class="ml-4"> PROMOTIONAL GOODS</div>
+                                    <div>HUMAN RESOURCE,</div>
+                                    <div class="ml-4"> JOB & CAREER</div>
+                                    <div>INTERPRETER (BUSINESS)</div>
+                                    <div style="color: yellow;">INVESTMENT</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category4-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">INVESTMENT</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>CRYPTO CURRENCY </div>
+                                                <div class="ml-4"> (INVESTMENT)</div>
+                                                <div>INSURANCE </div>
+                                                <div class="ml-4"> (INVESTMENT)</div>
+                                                <div>REAL ESTATE & </div>
+                                                <div>STOCK MARKET</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>LAW, GOVERNMENT and</div>
+                                    <div class="ml-4"> LEGAL SERVICES</div>
+                                    <div>MARKETING & SALES</div>
+                                    <div>PAPER, STATIONERY &</div>
+                                    <div class="ml-4"> OFFICE SUPPLIES</div>
+                                    <div>PAYROLL</div>
+                                    <div>PEST CONTROL</div>
+                                    <div>RETAILING & LABELING</div>
+                                    <div>SAFETY, SECURITY &</div>
+                                    <div class="ml-4"> FIRE (BUSINESS)</div>
+                                    <div>STARTUPS & </div>
+                                    <div class="ml-4"> ENTREPRENEURSHIP</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- May - VEHICLE -->
+                    <div class="grid grid-cols-1 gap-1 mb-4 md:grid-cols-2 lg:grid-cols-4 ">
+                        <div>
+                            <div class="m-1">
+                                <div>
+                                <img src="uploads/landing/webp/5_vehicle.webp" alt="vehicle | All World Trade"
+                                    class="object-cover w-full h-full">
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category5-background-color bg-gradient-to-r from-green-500 via-green-400 to-green-300">
+                            <div class="contact-list a-p-0px m-35px">
+                                <div class="font-semibold text-white">
+                                    <div class="text-2xl font-semibold">Day 13, 14 </div>
+                                    <div class="text-2xl font-semibold">Every Month</div>
+                                    <nav class="my-4 border-b"></nav>
+                                    <div class="text-2xl font-semibold">VEHICLE</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category5-background-color bg-gradient-to-r from-green-500 via-green-400 to-green-300">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div>ALL TERRAIN VEHICLES</div>
+                                    <div>AMPHIBIOUS VEHICLES</div>
+                                    <div style="color: yellow;">AUTO & AUTOMOTIVE</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category5-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">AUTO & AUTOMOTIVE</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>AUTO DEALER and </div>
+                                                <div class="ml-4"> LEASING and RENTAL</div>
+                                                <div>AUTOMATIVE </div>
+                                                <div class="ml-4"> COMPONENTS</div>
+                                                <div class="ml-4"> & PROCESSING</div>
+                                                <div>CLASSIC CARS</div>
+                                                <div>TAXI</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>AUTO SHOW</div>
+                                    <div style="color: yellow;">AVIATION</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category5-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">AVIATION</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>AIR TRANSPORT MRO</div>
+                                                <div>AIR ROUTES</div>
+                                                <div>AIRCRAFTS</div>
+                                                <div>AIRPORTS</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>BICYCLE</div>
+                                    <div>BUS</div>
+                                    <div>CARAVAN TRAILER</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category5-background-color bg-gradient-to-r from-green-500 via-green-400 to-green-300">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div style="color: yellow;">ELECTRIC VEHICLE</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category5-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">ELECTRIC VEHICLE</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>BATTERY</div>
+                                                <div>ELECTRIC VEHICLE</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>ENGINE</div>
+                                    <div>MARINE and WATERCRAFT</div>
+                                    <div>MOTORCYCLE</div>
+                                    <div>PUBLIC TRANSPORTATION</div>
+                                    <div>RAILWAY &</div>
+                                    <div class="ml-4"> ROADWAYS</div>
+                                    <div>REPAIR &</div>
+                                    <div class="ml-4">MAINTENANCE (VEHICLE)</div>
+                                    <div>TRUCK & TRUCKING</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- June - CONSTRUCTION -->
+                    <div class="grid grid-cols-1 gap-1 mb-4 md:grid-cols-2 lg:grid-cols-4 ">
+                        <div>
+                            <div class="m-1">
+                                <div>
+                                <img src="uploads/landing/webp/6_construction.webp" alt="construction | All World Trade"
+                                    class="object-cover w-full h-full">
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category6-background-color bg-gradient-to-r from-lime-600 to-emerald-500">
+                            <div class="contact-list a-p-0px m-35px">
+                                <div class="font-semibold text-white">
+                                    <div class="text-2xl font-semibold">Day 15, 16, 17 </div>
+                                    <div class="text-2xl font-semibold">Every Month</div>
+                                    <nav class="my-4 border-b"></nav>
+                                    <div class="text-2xl font-semibold">CONSTRUCTION</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category6-background-color bg-gradient-to-r from-lime-600 to-emerald-500">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div> ARCHITECTURE & </div>
+                                    <div class="ml-4"> DESIGNING</div>
+                                    <div style="color: yellow;">BUILDING &</div>
+                                    <div class="ml-4" style="color: yellow;">CONSTRUCTION SERVICES</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category6-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">BUILDING &</div>
+                                                <div class="ml-4" style="color: yellow;">CONSTRUCTION SERVICES
+                                                </div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>BATHROOM & KITCHEN</div>
+                                                <div>CARPENTRY</div>
+                                                <div>CIVIL WORKS</div>
+                                                <div>CONSTRUCTION </div>
+                                                <div class="ml-4"> CONTRACTORS</div>
+                                                <div>FACTORY </div>
+                                                <div class="ml-4"> CONSTRUCTION</div>
+                                                <div class="ml-4"> & MAINTENANCE</div>
+                                                <div>FLOORING & ROOFING</div>
+                                                <div>GEODESY</div>
+                                                <div>INFRASTRUCTURE</div>
+                                                <div>PAINTWORK</div>
+                                                <div>PLUMBING & </div>
+                                                <div class="ml-4"> SANITATION</div>
+                                                <div>POOL TECHNIQUE</div>
+                                                <div>REFRIGIRATION </div>
+                                                <div class="ml-4"> (CONSTRUCTION)</div>
+                                                <div>SURFACE & COATINGS</div>
+                                                <div>WINDOW, DOOR, GATES</div>
+                                                <div class="ml-4"> and FENCING</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>CLEANING & SANITATION</div>
+                                    <div>CONSTRUCTION EQUIPMENT </div>
+                                    <div class="ml-4"> & MACHINERY</div>
+                                    <div>CONSTRUCTION SAFETY, </div>
+                                    <div class="ml-4"> SECURITY and FIRE</div>
+                                    <div>DEVELOPMENT & </div>
+                                    <div class="ml-4"> INVESTMENT</div>
+                                    <div>ELEVATOR</div>
+                                    <div>FURNISHINGS & DÉCOR </div>
+                                    <div>FURNITURE</div>
+                                    <div>HARDWARE & HOUSEWARE</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category6-background-color bg-gradient-to-r from-lime-600 to-emerald-500">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div>HEATER, VENTILATION and</div>
+                                    <div class="ml-4"> AIR CONDITIONING (HVAC)</div>
+                                    <div>HEAVY EQUIPMENT</div>
+                                    <div style="color: yellow;">HOME and OFFICE</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category6-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">HOME and OFFICE</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>HOME APPLIANCES</div>
+                                                <div>OFFICE EQUIPMENT</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>INTERIOR DESIGN</div>
+                                    <div>LANDSCAPE</div>
+                                    <div>LIGHTING</div>
+                                    <div style="color: yellow;">MATERIALS & SUPPLIES</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category6-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">MATERIALS & SUPPLIES</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>CARBON FIBER</div>
+                                                <div>CEMENT & CONCRETE</div>
+                                                <div>FASTENERS</div>
+                                                <div>GLASS</div>
+                                                <div>INSULATION </div>
+                                                <div class="ml-4"> (CONSTRUCTION)</div>
+                                                <div>METAL SUPPLIES</div>
+                                                <div>PAINT SUPPLIES</div>
+                                                <div>PLASTIC</div>
+                                                <div>PLUMBING SUPPLIES</div>
+                                                <div>STONE & BRICKS</div>
+                                                <div>TEXTILES</div>
+                                                <div>TILES</div>
+                                                <div>WOOD SUPPLIES</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>MOVING and STORAGE</div>
+                                    <div>PEST CONTROL</div>
+                                    <div>REAL ESTATE & PROPERTY</div>
+                                    <div>REPAIR & MAINTENANCE</div>
+                                    <div>SMART CITIES</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- July - SCIENCE & TECHNOLOGY -->
+                    <div class="grid grid-cols-1 gap-1 mb-4 md:grid-cols-2 lg:grid-cols-4 ">
+                        <div>
+                            <div class="m-1">
+                                <div>
+                                <img src="uploads/landing/webp/7_science_and_technology.webp" alt="science and technology | All World Trade"
+                                    class="object-cover w-full h-full">
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category7-background-color bg-gradient-to-r from-sky-300 to-sky-500">
+                            <div class="contact-list a-p-0px m-35px">
+                                <div class="font-semibold text-white">
+                                    <div class="text-2xl font-semibold">Day 18, 19, 20 </div>
+                                    <div class="text-2xl font-semibold">Every Month</div>
+                                    <nav class="my-4 border-b"></nav>
+                                    <div class="text-2xl font-semibold">SCIENCE & TECHNOLOGY</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category7-background-color bg-gradient-to-r from-sky-300 to-sky-500">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div> AEROSPACE and </div>
+                                    <div class="ml-4"> ASTRONAUTICS</div>
+                                    <div>AI & COGNITIVE SCIENCE</div>
+                                    <div>BIOTECHNOLOGY</div>
+                                    <div>BLOCKCHAIN</div>
+                                    <div>CABLES & WIRES</div>
+                                    <div>CLOUD COMPUTING</div>
+                                    <div>COMPUTER</div>
+                                    <div style="color: yellow;">COMPUTER</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category7-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">COMPUTER</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>COMPUTER GRAPHICS</div>
+                                                <div>COMPUTER REPAIR</div>
+                                                <div>COMPUTER SCIENCE</div>
+                                                <div>MULTIMEDIA</div>
+                                                <div>SOFTWARE </div>
+                                                <div class="ml-4"> DEVELOPMENT</div>
+                                                <div class="ml-4"> and ENGINEERING</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>DATA SCIENCE, BIG DATA</div>
+                                    <div class="ml-4"> & MACHINE LEARNING</div>
+                                    <div>ELECTRICAL</div>
+                                    <div style="color: yellow;">ELECTRONICS</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category7-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">ELECTRONICS</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>GADGETS</div>
+                                                <div>MOBILE PHONE</div>
+                                                <div>WEARABLE </div>
+                                                <div class="ml-4"> TECHNOLOGY</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>EXTENDED REALITY</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category7-background-color bg-gradient-to-r from-sky-300 to-sky-500">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div>INFORMATION TECHNOLOGY</div>
+                                    <div>INTERNET OF THINGS </div>
+                                    <div>INVENTIONS (TECHNOLOGY)</div>
+                                    <div>IT & TECHNOLOGY</div>
+                                    <div>LASER & PHOTONICS</div>
+                                    <div>MICROTECHNOLOGY & </div>
+                                    <div class="ml-4"> NANOTECHNOLOGY</div>
+                                    <div>OPTICS</div>
+                                    <div>ROBOTICS</div>
+                                    <div>SCIENCE & RESEARCH</div>
+                                    <div>SEMICONDUCTORS</div>
+                                    <div>SENSOR TECHNOLOGY</div>
+                                    <div style="color: yellow;">TELECOMMUNICATION</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category7-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">TELECOMMUNICATION</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>RADIO & WIRELESS</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--8 August - MANUFACTURING & ENERGY -->
+                    <div class="grid grid-cols-1 gap-1 mb-4 md:grid-cols-2 lg:grid-cols-4 ">
+                        <div>
+                            <div class="m-1">
+                                <div>
+                                <img src="uploads/landing/webp/8_manufacturing_and_energy.webp" alt="manufacturing | All World Trade"
+                                    class="object-cover w-full h-full">
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category8-background-color bg-gradient-to-r from-blue-600 to-blue-400">
+                            <div class="contact-list a-p-0px m-35px">
+                                <div class="font-semibold text-white">
+                                    <div class="text-2xl font-semibold">Day 21, 22, 23 </div>
+                                    <div class="text-2xl font-semibold">Every Month</div>
+                                    <nav class="my-4 border-b"></nav>
+                                    <div class="text-2xl font-semibold">MANUFACTURING & ENERGY</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category8-background-color bg-gradient-to-r from-blue-600 to-blue-400">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div>DISASTER </div>
+                                    <div class="ml-4"> MANAGEMENT (MANUFACTURING)</div>
+                                    <div>EMBEDDED </div>
+                                    <div class="ml-4"> SYSTEM (MANUFACTURING)</div>
+                                    <div style="color: yellow;">ENVIRONMENT & WASTE</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category8-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">ENVIRONMENT & WASTE</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>RECYCLING</div>
+                                                <div>SEWAGE TECHNOLOGY</div>
+                                                <div>WASTE MANAGEMENT</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>FOUNDRY, CASTING & </div>
+                                    <div class="ml-4"> FORGING</div>
+                                    <div style="color: yellow;">INDUSTRIAL PRODUCTS</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category8-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">INDUSTRIAL PRODUCTS</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>BATTERY</div>
+                                                <div>IRON & STEEL</div>
+                                                <div>LIGHTING, LED,</div>
+                                                <div class="ml-4"> SIGNAGE MANUFACTURER</div>
+                                                <div>MEDICAL DEVICE</div>
+                                                <div>PAPER & STATIONERY</div>
+                                                <div>TISSUE </div>
+                                                <div class="ml-4"> MANUFACTURER</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>INDUSTRIAL SAFETY,</div>
+                                    <div class="ml-4"> SECURITY & FIRE</div>
+                                    <div style="color: yellow;">LOGISTICS & DISTRIBUTION</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category8-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div style="color: yellow;">LOGISTICS & </div>
+                                                <div class="ml-4 text-lg orbitron">DISTRIBUTION</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>IMPORTS & EXPORTS</div>
+                                                <div>SMART LOGISTICS</div>
+                                                <div>WAREHOUSING </div>
+                                                <div class="ml-4"> TECHNOLOGIES</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="color: yellow;">MANUFACTURING</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category8-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div style="color: yellow;">MANUFACTURING</div>
+                                                <div class="text-lg font-semibold text-white m-15px">
+                                                    <div>3D PRINTING</div>
+                                                    <div>ADDITIVE </div>
+                                                    <div class="ml-4"> MANUFACTURING</div>
+                                                    <div>AUTOMATION / </div>
+                                                    <div class="ml-4 "> ROBOTICS</div>
+                                                    <div>COATING </div>
+                                                    <div class="ml-4"> TECHNOLOGIES</div>
+                                                    <div>CONVEYING </div>
+                                                    <div class="ml-4"> TECHNOLOGY</div>
+                                                    <div>DESIGN & TESTING</div>
+                                                    <div>DESIGN FOR </div>
+                                                    <div class="ml-4"> MANUFACTURING (DFM)</div>
+                                                    <div>ELECTRONICS </div>
+                                                    <div class="ml-4"> MANUFACTURING</div>
+                                                    <div>FABRICATION &</div>
+                                                    <div class="ml-4"> METAL FORMING</div>
+                                                    <div>INDUSTRIAL </div>
+                                                    <div class="ml-4"> ENGINEERING</div>
+                                                    <div>MANUFACTURING </div>
+                                                    <div class="ml-4">WHOLESALE & DISTRIBUTORS</div>
+                                                    <div>MATERIALS HANDLING</div>
+                                                    <div>MEASUREMENT </div>
+                                                    <div class="ml-4"> TECHNOLOGY</div>
+                                                    <div>MECHANICAL & </div>
+                                                    <div class="ml-4"> PRECISION ENGINEERING</div>
+                                                    <div>SHIPBUILDING</div>
+                                                    <div>SMART FACTORY</div>
+                                                    <div>WELDING & CUTTING</div>
+                                                    <div>IC & </div>
+                                                    <div class="ml-4"> SENSOR PACKAGING</div>
+                                                    <div>ELECTROTEST</div>
+                                                    <div>ELECTRONIC </div>
+                                                    <div class="ml-4"> COMPONENTS & MATERIALS</div>
+                                                    <div>PRINTED WIRING BOARD</div>
+                                                    <div>FINE PROCESS </div>
+                                                    <div class="ml-4"> TECHNOLOGY</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-lg" style="color: yellow;">MANUFACTURING MACHINERY,</div>
+                                    <div class="text-lg ml-15px" style="color: yellow;"> EQUIPMENT & TOOLS</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category8-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div style="color: yellow;">MANUFACTURING</div>
+                                                <div class="ml-4" style="color: yellow;">MACHINERY</div>
+                                                <div class="ml-4" style="color: yellow;">EQUIPMENT & TOOLS</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>DIE & MOLD</div>
+                                                <div>FINE PROCESS </div>
+                                                <div class="ml-4"> TECHNOLOGY</div>
+                                                <div>TOOL MANUFACTURING</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category8-background-color bg-gradient-to-r from-blue-600 to-blue-400">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div style="color: yellow;">MINING</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category8-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">MINING</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>MINING MACHINERY & </div>
+                                                <div class="ml-15px"> EQUIPMENT</div>
+                                                <div>MINING TECHNOLOGY</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-lg">OCEANOLOGY</div>
+                                    <div>PACKING, PACKAGING </div>
+                                    <div class="ml-4"> & PROCESSING</div>
+                                    <div>PLASTICS & POLYMERS</div>
+                                    <div style="color: yellow;">POWER, ENERGY & UTILITIES</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category8-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">POWER, ENERGY & UTILITIES</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>BIOGAS</div>
+                                                <div>BIOMASS ENERGY</div>
+                                                <div>DRILLING </div>
+                                                <div class="ml-4"> TECHNOLOGIES</div>
+                                                <div>GENERATORS and </div>
+                                                <div class="ml-4"> ALTERNATORS</div>
+                                                <div>GEOTHERMAL</div>
+                                                <div>HYDROGEN & </div>
+                                                <div class="ml-4"> FUEL CELL</div>
+                                                <div>HYDROPOWER</div>
+                                                <div>NUCLEAR ENERGY</div>
+                                                <div>PETROLEUM, OIL & GAS</div>
+                                                <div>PUBLIC UTILITIES</div>
+                                                <div>RENEWABLE ENERGY</div>
+                                                <div>SMART GRID</div>
+                                                <div>SOLAR ENERGY</div>
+                                                <div>WIND ENERGY</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>PRINT & PRINTING </div>
+                                    <div>RAILWAY & ROADWAYS</div>
+                                    <div style="color: yellow;">RAW MATERIAL & SUPPLY</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category8-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">RAW MATERIAL & SUPPLY</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>CHEMICALS & DYES</div>
+                                                <div>FASTENERS</div>
+                                                <div>METAL</div>
+                                                <div>MINERALS & ORES</div>
+                                                <div>TIMBER</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-sm">REPAIR & </div>
+                                    <div class="ml-4 text-sm"> MAINTENANCE (MANUFACTURING)</div>
+                                    <div>RUBBER</div>
+                                    <div>SUPPLY CHAIN</div>
+                                    <div>WATER & WASTEWATER</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--9 September - BEAUTY -->
+                    <div class="grid grid-cols-1 gap-1 mb-4 md:grid-cols-2 lg:grid-cols-4 ">
+                        <div>
+                            <div class="m-1">
+                                <div>
+                                <img src="uploads/landing/webp/9_beauty.webp" alt="beauty | All World Trade"
+                                    class="object-cover w-full h-full">
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category9-background-color bg-gradient-to-r from-purple-600 to-purple-400">
+                            <div class="contact-list a-p-0px m-35px">
+                                <div class="font-semibold text-white">
+                                    <div class="text-2xl font-semibold">Day 24, 25, 26, 27 </div>
+                                    <div class="text-2xl font-semibold">Every Month</div>
+                                    <nav class="my-4 border-b"></nav>
+                                    <div class="text-2xl font-semibold">BEAUTY</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category9-background-color bg-gradient-to-r from-purple-600 to-purple-400">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div style="color: yellow;">APPAREL & CLOTHING</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category9-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">APPAREL & CLOTHING</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>CHILDREN'S APPAREL</div>
+                                                <div>KNITTING & STITCHING</div>
+                                                <div>MATERNITY & BABY</div>
+                                                <div>MEN'S APPAREL</div>
+                                                <div>WOMEN'S APPAREL</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="color: yellow;">ARTS</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category9-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">ARTS</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>ANTIQUES</div>
+                                                <div>ARTISTS</div>
+                                                <div>ARTS & DESIGN</div>
+                                                <div>MODERN and </div>
+                                                <div class="ml-4"> CONTEMPORARY ART</div>
+                                                <div>PAINTING</div>
+                                                <div>RESTORATION (ARTS)</div>
+                                                <div>SCULPTURE</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="color: yellow;">BEAUTY</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category9-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">BEAUTY</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>COSMETIC</div>
+                                                <div class="ml-4"> & AESTHETIC MEDICINE</div>
+                                                <div>COSMETICS</div>
+                                                <div>DEMATOLOGY</div>
+                                                <div>HAIR DRESSING</div>
+                                                <div>NAILS</div>
+                                                <div>PLASTIC SURGERY</div>
+                                                <div>TATTOO</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-lg">CHRISTMAS MARKET</div>
+                                    <div style="color: yellow;">CRAFTS</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category9-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">CRAFTS</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>CERAMICS</div>
+                                                <div>DECORATION</div>
+                                                <div>GLASS & GLASSWARE</div>
+                                                <div>HANDICRAFTS</div>
+                                                <div>METAL</div>
+                                                <div>STATIONERY</div>
+                                                <div>WOOD</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>CREATIVITY & INNOVATION</div>
+                                    <div style="color: yellow;">FASHION</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category9-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">FASHION</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>BAG</div>
+                                                <div>FASHION SHOW</div>
+                                                <div>SHOES & FOOTWEAR</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>FOSSILS</div>
+                                    <div style="color: yellow;">GEMS & JEWELRY</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category9-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div style="color: yellow;">GEMS & JEWELRY</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>NATURAL STONES</div>
+                                                <div>PRECIOUS METAL</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>LEATHER</div>
+                                    <div>LINGERIE, NIGHTWEAR </div>
+                                    <div class="ml-4"> & EROTIC</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category9-background-color bg-gradient-to-r from-purple-600 to-purple-400">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div>PERFUME</div>
+                                    <div>PERSONAL CARE </div>
+                                    <div class="ml-4"> PRODUCTS</div>
+                                    <div>PHOTOGRAPHY & </div>
+                                    <div class="ml-4"> VIDEOGRAPHY</div>
+                                    <div>PRODUCT DEVELOPMENT </div>
+                                    <div class="ml-4"> & DISTRIBUTION</div>
+                                    <div>SHOPPING, MALLS and </div>
+                                    <div class="ml-4"> SPECIALTY RETAIL</div>
+                                    <div> TEXTILE, FABRICS </div>
+                                    <div class="ml-4"> & YARNS</div>
+                                    <div>WATCHES</div>
+                                    <div style="color: yellow;">WEDDING</div>
+                                    <div class="ml-4" style="color: yellow;">BRIDAL & EVENTS</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="trade-category9-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">WEDDING</div>
+                                                <div class="ml-4" style="color: yellow;">BRIDAL & EVENTS</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>BRIDAL CARS</div>
+                                                <div>BRIDAL GOWNS</div>
+                                                <div>CATERING SERVICES</div>
+                                                <div>COORDINATOR</div>
+                                                <div>EVENT STYLIST</div>
+                                                <div>FLORIST (EVENTS)</div>
+                                                <div>GIFTS &</div>
+                                                <div class="ml-4"> SOUVENIRS (EVENTS)</div>
+                                                <div>LIGHTS & </div>
+                                                <div class="ml-4"> SOUNDS (EVENTS)</div>
+                                                <div>MOBILE BAR</div>
+                                                <div>PHOTOBOOTH</div>
+                                                <div>VENUE (EVENTS)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--10 October - RECREATION -->
+                    <div class="grid grid-cols-1 gap-1 md:grid-cols-2 lg:grid-cols-4">
+                        <div>
+                            <div class="m-1">
+                                <div>
+                                <img src="uploads/landing/webp/10_recreation.webp" alt="recreation | All World Trade"
+                                    class="object-cover w-full h-full">
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category10-background-color bg-gradient-to-r from-fuchsia-600 to-pink-600">
+                            <div class="contact-list a-p-0px m-35px">
+                                <div class="font-semibold text-white">
+                                    <div class="text-2xl font-semibold">Day 28, 29, 30 </div>
+                                    <nav class="my-4 border-b"></nav>
+                                    <div class="text-2xl font-semibold">RECREATION</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category10-background-color bg-gradient-to-r from-fuchsia-600 to-pink-600">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div>AMUSEMENT & </div>
+                                    <div class="ml-4"> ATTRACTIONS</div>
+                                    <div style="color: yellow;">ANIMALS & PETS</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category10-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">ANIMALS & PETS</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>ANIMAL CARE and </div>
+                                                <div class="ml-4">HEALTH PRODUCTS</div>
+                                                <div>AQUATICS</div>
+                                                <div>CAT</div>
+                                                <div>DOG</div>
+                                                <div>REPTILES</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>CANNABIS, TOBACCO,</div>
+                                    <div class="ml-4"> VAPE & E-CIGARETTE</div>
+                                    <div>CARNIVAL</div>
+                                    <div>CASINO, GAMING</div>
+                                    <div class="ml-4"> & GAMBLING</div>
+                                    <div class="text-lg">COMIC CON & ANIME</div>
+                                    <div>COMPUTER, VIDEO and </div>
+                                    <div class="ml-4"> MOBILE GAMES</div>
+                                    <div>COSPLAY</div>
+                                    <div>DANCING</div>
+                                    <div>DIVING</div>
+                                    <div style="color: yellow;">ENTERTAINMENT & MEDIA</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category10-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">ENTERTAINMENT & MEDIA</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>BRAND LICENSING</div>
+                                                <div>BROADCASTING</div>
+                                                <div>SOCIAL MEDIA</div>
+                                                <div>THEATER TEHCNOLOGY</div>
+                                                <div>TV FORMAT</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center m-1 rounded-md trade-category10-background-color bg-gradient-to-r from-fuchsia-600 to-pink-600">
+                            <div class="contact-list a-p-0px m-15px">
+                                <div class="text-lg font-semibold text-white">
+                                    <div>GIFTS</div>
+                                    <div style="color: yellow;">GREAT OUTDOORS</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category10-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">GREAT OUTDOORS</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>CAMPING</div>
+                                                <div>FISHING</div>
+                                                <div>HIKING</div>
+                                                <div>HUNTING</div>
+                                                <div>HUNTING ARMS</div>
+                                                <div>MOUNTAIN CLIMBING</div>
+                                                <div>NATURE TRIP</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>HOBBY & COLLECTION </div>
+                                    <div style="color: yellow;">HOSPITALITY</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category10-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">HOSPITALITY</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>HOTEL & CATERING</div>
+                                                <div>RESTAURANT</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>HOTEL & LODGING</div>
+                                    <div style="color: yellow;">MARITIME & BOATS</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category10-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">MARITIME & BOATS</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>CRUISE</div>
+                                                <div>POWER & SAILBOAT</div>
+                                                <div>YACHTING</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="color: yellow;">MUSIC & SOUND</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category10-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">MUSIC & SOUND</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>MUSICAL INSTRUMENTS</div>
+                                                <div>CELLO</div>
+                                                <div>CLARINET</div>
+                                                <div>DRUMS</div>
+                                                <div>FLUTE</div>
+                                                <div>GUITAR</div>
+                                                <div>HARP</div>
+                                                <div>PIANO</div>
+                                                <div>SAXOPHONE</div>
+                                                <div>TRUMPET</div>
+                                                <div>VIOLIN</div>
+                                                <div>MUSICAL INSTRUMENT LEARNING</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="color: yellow;">SPORTS</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category10-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div class="text-lg orbitron">SPORTS</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>AMERICAN FOOTBALL</div>
+                                                <div>ARCHERY</div>
+                                                <div>BASEBALL</div>
+                                                <div>BASKETBALL</div>
+                                                <div>CRICKET</div>
+                                                <div>EQUESTRIAN</div>
+                                                <div>FIELD HOCKEY</div>
+                                                <div>GOLF</div>
+                                                <div>MOTORSPORT</div>
+                                                <div>SOCCER</div>
+                                                <div>SPORTSWEAR</div>
+                                                <div>TABLE TENNIS</div>
+                                                <div>TENNIS</div>
+                                                <div>VOLLEYBALL</div>
+                                                <div>WATER SPORTS</div>
+                                                <div>WINTER SPORTS</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>SURFING</div>
+                                    <div style="color: yellow;">TOYS & GAMES</div>
+                                    <div uk-drop="pos: center ;animation: uk-animation-slide-center-small">
+                                        <div class="text-left trade-category10-list-box">
+                                            <div class="font-semibold" style="color: yellow;">
+                                                <div style="color: yellow;">TOYS & GAMES</div>
+                                            </div>
+                                            <div class="text-lg font-semibold text-white m-15px">
+                                                <div>CHILDREN'S TOYS</div>
+                                                <div>VIDEO GAMES</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>TRAVEL, TOURISM</div>
+                                    <div class="ml-4"> & LEISURE</div>
+                                    <div>ZOO</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- === EVENTS - END === -->
+            <!-- === TRADERS VIDEO - START === -->
+            <div class="bg-white main_content_custom-4 dark:bg-gray-900" id="tradersVideos">
+                <div class="mcontainer-custom-4">
+                    <div class="relative flex justify-between mb-3 md:mb-4">
+                        <div class="flex-1">
+                            <h2 class="text-2xl font-semibold">Traders Video</h2>
+                            <nav class="my-4 border-b"></nav>
+                        </div>
+                    </div>
+                    <!-- === TRADERS VIDEO SLIDES - START === -->
+                    <div class="relative" uk-slider="finite: true">
+                        <div class="px-1 py-3 uk-slider-container">
+                            <ul class="
+                                uk-child-width-1-4@m uk-child-width-1-3@s uk-child-width-1-2 uk-grid-small uk-grid
+                                mr-2
+                                ">
+                                <li class="mb-10">
+                                    <a href="https://www.youtube.com/watch?v=hwy7K7FJnZ4"
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28"
+                                        target="_blank">
+                                    <img src="uploads/traders-videos-thumbnail/matrix-creation-events-venue.webp"
+                                        alt="Matrix Creation Events Venue Traders Video | All World Trade" class="absolute inset-0 object-cover w-full h-full" />
+                                    <span class="
+                                        absolute
+                                        bg-black bg-opacity-60
+                                        bottom-1
+                                        font-semibold
+                                        px-1.5
+                                        py-0.5
+                                        right-1
+                                        rounded
+                                        text-white text-xs
+                                        ">
+                                    12:21</span>
+                                    <img src="assets/images/icon-play.svg"
+                                        class="w-12 h-12 uk-position-center" alt="Matrix Creation Events Venue Traders Video | All World Trade" />
+                                    </a>
+                                    <div class="pt-3">
+                                        <a href="https://www.youtube.com/watch?v=hwy7K7FJnZ4"
+                                            class="font-semibold line-clamp-2" target="_blank">
+                                        Matrix Creation Events Venue
+                                        </a>
+                                        <div class="pt-2">
+                                            <a href="https://www.youtube.com/watch?v=hwy7K7FJnZ4"
+                                                class="text-sm" target="_blank"> Multiple Virtual Reality
+                                            Scenery on 3 Story High Video Wall at Matrix Creation Events
+                                            Venue </a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="mb-10">
+                                    <a href="https://www.youtube.com/watch?v=ICvW1755Puc" target="_blank"
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/traders-videos-thumbnail/team-one-vision.jpg" alt="Team One Vision Traders Video | All World Trade"
+                                        class="absolute inset-0 object-cover w-full h-full" />
+                                    <span class="
+                                        absolute
+                                        bg-black bg-opacity-60
+                                        bottom-1
+                                        font-semibold
+                                        px-1.5
+                                        py-0.5
+                                        right-1
+                                        rounded
+                                        text-white text-xs
+                                        ">
+                                    02:00</span>
+                                    <img src="assets/images/icon-play.svg"
+                                        class="w-12 h-12 uk-position-center" alt="Team One Vision Traders Video | All World Trade" />
+                                    </a>
+                                    <div class="pt-3">
+                                        <a href="https://www.youtube.com/watch?v=ICvW1755Puc" target="_blank"
+                                            class="font-semibold line-clamp-2">
+                                        Team One Vision
+                                        </a>
+                                        <div class="pt-2">
+                                            <a href="https://www.youtube.com/watch?v=ICvW1755Puc"
+                                                target="_blank" class="text-sm font-medium">
+                                            Pru Life UK continues to make it their priority to help
+                                            Filipinos achieve financial stability. </a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="mb-10">
+                                    <a href="https://www.youtube.com/watch?v=BRHRAgIeUlE" target="_blank"
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/traders-videos-thumbnail/scent-4.webp" alt="Scent Traders Video | All World Trade"
+                                        class="absolute inset-0 object-cover w-full h-full" />
+                                    <span class="
+                                        absolute
+                                        bg-black bg-opacity-60
+                                        bottom-1
+                                        font-semibold
+                                        px-1.5
+                                        py-0.5
+                                        right-1
+                                        rounded
+                                        text-white text-xs
+                                        ">
+                                    01:22</span>
+                                    <img src="assets/images/icon-play.svg"
+                                        class="w-12 h-12 uk-position-center" alt="Scent Traders Video | All World Trade" />
+                                    </a>
+                                    <div class="pt-3">
+                                        <a href="https://www.youtube.com/watch?v=BRHRAgIeUlE" target="_blank"
+                                            class="font-semibold line-clamp-2">
+                                        The Scent Connection CEO
+                                        </a>
+                                        <div class="pt-2">
+                                            <a href="https://www.youtube.com/watch?v=BRHRAgIeUlE"
+                                                target="_blank" class="text-sm font-medium">
+                                            Meet the Scent Connection CEO from the 3rd generation of
+                                            perfumery business tycoons
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="mb-10">
+                                    <a href="https://www.facebook.com/watch/?v=573257374604592" target="_blank"
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/traders-videos-thumbnail/mgi-ionspec-medical-eye-wear.webp"
+                                        alt="MGI Ionspec Medical Eye Wear Traders Video | All World Trade" class="absolute inset-0 object-cover w-full h-full" />
+                                    <span class="
+                                        absolute
+                                        bg-black bg-opacity-60
+                                        bottom-1
+                                        font-semibold
+                                        px-1.5
+                                        py-0.5
+                                        right-1
+                                        rounded
+                                        text-white text-xs
+                                        ">
+                                    06:38</span>
+                                    <img src="assets/images/icon-play.svg"
+                                        class="w-12 h-12 uk-position-center" alt="MGI Ionspec Medical Eye Wear Traders Video | All World Trade" />
+                                    </a>
+                                    <div class="pt-3">
+                                        <a href="https://www.facebook.com/watch/?v=573257374604592"
+                                            target="_blank" class="font-semibold line-clamp-2">
+                                        Ionspec MEDICAL EYEWEAR Testimony
+                                        </a>
+                                        <div class="pt-2">
+                                            <a href="https://www.facebook.com/watch/?v=573257374604592"
+                                                target="_blank" class="text-sm font-medium">
+                                            GLAUCOMA PATIENT 99 % NO VISION, sa Ionspec NAKA-ANINAG ULET
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="mb-10">
+                                    <a href="https://www.facebook.com/mgiproductsphilippines/videos/763856057547376/"
+                                        target="_blank"
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/traders-videos-thumbnail/mgi-ionspec-medical-eye-wear.webp"
+                                        alt="MGI Ionspec Medical Eye Wear Traders Video | All World Trade" class="absolute inset-0 object-cover w-full h-full" />
+                                    <span class="
+                                        absolute
+                                        bg-black bg-opacity-60
+                                        bottom-1
+                                        font-semibold
+                                        px-1.5
+                                        py-0.5
+                                        right-1
+                                        rounded
+                                        text-white text-xs
+                                        ">
+                                    11:55</span>
+                                    <img src="assets/images/icon-play.svg"
+                                        class="w-12 h-12 uk-position-center" alt="MGI Ionspec Medical Eye Wear Traders Video | All World Trade" />
+                                    </a>
+                                    <div class="pt-3">
+                                        <a href="https://www.facebook.com/mgiproductsphilippines/videos/763856057547376/"
+                                            target="_blank" class="font-semibold line-clamp-2">
+                                        How MGI Medical Eyewear Helps our Eyes!
+                                        </a>
+                                        <div class="pt-2">
+                                            <a href="https://www.facebook.com/mgiproductsphilippines/videos/763856057547376/"
+                                                target="_blank" class="text-sm font-medium">
+                                            Our MGI Eyewear simple explanation of how it can help our eyes!
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="mb-10">
+                                    <a href="https://www.facebook.com/watch/?v=680867256774296&ref=sharing&_rdc=1&_rdr"
+                                        target="_blank"
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/traders-videos-thumbnail/mystic-skin.jpg" alt="Mystic Skin Traders Video | All World Trade"
+                                        class="absolute inset-0 object-cover w-full h-full" />
+                                    <span class="
+                                        absolute
+                                        bg-black bg-opacity-60
+                                        bottom-1
+                                        font-semibold
+                                        px-1.5
+                                        py-0.5
+                                        right-1
+                                        rounded
+                                        text-white text-xs
+                                        ">
+                                    0:51</span>
+                                    <img src="assets/images/icon-play.svg"
+                                        class="w-12 h-12 uk-position-center" alt="Mystic Skin Traders Video | All World Trade" />
+                                    </a>
+                                    <div class="pt-3">
+                                        <a href="https://www.facebook.com/watch/?v=680867256774296&ref=sharing&_rdc=1&_rdr"
+                                            target="_blank" class="font-semibold line-clamp-2">
+                                        Mystic Skin
+                                        </a>
+                                        <div class="pt-2">
+                                            <a href="https://www.facebook.com/watch/?v=680867256774296&ref=sharing&_rdc=1&_rdr"
+                                                target="_blank" class="text-sm font-medium">
+                                            Sesh
+                                            #tattoo
+                                            #CarcarCitytattoo #cebuphilippines #mysticskintattoo
+                                            #sgoonstattoosupply #southsidecommunity
+                                            📱0 9 5 6 1 2 9 6 5 0 0
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="mb-10">
+                                    <a href="https://www.facebook.com/watch/?v=1963204720660328&ref=sharing&_rdc=1&_rdr"
+                                        target="_blank"
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/traders-videos-thumbnail/ding_adeth_shop.webp" alt="Ding Adeth Traders Video | All World Trade"
+                                        class="absolute inset-0 object-cover w-full h-full" />
+                                    <span class="
+                                        absolute
+                                        bg-black bg-opacity-60
+                                        bottom-1
+                                        font-semibold
+                                        px-1.5
+                                        py-0.5
+                                        right-1
+                                        rounded
+                                        text-white text-xs
+                                        ">
+                                    0:53</span>
+                                    <img src="assets/images/icon-play.svg"
+                                        class="w-12 h-12 uk-position-center" alt="Ding Adeth Traders Video | All World Trade" />
+                                    </a>
+                                    <div class="pt-3">
+                                        <a href="https://www.facebook.com/watch/?v=1963204720660328&ref=sharing&_rdc=1&_rdr"
+                                            target="_blank" class="font-semibold line-clamp-2">
+                                        Ding-Adeth KALAW Pili Pastries
+                                        </a>
+                                        <div class="pt-2">
+                                            <a href="https://www.facebook.com/watch/?v=1963204720660328&ref=sharing&_rdc=1&_rdr"
+                                                target="_blank" class="text-sm font-medium">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="mb-10">
+                                    <a href="https://www.facebook.com/100080231707449/videos/1316147259241076/"
+                                        target="_blank"
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/traders-videos-thumbnail/pomeranian.jpg" alt="Pomeranian Traders Video | All World Trade"
+                                        class="absolute inset-0 object-cover w-full h-full" />
+                                    <span class="
+                                        absolute
+                                        bg-black bg-opacity-60
+                                        bottom-1
+                                        font-semibold
+                                        px-1.5
+                                        py-0.5
+                                        right-1
+                                        rounded
+                                        text-white text-xs
+                                        ">
+                                    2:22</span>
+                                    <img src="assets/images/icon-play.svg"
+                                        class="w-12 h-12 uk-position-center" alt="Pomeranian Traders Video | All World Trade" />
+                                    </a>
+                                    <div class="pt-3">
+                                        <a href="https://www.facebook.com/100080231707449/videos/1316147259241076/"
+                                            target="_blank" class="font-semibold line-clamp-2">
+                                        Imperial Royalty Pomeranian
+                                        </a>
+                                        <div class="pt-2">
+                                            <a href="https://www.facebook.com/100080231707449/videos/1316147259241076/"
+                                                target="_blank" class="text-sm font-medium">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- === TRADERS VIDEO SLIDES - END === -->
+                </div>
+            </div>
+            <!-- === TRADERS VIDEO - END === -->
+            <!-- === WEBINARS - START === -->
+            <div class="bg-white main_content_custom-4 dark:bg-gray-900" id="tradersWebinars">
+                <div class="mcontainer-custom-4">
+                    <div class="relative flex justify-between mb-3 md:mb-4">
+                        <div class="flex-1">
+                            <h2 class="text-2xl font-semibold">Traders Webinars</h2>
+                            <nav class="my-4 border-b"></nav>
+                        </div>
+                    </div>
+                    <!-- === WEBINARS SLIDES - START === -->
+                    <div class="relative" uk-slider="finite: true">
+                        <div class="px-1 py-3 uk-slider-container">
+                            <ul class="
+                                uk-child-width-1-4@m uk-child-width-1-3@s uk-child-width-1-2 uk-grid-small uk-grid
+                                mr-2
+                                ">
+                                <li class="mb-10">
+                                    <a href="https://www.facebook.com/Matrix-Creation-Events-Venue-Events-Place-261606537670432/"
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28"
+                                        target="_blank">
+                                        <img src="uploads/traders-videos-thumbnail/matrix-creation-events-venue.webp"
+                                            alt="Matrix Creation Events Venue Traders Webinars | All World Trade" class="absolute inset-0 object-cover w-full h-full" />
+                                        <span class="
+                                            absolute
+                                            bg-black bg-opacity-60
+                                            bottom-1
+                                            font-semibold
+                                            px-1.5
+                                            py-0.5
+                                            right-1
+                                            rounded
+                                            text-white text-xs
+                                            ">
+                                        </span>
+                                    </a>
+                                    <div class="pt-3">
+                                        <a href="https://www.facebook.com/Matrix-Creation-Events-Venue-Events-Place-261606537670432/"
+                                            class="font-semibold line-clamp-2" target="_blank">
+                                        Matrix Creation Events Venue
+                                        </a>
+                                        <div class="pt-2">
+                                            <a href="https://www.facebook.com/Matrix-Creation-Events-Venue-Events-Place-261606537670432/"
+                                                class="text-sm" target="_blank">
+                                            Multiple Virtual Reality Scenery on 3 Story High Video Wall at
+                                            Matrix Creation Events Venue
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- === WEBINARS SLIDES - END === -->
+                </div>
+            </div>
+            <!-- === WEBINARS - END === -->
+            <!-- === SPONSORS - START === -->
+            <div class="bg-white main_content_custom-4 dark:bg-gray-900" id="sponsors">
+                <div class="mcontainer-custom-4">
+                    <div class="relative flex justify-between mb-3 md:mb-4">
+                        <div class="flex-1">
+                            <h2 class="text-2xl font-semibold">Sponsors</h2>
+                            <nav class="my-4 border-b"></nav>
+                        </div>
+                    </div>
+                    <div class="relative" uk-slider="finite: true">
+                        <div class="px-1 py-3 uk-slider-container">
+                            <ul class="
+                                uk-child-width-1-4@m uk-child-width-1-3@s uk-child-width-1-2 uk-grid-small uk-grid
+                                mr-2
+                                ">
+                                <li class="mb-10">
+                                    <div
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/sponsors/webp/matrix-creation-events-venue.webp"
+                                        alt="Matrix Creation Events Venue Traders Sponsors | All World Trade" class="absolute inset-0 object-cover w-full h-full" />
+                                    </div>
+                                </li>
+                                <li class="mb-10">
+                                    <div
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/sponsors/webp/ltsjs-2.webp" alt="Little Twinkling Star Jewelry Store Traders Sponsors | All World Trade"
+                                        class="absolute inset-0 object-cover w-full h-full" />
+                                    </div>
+                                </li>
+                                <li class="mb-10">
+                                    <div
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/sponsors/webp/dle-2.webp" alt="Diversified Lighting Enterprises  Traders Sponsors | All World Trade"
+                                        class="absolute inset-0 object-cover w-full h-full" />
+                                    </div>
+                                </li>
+                                <li class="mb-10">
+                                    <div
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/sponsors/webp/anep-top.webp" alt="Anep Top Metal Marketing Traders Sponsors | All World Trade"
+                                        class="absolute inset-0 object-cover w-full h-full" />
+                                    </div>
+                                </li>
+                                <li class="mb-10">
+                                    <div
+                                        class="relative block w-full overflow-hidden rounded-lg md:h-44 h-28">
+                                    <img src="uploads/sponsors/webp/tech-n-2.webp" alt="Tech N Plus Traders Sponsors | All World Trade"
+                                        class="absolute inset-0 object-cover w-full h-full" />
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- === SPONSORS - END === -->
+            <!-- === modal - START === -->
+            <%- include('../modal/awt_introduction.ejs') %>
+            <!-- === modal - END === -->
+            <%- include('../includes/footer/index.ejs') %>
+            <%- include('../modal/email-if-help-and-suggest-link-not-available.ejs') %>
+        </div>
+    </div>
+    <!-- </div> -->
+    <%- include('../includes/scripts/index.ejs') %>
+    <!-- comment muna itong home.js code lang ito pang count ng trader at visitors pero pinatanggal muna -->
+    <!-- <script src="assets/js/home.js"></script> -->
+</body>
+</html>

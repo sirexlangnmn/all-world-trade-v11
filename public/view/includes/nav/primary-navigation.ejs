@@ -1,0 +1,290 @@
+<header>
+    <style >
+        .navLogo {
+            height: 60px; 
+            margin-bottom: 0px;
+        }
+    
+        .nav-span {
+            font-size: 24px; 
+            font-family: inherit;
+        }
+    </style>
+    <nav class="sticky top-0 bg-white shadow-lg defaultscroll is-sticky">
+        <div class="max-w-full px-4 mx-auto">
+            <div class="flex justify-between">
+                <!-- Website Logo -->
+                <!-- <a href="#" class="flex items-center">
+                    <img src="" class="navLogo" id="navLogo" alt="All World Trade" />
+                </a> -->
+                <!-- <a href="#" class="flex items-center p-2 text-2xl text-gray-900 dark:text-white ">
+                    <img class="w-16 h-16 mr-2" src="/uploads/logo/all-world-trade-circle-logo-mar-07-0946.png" alt="logo">
+                    All World Trade
+                </a> -->
+                <a href="#" class="flex items-center p-2 text-2xl text-gray-900 dark:text-white ">
+                    <img class="w-16 h-16 mr-2" src="/uploads/logo/all-world-trade-circle-logo-mar-07-0946.png" alt="logo" onclick="goToHomePage()">
+                    <h3 class="" onclick="goToHomePage()"> All World Trade </h3>
+                </a>
+                <div class="flex items-center md:order-2">
+                    <!-- <div class="right_side rightSide" id="right_side_with_no_session" >
+                            <div class="header_widgets">
+                                <div class="flex hidden my-2 space-x-3 text-sm font-semibold text-center capitalize lg:block">
+                                    <a href="#" onclick="goToLoginPage()"
+                                        class="px-6 py-3 text-white bg-blue-500 rounded-md shadow blue-500 blue-white-hover">Login</a>
+        
+                                </div>
+                            </div>
+                        </div> -->
+                        <div id="right_side_with_no_session" style="display: none;">
+                            <a href="#" onclick="goToLoginPage()"
+                                            class="px-6 py-3 text-white bg-blue-500 rounded-md shadow blue-500 blue-white-hover">Login</a>
+
+                        </div>
+
+
+                    <div class="items-center px-2 py-2 md:flex ">
+                        <div class="right_side" id="right_side_with_session" style="display: none;">
+                            <div class="header_widgets" id="primaryWidgets">
+                                <!-- === CART - START === -->
+          
+                                <!-- === CART - END === -->
+                            
+                                <!-- === NOTIFICATIONS - START === -->
+                   
+                                <!-- === NOTIFICATIONS - END === -->
+                           
+                                <!-- === MESSAGES - START === -->
+                            
+                                <!-- === MESSAGES - END === -->
+                               
+                                <!-- === AVATAR - START === -->
+                                <%- include('../header_avatar/index.ejs') %>
+                                <!-- === AVATAR - END === -->
+                            </div>
+                        </div>
+        
+                        <!-- <div class="right_side rightSide" id="right_side_with_no_session" >
+                            <div class="header_widgets">
+                                <div class="flex hidden my-2 space-x-3 text-sm font-semibold text-center capitalize lg:block">
+                                    <a href="#" onclick="goToLoginPage()"
+                                        class="px-6 py-3 text-white bg-blue-500 rounded-md shadow blue-500 blue-white-hover">Login</a>
+        
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+
+                </div>
+
+                <!-- Primary Navbar items -->
+                <!-- <div class="sticky top-0 items-center hidden md:flex defaultscroll is-sticky" id="primaryNav" style="margin-left: -250px;"> -->
+                <div class="sticky top-0 items-center hidden md:flex defaultscroll is-sticky" id="primaryNav" >
+                    <div class="grid grid-cols-7 primaryNav">
+                        <div class="block px-10 py-3 text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100 ">
+                            <a class="" href="#" onclick="goToHomePage()">
+                                <div class="flex-1" >
+                                    <div class="text-gray-800 icon-feather-home nav-span dark:text-gray-400" > </div>
+                                    <span class="" > Home </span>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- <div class="block px-10 py-3 text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100">
+                            <a class="block text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100"
+                                href="/#selections">
+                                <div class="flex-1" >
+                                    <div class="text-gray-800 icon-feather-calendar nav-span dark:text-gray-400" > </div>
+                                    <span class="" > Event Calendar </span>
+                                </div>
+                            </a>
+                        </div> -->
+                        <div class="block px-10 py-3 text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100" >
+                            <a class="block text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100"
+                                href="/#tradersVideos">
+                                <!-- <span class="text-gray-800 icon-feather-video nav-span dark:text-gray-400" > </span> -->
+                                <div class="flex-1" >
+                                    <div class="text-gray-800 icon-feather-video nav-span dark:text-gray-400" > </div>
+                                    <span class="" > Traders Videos </span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="block px-10 py-3 text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100" >
+                            <a class="block text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100"
+                                href="/#tradersWebinars">
+                                <!-- <span class="text-gray-800 icon-feather-info nav-span dark:text-gray-400" > </span> -->
+                                <div class="flex-1" >
+                                    <div class="text-gray-800 icon-feather-info nav-span dark:text-gray-400" > </div>
+                                    <span class="" > Traders Webinars </span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="block px-10 py-3 text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100" >
+                            <a class="block text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100"
+                                href="/pricing">
+                                <!-- <span class="text-gray-800 icon-feather-tag nav-span dark:text-gray-400" > </span> -->
+                                <div class="flex-1" >
+                                    <div class="text-gray-800 icon-feather-tag nav-span dark:text-gray-400" > </div>
+                                    <span class="" > Pricing </span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="block px-10 py-3 text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100" >
+                            <a href="#" onclick="goToSelectionPage()"
+                                class="block text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100">
+                                <!-- <span class="text-gray-800 icon-feather-users nav-span dark:text-gray-400" >
+                                </span> -->
+                                <div class="flex-1" >
+                                    <div class="text-gray-800 icon-feather-users nav-span dark:text-gray-400" >
+                                    </div>
+                                    <span class="" > Selections </span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="block px-10 py-3 text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100" >
+                            <a href="#" onclick="goToHelpSuggestionPage()"
+                                class="block text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100">
+                                <!-- <span class="text-gray-800 icon-feather-message-square nav-span dark:text-gray-400" >
+                                </span> -->
+                                <div class="flex-1" >
+                                    <div class="text-gray-800 icon-feather-message-square nav-span dark:text-gray-400" >
+                                    </div>
+                                    <span class="" > Help </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Secondary Navbar items -->
+               
+    
+                <!-- Mobile menu button -->
+                <!-- <div class="flex items-center md:hidden">
+              <button class="outline-none mobile-menu-button">
+                <svg class="w-6 h-6 text-gray-500 hover:text-blue-500" x-show="!showMenu" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+              </button>
+            </div> -->
+            </div>
+        </div>
+        <!-- mobile menu -->
+        <div class="hidden mobile-menu">
+            <div class="grid grid-cols-7">
+                <div class="block px-4 py-3 text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100"
+                    uk-tooltip="title: Home; pos: bottom">
+                    <a class="" href="#" onclick="goToHomePage()">
+                        <span class="icon-feather-home nav-span" > </span>
+                    </a>
+                </div>
+                <div class="block px-4 py-3 text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100"
+                    uk-tooltip="title: Event Calendar; pos: bottom">
+                    <a class="block text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100"
+                        href="/all-about-events">
+                        <span class="icon-feather-calendar nav-span" > </span>
+                    </a>
+                </div>
+                <div class="block px-4 py-3 text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100"
+                    uk-tooltip="title: Traders Videos; pos: bottom">
+                    <a class="block text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100"
+                        href="/#tradersVideos">
+                        <span class="icon-feather-video nav-span" > </span>
+                    </a>
+                </div>
+                <div class="block px-4 py-3 text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100"
+                    uk-tooltip="title: Traders Webinars; pos: bottom">
+                    <a class="block text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100"
+                        href="/#tradersWebinars">
+                        <span class="icon-feather-info nav-span" > </span>
+                    </a>
+                </div>
+                <div class="block px-4 py-3 text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100"
+                    uk-tooltip="title: Pricing; pos: bottom">
+                    <a class="block text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100"
+                        href="/pricing">
+                        <span class="icon-feather-tag nav-span" > </span>
+                    </a>
+                </div>
+                <div class="block px-4 py-3 text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100"
+                    uk-tooltip="title: Selections; pos: bottom">
+                    <a href="#" onclick="goToSelectionPage()"
+                        class="block text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100">
+                        <span class="icon-feather-users nav-span" > </span>
+                    </a>
+                </div>
+                <div class="block px-4 py-3 text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100"
+                    uk-tooltip="title: Help / Suggestion; pos: bottom">
+                    <a href="#" onclick="goToHelpSuggestionPage()"
+                        class="block text-center border-white rounded-custom hover:border-gray-100 hover:bg-gray-100">
+                        <span class="icon-feather-message-square nav-span" > </span>
+                    </a>
+                </div>
+            </div>
+    
+            <script  src="assets/js/primary-navigation.js"></script>
+            <script >
+                const mobileMenuButton = document.querySelector("button.mobile-menu-button");
+                const mobileMenu = document.querySelector(".mobile-menu");
+                const primaryNav = document.querySelector(".primaryNav");
+                const rightSideWithSession = document.getElementById('right_side_with_session');
+                const rightSideWithNoSession = document.getElementById('right_side_with_no_session');
+                const sessionUuid = '<%= data.uuid %>';
+
+                if (sessionUuid) {
+                    rightSideWithSession.style.display = 'block';
+                    rightSideWithNoSession.style.display = 'none';
+                } else {
+                    rightSideWithSession.style.display = 'none';
+                    rightSideWithNoSession.style.display = 'block';
+                }
+
+                function toggleNav() {
+                    const w = window.innerWidth;
+                    if (w < 1015) {
+                        mobileMenu.classList.remove("hidden");
+                        primaryNav.classList.add("hidden");
+                    }
+                    if (w > 1015) {
+                        mobileMenu.classList.add("hidden");
+                        primaryNav.classList.remove("hidden");
+                    }
+
+                    if (w > 1280) {
+                        // primaryNav.style.marginLeft = "-150px";
+                    } else {
+                        primaryNav.style.marginLeft = null;
+                    }
+
+                    if (w > 1460) {
+                        // primaryNav.style.marginLeft = "-150px";
+                    } else {
+                        primaryNav.style.marginLeft = null;
+                    }
+                }
+
+                window.addEventListener('resize', () => {
+                    toggleNav();
+                });
+
+                window.addEventListener('load', () => {
+                    toggleNav();
+                });
+
+                function goToHomePage() {
+                    location.replace(host + '/');
+                }
+
+                function goToSelectionPage() {
+                    location.replace(host + '/selection');
+                }
+
+                function goToLoginPage() {
+                    location.replace(host + '/login');
+                }
+            </script>
+            <!-- </ul> -->
+        </div>
+    
+    </nav>
+</header>

@@ -1,0 +1,556 @@
+<%- include('../includes/head/index.ejs') %>
+
+  <style>
+    .my-actions {
+      margin: 0 2em;
+    }
+
+    .order-1 {
+      order: 1;
+      margin-left: -20px;
+    }
+
+    .order-2 {
+      order: 2;
+    }
+
+    .order-3 {
+      order: 3;
+      margin-right: -20px;
+    }
+
+    .right-gap {
+      margin-right: auto;
+    }
+  </style>
+
+  <body>
+    <div id="wrapper" class="is-collapse is-active">
+      <!-- === HEADER - START === -->
+      <%- include('../includes/nav/primary-navigation.ejs') %>
+        <!-- === HEADER - END === -->
+
+        <!-- Main Contents -->
+        <!-- <div class="bg-gray-200 main_content_custom"> -->
+        <div class="main_content_custom">
+          <div class="mcontainer_custom">
+            <!--  breadcrumb -->
+            <div class="w-full mt-10 lg:w-6/6">
+              <div class="mb-2 card">
+                <div class="py-0 breadcrumb-area">
+                  <div class="breadcrumb">
+                    <ul class="p-4" id="displaySearchParameter">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="lg:flex lg:space-x-2 ">
+              <div class="hidden w-full mb-2 lg:block lg:w-1/6" data-panel="left">
+                <div class="bg-white selection-left-column" id="selectionLeftColumn" data-simplebar>
+                  <div class="p-3 -mt-1.5">
+                    <!-- <div
+                      class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                      role="alert">
+                      <svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                      <span class="font-medium">More detail means more specific filtering</span>
+                    </div> -->
+                    <div id="alert-border-4" class="" role="alert">
+                       <div class="mb-2 ml-3 text-sm font-bold text-green-300">
+                        More detail means more specific filtering
+                      </div>
+                    </div>
+                    <div class="mb-14">
+                      <div class="">
+                        <h2 class="text-lg font-semibold">COMPANY BACKGROUND</h2>
+                        <hr />
+                      </div>
+                      <p
+                        class="inline-flex items-center text-xs font-normal text-gray-500 hover:underline dark:text-gray-400">
+                        Scope of Operation</p>
+                      <ul uk-accordion class="p-4 bg-gray-200 rounded-lg mb-14 dark:bg-gray-200">
+                        <li class="mb-6" id="selectionRegionOfOperationAccordion">
+                          <a class="uk-accordion-title -mb-20px" href="#">
+                            <div class="icon-and-text">
+                              <img alt="America icon" srcset="https://img.icons8.com/color/2x/america.png 2x"
+                                class="icon-custom" />
+                              <div class="text-sm text-gray-500 mt-0.5">GLOBAL REGION</div>
+                            </div>
+                          </a>
+                          <div class="relative p-1 uk-accordion-content bg-white2">
+                            <div id="selectionRegionOfOperation">
+                            </div>
+                          </div>
+                          <p id="displayselectedRegionOfOperation"
+                            class="ml-12 text-base font-semibold capitalize text-md font-md text-white-900 dark:text-white-300">
+                            <!-- Selected Region Of Operation -->
+                          </p>
+                          <input type="text" id="selectedRegionOfOperation" name="selectedRegionOfOperation"
+                            placeholder="" class="" style="display: none;">
+                        </li>
+                        <!-- <nav class="mb-6 border-b"></nav> -->
+                        <li class="mb-6" id="selectionCountryAccordion">
+                          <!-- <a class="uk-accordion-title" href="#">Country</a> -->
+                          <a class="uk-accordion-title -mb-20px" href="#">
+                            <div class="icon-and-text">
+                              <img alt="America icon" srcset="https://img.icons8.com/color/2x/america.png 2x"
+                                class="icon-custom" />
+                              <div class="text-sm text-gray-500 mt-0.5">COUNTRY</div>
+                            </div>
+                          </a>
+                          <div class="relative p-1 uk-accordion-content bg-white2">
+                            <div id="selectionCountry">
+                            </div>
+                          </div>
+                          <p id="displaySelectedCountry"
+                            class="ml-12 text-base font-semibold capitalize text-md font-md text-white-900 dark:text-white-300">
+                            <!-- Selected Country -->
+                          </p>
+                          <input type="text" id="selectedCountry" name="selectedCountry" placeholder="" class=""
+                            style="display: none;">
+                        </li>
+                        <!-- <nav class="mb-6 border-b"></nav> -->
+                        <li class="mb-6" id="selectionStateAccordion">
+                          <!-- <a class="uk-accordion-title" href="#">State / Province</a> -->
+                          <a class="uk-accordion-title -mb-20px" href="#">
+                            <div class="icon-and-text">
+                              <img alt="America icon" srcset="https://img.icons8.com/color/2x/place-marker.png 2x"
+                                class="icon-custom" />
+                              <div class="text-sm text-gray-500 mt-0.5">PROVINCE</div>
+                            </div>
+                          </a>
+                          <div class="relative p-1 uk-accordion-content bg-white2">
+                            <div id="selectionState">
+                            </div>
+                          </div>
+                          <p id="displaySelectedState"
+                          class="ml-12 text-base font-semibold capitalize text-md font-md text-white-900 dark:text-white-300">
+                            <!-- Selected State -->
+                          </p>
+                          <input type="text" id="selectedState" name="selectedState" placeholder="" class=""
+                            style="display: none;">
+                        </li>
+                        <!-- <nav class="mb-6 border-b"></nav> -->
+                        <li class="mb-6" id="selectionCityAccordion">
+                          <!-- <a class="uk-accordion-title" href="#">City</a> -->
+                          <a class="uk-accordion-title -mb-20px" href="#">
+                            <div class="icon-and-text">
+                              <img alt="America icon" srcset="https://img.icons8.com/color/2x/place-marker.png 2x"
+                                class="icon-custom" />
+                              <div class="text-sm text-gray-500 mt-0.5">CITY</div>
+                            </div>
+                          </a>
+                          <div class="relative p-1 uk-accordion-content bg-white2">
+                            <div id="selectionCity">
+                            </div>
+                          </div>
+                          <p id="displaySelectedCity"
+                          class="ml-12 text-base font-semibold capitalize text-md font-md text-white-900 dark:text-white-300">
+                            <!-- Selected City -->
+                          </p>
+                          <input type="text" id="selectedCity" name="selectedCity" placeholder="" class=""
+                            style="display: none;">
+                        </li>
+                      </ul>
+                      <ul uk-accordion>
+                        <li class="mb-6" id="selectionLanguageAccordion">
+                          <!-- <a class="uk-accordion-title" href="#">Language</a> -->
+                          <a class="uk-accordion-title -mb-20px" href="#">
+                            <div class="icon-and-text">
+                              <img alt="America icon" srcset="https://img.icons8.com/color/2x/language.png 2x"
+                                class="icon-custom" />
+                              <div class="text-sm text-gray-500 mt-0.5">LANGUAGE</div>
+                            </div>
+                          </a>
+                          <div class="relative p-1 uk-accordion-content bg-white2">
+                            <div id="language">
+                            </div>
+                          </div>
+                          <p id="displaySelectedlanguage"
+                          class="ml-12 text-base font-semibold capitalize text-md font-md text-white-900 dark:text-white-300">
+                            <!-- Selected Language -->
+                          </p>
+                          <input type="text" id="selectedLanguage" name="selectedLanguage" placeholder="" class=""
+                            style="display: none;">
+                        </li>
+                        <!-- <nav class="mb-6 border-b"></nav> -->
+                        <li class="mb-6" id="selectionBusinessScaleAccordion">
+                          <a class="uk-accordion-title -mb-20px" href="#">
+                            <div class="icon-and-text">
+                              <img alt="America icon" srcset="https://img.icons8.com/color/2x/client-company.png 2x"
+                                class="icon-custom" />
+                              <div class="text-sm text-gray-500 mt-0.5">BUSINESS SCALE</div>
+                            </div>
+                          </a>
+                          <div class="relative p-1 uk-accordion-content bg-white2">
+                            <div
+                              class="p-2 filterByBusinessScaleClass text-md font-md text-white-900 dark:text-white-300 hover:bg-gray-50"
+                              data-el="">Any</div>
+                            <div
+                              class="p-2 filterByBusinessScaleClass text-md font-md text-white-900 dark:text-white-300 hover:bg-gray-50"
+                              data-el="1">Small Scale</div>
+                            <div
+                              class="p-2 filterByBusinessScaleClass text-md font-md text-white-900 dark:text-white-300 hover:bg-gray-50"
+                              data-el="2">Medium Scale</div>
+                            <div
+                              class="p-2 filterByBusinessScaleClass text-md font-md text-white-900 dark:text-white-300 hover:bg-gray-50"
+                              data-el="3">Large Scale</div>
+                          </div>
+                          <p id="displaySelectedBusinessScale"
+                          class="ml-12 text-base font-semibold capitalize text-md font-md text-white-900 dark:text-white-300">
+                            <!-- Selected Business Scale -->
+                          </p>
+                          <input type="text" id="selectedBusinessScale" name="selectedBusinessScale" placeholder=""
+                            class="" style="display: none;">
+                        </li>
+                        <!-- <nav class="mb-6 border-b"></nav> -->
+                      </ul>
+                    </div>
+
+                    <!-- ============================= -->
+                    <!-- SELECTION BY CATEGORY [start] -->
+                    <!-- ============================= -->
+                    <div class="mb-4">
+                      <h2 class="text-lg font-semibold">SELECTION CATEGORY</h2>
+                      <hr />
+                    </div>
+                    <!-- <ul class="mb-52"> -->
+                    <ul class="mb-14" uk-accordion>
+                      <!-- <li style="font-weight: 700;">
+                        <div class="icon-and-text">
+                          <img alt="America icon" srcset="https://img.icons8.com/color/2x/stall.png 2x"
+                            class="icon-custom" />
+                          <span class="span-inline-icon"> Trade Category </span>
+                        </div>
+                        <select class="selectpicker" id="trade-categories" name="trade-categories">
+                        </select>
+                      </li>
+                      <br /> -->
+                      <li class="mb-6" id="selectionTradeCategoriesAccordion">
+                        <a class="uk-accordion-title -mb-20px" href="#">
+                          <div class="icon-and-text">
+                            <img alt="America icon" srcset="https://img.icons8.com/color/2x/stall.png 2x"
+                              class="icon-custom" />
+                            <div class="text-sm text-gray-500 mt-0.5">TRADE CATEGORY</div>
+                          </div>
+                        </a>
+                        <div class="relative p-1 uk-accordion-content bg-white2">
+                          <div id="trade-categories">
+                          </div>
+                        </div>
+                        <p id="displaySelectedTradeCategories"
+                        class="ml-12 text-base font-semibold capitalize text-md font-md text-white-900 dark:text-white-300">
+                          <!-- Selected Trade Category -->
+                        </p>
+                        <input type="text" id="selectedTradeCategories" name="selectedTradeCategories" placeholder=""
+                          class="" style="display: none;">
+                      </li>
+                      <!-- <nav class="mb-6 border-b"></nav> -->
+                      <!-- <li style="font-weight: 700;">
+                        <a href="">
+                          <ion-icon name="settings-outline" class="side-icon"></ion-icon>
+                          <span>Sub Category</span>
+                        </a>
+                        <select class="selectpicker" id="sub-categories" name="sub-categories">
+                        </select>
+                      </li> -->
+                      <li class="mb-6" id="selectionSubCategoriesAccordion">
+                        <a class="uk-accordion-title -mb-20px" href="#">
+                          <div class="icon-and-text">
+                            <img alt="America icon" srcset="https://img.icons8.com/color/2x/stall.png 2x"
+                              class="icon-custom" />
+                            <div class="text-sm text-gray-500 mt-0.5">SUB CATEGORY</div>
+                          </div>
+                        </a>
+                        <div class="relative p-1 uk-accordion-content bg-white2">
+                          <div id="sub-categories">
+                          </div>
+                        </div>
+                        <p id="displaySelectedSubCategories"
+                        class="ml-12 text-base font-semibold capitalize text-md font-md text-white-900 dark:text-white-300">
+                          <!-- Selected Sub Category -->
+                        </p>
+                        <input type="text" id="selectedSubCategories" name="selectedSubCategories" placeholder=""
+                          class="" style="display: none;">
+                      </li>
+                      <!-- <nav class="mb-6 border-b"></nav> -->
+                      <!-- <br />
+                      <li style="font-weight: 700;">
+                        <a href="">
+                          <ion-icon name="settings-outline" class="side-icon"></ion-icon>
+                          <span>Minor Sub Category</span>
+                        </a>
+                        <select class="selectpicker" id="minor-sub-categories" name="minor-sub-categories">
+                        </select>
+                      </li> -->
+                      <li class="mb-6" id="selectionMinorSubCategoriesAccordion">
+                        <a class="uk-accordion-title -mb-20px" href="#">
+                          <div class="icon-and-text">
+                            <img alt="America icon" srcset="https://img.icons8.com/color/2x/stall.png 2x"
+                              class="icon-custom" />
+                            <div class="text-sm text-gray-500 mt-0.5">MINOR SUB CATEGORY</div>
+                          </div>
+                        </a>
+                        <div class="relative p-1 uk-accordion-content bg-white2">
+                          <div id="minor-sub-categories">
+                          </div>
+                        </div>
+                        <p id="displaySelectedMinorSubCategories"
+                        class="ml-12 text-base font-semibold capitalize text-md font-md text-white-900 dark:text-white-300">
+                          <!-- Selected Sub Category -->
+                        </p>
+                        <input type="text" id="selectedMinorSubCategories" name="selectedMinorSubCategories"
+                          placeholder="" class="" style="display: none;">
+                      </li>
+                      <!-- <nav class="mb-6 border-b"></nav> -->
+                    </ul>
+                    <!-- =========================== -->
+                    <!-- SELECTION BY CATEGORY [end] -->
+                    <!-- =========================== -->
+
+                    <!-- =========================== -->
+                    <!-- SEARCH BY [start] -->
+                    <!-- =========================== -->
+                    <div class="mb-14">
+                      <div class="mb-4">
+                        <h2 class="text-lg font-semibold">SEARCH BY</h2>
+                        <hr />
+                      </div>
+                      <ul>
+                        <li style="font-weight: 700;">
+                          <select class="selectpicker orbitron" id="searchByProductOrCompanyName"
+                            name="searchByProductOrCompanyName">
+                            <!-- <option class="orbitron" value="product_service" selected>Product / Service</option> -->
+                            <option class="orbitron" value="company_name">Company Name</option>
+                          </select>
+                          <input type="text" id="company_name_input" name="company_name_input"
+                            placeholder="Company Name" class="w-full h-12 px-3 mt-2 bg-gray-100 rounded-md">
+                          <input type="text" id="product_service_input" name="product_service_input"
+                            placeholder="Product / Service" class="w-full h-12 px-3 mt-2 bg-gray-100 rounded-md">
+                        </li>
+                        <ul>
+                    </div>
+                    <!-- =========================== -->
+                    <!-- SEARCH BY [end] -->
+                    <!-- =========================== -->
+
+                  </div>
+                </div>
+              </div>
+              <div class="w-full mb-2 lg:w-4/6" id="companiesProfilePictureDiv" data-panel="middle">
+                <div class="card" id="selectionMidColumnCompanyBanner">
+
+                  <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slideshow>
+
+                    <!-- <ul class="uk-slideshow-items" style="height: 944px" id="companiesProfilePicture"> -->
+                    <ul class="uk-slideshow-items" id="companiesProfilePicture">
+                      <!-- <li>
+                    <img src="uploads/selections/SID001.jpg" alt="" uk-cover>
+                  </li>
+                  <li>
+                    <img src="uploads/selections/SID002.jpg" alt="" uk-cover>
+                  </li>
+                  <li>
+                    <img src="uploads/selections/SID003.jpg" alt="" uk-cover>
+                  </li> -->
+                    </ul>
+                    <a class="p-4 text-white uk-position-center-left uk-position-small uk-hidden-hover" href="#"
+                      uk-slidenav-previous uk-slideshow-item="previous" id="selections-prev-slide"></a>
+                    <a class="p-4 text-white uk-position-center-right uk-position-small uk-hidden-hover" href="#"
+                      uk-slidenav-next uk-slideshow-item="next" id="selections-next-slide"></a>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Right Sidebar -->
+              <div class="hidden w-full lg:block lg:w-1/6" data-panel="right">
+                <div class="bg-white selection-company-details-right" id="cardForDetailsOfSpecificCompany"
+                  data-simplebar>
+                  <div class="p-4 -mt-1.5">
+                    <div class="mb-14 selection-left-column-inner">
+                      <div class="flex items-center justify-between border-b">
+                        <h2 class="text-lg font-semibold">COMPANY DETAILS</h2>
+                      </div>
+                      <div class="p-4 -mt-1.5">
+                        <div class="flex items-center p-2 -mx-2 space-x-4 rounded-md hover:bg-gray-50">
+                          <div class="flex-1">
+                            <div class="text-sm text-gray-500 mt-0.5">COMPANY NAME</div>
+                            <p class="text-base font-semibold capitalize" id="selection-company-name"></p>
+                          </div>
+                        </div>
+                        <div class="flex items-center p-2 -mx-2 space-x-4 rounded-md hover:bg-gray-50">
+                          <div class="flex-1">
+                            <div class="text-sm text-gray-500 mt-0.5">COMPANY TAGLINE</div>
+                            <p class="text-base font-semibold capitalize" id="selection-company-tagline"></p>
+                          </div>
+                        </div>
+                        <div class="flex items-center p-2 -mx-2 space-x-4 rounded-md hover:bg-gray-50">
+                          <div class="flex-1">
+                            <div class="text-sm text-gray-500 mt-0.5">Tags</div>
+                            <!-- <a href="timeline-page.html" class="text-base font-semibold capitalize" id="selection-business-industry-belong"></a> -->
+                            <div class="flex flex-wrap gap-2" id="selection-business-industry-belong">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="flex items-center p-2 -mx-2 space-x-4 rounded-md hover:bg-gray-50">
+                          <div class="flex-1">
+                            <div class="text-sm text-gray-500 mt-0.5">GLOBAL REGION :</div>
+                            <p class="text-base font-semibold capitalize"
+                              id="selection-company-region-of-operations"></p>
+                          </div>
+                        </div>
+                        <div class="flex items-center p-2 -mx-2 space-x-4 rounded-md hover:bg-gray-50">
+                          <div class="flex-1">
+                            <div class="text-sm text-gray-500 mt-0.5">COUNTRY :</div>
+                            <p class="text-base font-semibold capitalize"
+                              id="selection-company-country-of-operations"></p>
+                          </div>
+                        </div>
+                        <div class="flex items-center p-2 -mx-2 space-x-4 rounded-md hover:bg-gray-50">
+                          <div class="flex-1">
+                            <div class="text-sm text-gray-500 mt-0.5">STATE / PROVINCE :</div>
+                            <p class="text-base font-semibold capitalize"
+                              id="selection-company-state-of-operations"></p>
+                          </div>
+                        </div>
+                        <div class="flex items-center p-2 -mx-2 space-x-4 rounded-md hover:bg-gray-50">
+                          <div class="flex-1">
+                            <div class="text-sm text-gray-500 mt-0.5">CITY :</div>
+                            <p class="text-base font-semibold capitalize"
+                              id="selection-company-city-of-operations"></p>
+                          </div>
+                        </div>
+                        <div class="flex items-center p-2 -mx-2 space-x-4 rounded-md hover:bg-gray-50">
+                          <div class="flex-1">
+                            <div class="text-sm text-gray-500 mt-0.5">Operating Time (LOCAL)</div>
+                            <p class="text-base font-semibold capitalize" id="local-operating-time"></p>
+                          </div>
+                        </div>
+                        <div class="flex items-center p-2 -mx-2 space-x-4 rounded-md hover:bg-gray-50">
+                          <div class="flex-1">
+                            <div class="text-sm text-gray-500 mt-0.5">Operating Time (UCT)</div>
+                            <p class="text-base font-semibold capitalize" id="uct-operating-time"></p>
+                          </div>
+                        </div>
+                        <div class="flex items-center p-2 -mx-2 space-x-4 rounded-md hover:bg-gray-50">
+                          <div class="flex-1">
+                            <div class="text-sm text-gray-500 mt-0.5">Languages of Communication</div>
+                            <div class="flex flex-wrap gap-2" id="selection-business-language-of-communication">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="flex items-center p-2 -mx-2 space-x-4 rounded-md hover:bg-gray-50">
+                          <div class="flex-1">
+                            <div class="text-sm text-gray-500 mt-0.5">Trade Category</div>
+                            <p class="text-base font-semibold capitalize"
+                              id="selection-business-major-category"></p>
+                          </div>
+                        </div>
+                        <div class="flex items-center p-2 -mx-2 space-x-4 rounded-md hover:bg-gray-50">
+                          <div class="flex-1">
+                            <div class="text-sm text-gray-500 mt-0.5">Sub Category</div>
+                            <p class="text-base font-semibold capitalize"
+                              id="selection-business-sub-category"></p>
+                          </div>
+                        </div>
+                        <div class="flex items-center p-2 -mx-2 space-x-4 rounded-md hover:bg-gray-50">
+                          <div class="flex-1">
+                            <div class="text-sm text-gray-500 mt-0.5">Minor Sub Category</div>
+                            <p class="text-base font-semibold capitalize"
+                              id="selection-business-minor-sub-category"></p>
+                          </div>
+                        </div>
+                        <div class="flex items-center p-2 -mx-2 space-x-4 rounded-md hover:bg-gray-50">
+                          <div class="flex-1">
+                            <div class="text-sm text-gray-500 mt-0.5">Business Scale</div>
+                            <p class="text-base font-semibold capitalize"
+                              id="selection-business-scale"></p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="selection-company-details-right bg-white mt-2.5" id="cardForCompanySearchResult" id="asdf"
+                  data-simplebar>
+                  <div class="p-4 -mt-1.5">
+                    <div class="mb-14 selection-left-column-inner">
+                      <div class="flex items-center justify-between border-b">
+                        <h2 class="text-lg font-semibold">RESULTS</h2>
+                      </div>
+                      <div class="p-4 -mt-1.5" id="top-selection-results">
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+
+    <%- include('../modal/email-if-help-and-suggest-link-not-available.ejs') %>
+    <%- include('../modal/selectionQuestion.ejs') %>
+    <%- include('../modal/client-email-the-trader.ejs') %>
+    <%- include('../includes/scripts/index.ejs') %>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js"></script>
+      <script src="assets/js/selection.js"></script>
+      <script src="assets/js/selection-countries.js"></script>
+      <script src="assets/js/timezone.js"></script>
+      <script src="assets/js/image-link-checker.js"></script>
+      <script src="assets/js/client-email-the-trader.js"></script>
+      <!-- <script src="assets/js/getStatesAndCitiesOptions.js"></script> -->
+      
+
+      <script type="text/javascript">
+        // Mobile panel switching via profile avatar dropdown (only active below lg breakpoint)
+        (function() {
+          'use strict';
+
+          var panels = {
+            left: document.querySelector('[data-panel="left"]'),
+            middle: document.querySelector('[data-panel="middle"]'),
+            right: document.querySelector('[data-panel="right"]')
+          };
+
+          // Listen globally for clicks on panel-switching links
+          document.addEventListener('click', function(e) {
+            var target = e.target.closest('[data-panel-target]');
+            if (!target) return;
+
+            var panelToShow = target.getAttribute('data-panel-target');
+
+            // On desktop do nothing — preserve the 3-column layout
+            if (window.innerWidth >= 1024) return;
+
+            e.preventDefault();
+
+            Object.keys(panels).forEach(function(key) {
+              panels[key].classList.toggle('hidden', key !== panelToShow);
+            });
+
+            // Close the profile dropdown via UIkit API
+            var drop = target.closest('[uk-drop]');
+            if (drop && window.UIkit) {
+              window.UIkit.dropdown(drop).hide();
+            }
+          });
+
+          // Reset to default layout on resize across the lg breakpoint
+          window.addEventListener('resize', function() {
+            if (window.innerWidth < 1024) {
+              panels.left.classList.add('hidden');
+              panels.middle.classList.remove('hidden');
+              panels.right.classList.add('hidden');
+            } else {
+              panels.middle.classList.remove('hidden');
+            }
+          });
+        })();
+      </script>
+  </body>
+
+  </html>

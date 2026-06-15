@@ -1,0 +1,91 @@
+<script >
+    const btn = document.querySelector("button.mobile-menu-button");
+    const mobileMenu = document.querySelector(".mobile-menu");
+    const primaryNav = document.querySelector(".primaryNav");
+
+    // btn.addEventListener("click", () => {
+    //   mobileMenu.classList.toggle("hidden");
+    // });
+
+    let w = window.innerWidth;
+
+    if (w < 1015) {
+        mobileMenu.classList.remove("hidden");
+        primaryNav.classList.add("hidden");
+    }
+    if (w > 1015) {
+        mobileMenu.classList.add("hidden");
+        primaryNav.classList.remove("hidden");
+    }
+
+    addEventListener('resize', (event) => {
+        let w = window.innerWidth;
+        
+        if (w < 1015) {
+            mobileMenu.classList.remove("hidden");
+            primaryNav.classList.add("hidden");
+        }
+        if (w > 1015) {
+            mobileMenu.classList.add("hidden");
+            primaryNav.classList.remove("hidden");
+        }
+    });
+
+    let sessionUuid = `<%= data.uuid %>`;
+    
+    if (sessionUuid) {
+        document.getElementById('right_side_with_session').style.display = 'block';
+        document.getElementById('right_side_with_no_session').style.display = 'none';
+    } else {
+        document.getElementById('right_side_with_session').style.display = 'none';
+        document.getElementById('right_side_with_no_session').style.display = 'block';
+    }
+
+    function goToHomePage() {
+        location.replace(host + '/');
+    }
+
+
+    function goToSelectionPage() {
+        location.replace(host + '/selection');
+    }
+
+    
+
+    addEventListener("load", (event) => {
+        let innerWidth = window.innerWidth;
+
+        if (innerWidth > 1280) {
+            document.getElementById("primaryNav").style.marginLeft = "-250px";
+        } else {
+            document.getElementById("primaryNav").style.marginLeft = null;
+        }
+
+        if (innerWidth > 1460) {
+            document.getElementById("primaryNav").style.marginLeft = "-250px";
+        } else {
+            document.getElementById("primaryNav").style.marginLeft = null;
+        }
+
+    });
+
+    addEventListener('resize', (event) => {
+        let innerWidth = window.innerWidth;
+
+        if (innerWidth > 1280) {
+            document.getElementById("primaryNav").style.marginLeft = "-250px";
+        } else {
+            document.getElementById("primaryNav").style.marginLeft = null;
+        }
+
+        if (innerWidth > 1460) {
+            document.getElementById("primaryNav").style.marginLeft = "-250px";
+        } else {
+            document.getElementById("primaryNav").style.marginLeft = null;
+        }
+    });
+
+    function goToLoginPage() {
+        location.replace(host + '/login');
+    }
+</script>

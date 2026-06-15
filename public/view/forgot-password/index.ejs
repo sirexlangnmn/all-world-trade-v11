@@ -1,0 +1,105 @@
+<%- include('../includes/head/index.ejs') %>
+
+    <body>
+        <!-- <body class="bg-gray-100"> -->
+
+        <div id="wrapper" class="flex flex-col justify-between h-screen">
+            <!-- header-->
+            <div class="bg-white py-4 shadow dark:bg-gray-800">
+                <div class="max-w-6xl mx-auto">
+                    <div class="flex items-center lg:justify-between justify-around">
+                        <a class="w-32">
+                            <img alt="" class="w-32" />
+                        </a>
+                        <div class="capitalize flex font-semibold hidden lg:block my-2 space-x-3 text-center text-sm">
+                            <a
+                                href="#"
+                                onclick="lookingForSmallScaleCompany()" 
+                                class="bg-blue-500 blue-500 px-6 py-3 rounded-md shadow text-white blue-white-hover orbitron"
+                                >Register</a
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:p-12 max-w-xl lg:my-0 my-12 mx-auto p-6 space-y-">
+                <div class="">
+                    <img src="uploads/logo/rectangle-logo2.png" alt="" style="width: 1000px; height: 150px" />
+                </div>
+            </div>
+           
+            <!-- Content-->
+         
+                <div class="mcontainer">
+                  <div class="max-w-2xl m-auto shadow-md rounded-md bg-white">
+                    <!-- form header -->
+                    <div class="text-center border-b border-gray-100 py-6">
+                      <h3 class="font-bold text-xl"> Forgot Password </h3>
+                    </div>
+      
+                    <!-- form body -->
+                    <form
+                        action="javascript:void(0);"
+                        method="POST"
+                        id="forgotPasswordForm"
+                        name="forgotPasswordForm"
+                        enctype="multipart/form-data"
+                        accept-charset="utf-8"
+                        class="lg:p-10 p-6 space-y-3 relative bg-white2 shadow-xl rounded-md"
+                    >
+                      <fieldset>
+                        <div class="p-1 space-y-10">
+                          <p class="leading-6 pr-4 orbitron">
+                            If you do not see the email in your <span class="text-blue-500">inbox</span> in a few minutes, please check your <span class="text-blue-500">“junk mail”</span> folder or <span class="text-blue-500">“spam”</span> folder. 
+                          </p>
+                          <p class="leading-6 pr-4 orbitron">
+                            If you do not receive a Forgot Password email, try to <span class="text-blue-500">“Send”</span> again
+                          </p>
+                          <div class="mt-10">
+                              <label class="mb-0 orbitron"> Email Address </label>
+                              <input
+                                  type="email"
+                                  placeholder="info@example.com"
+                                  class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full orbitron"
+                                  id="emailAddress"
+                                  name="emailAddress"
+                              />
+                          </div>
+                          <div>
+                              <button
+                                  type="submit"
+                                  class="bg-blue-600 font-semibold p-2 rounded-md text-center text-white w-full orbitron"
+                              >
+                                  Send
+                              </button>
+                          </div>
+                          <div>
+                              <a href="#" class="block text-center  mt-5 pb-4 font-medium text-blue-500" onclick="goToLoginPage();"> Back to Login</a>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </form>
+                  </div>
+                </div>
+            
+
+            <!-- Footer -->
+            <%- include('../includes/footer/index.ejs') %>
+        </div>
+
+        <script  src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js"></script>
+        <%- include('../includes/scripts/index.ejs') %>
+        <script  src="assets/js/forgot-password.js"></script>
+        <script >
+            function goToLoginPage() {
+              location.replace(host + '/login');
+            }
+
+            function lookingForSmallScaleCompany() {
+                // location.replace(host + '/registration-for-small-scale-company');
+                location.replace(host + '/registration');
+            }
+        </script> 
+    </body>
+</html>

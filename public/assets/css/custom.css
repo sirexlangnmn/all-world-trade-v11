@@ -1,0 +1,937 @@
+@media (min-width: 1200px) {
+    .main_content_custom {
+        margin-left: 320px;
+    }
+    .container,
+    .mcontainer_custom {
+        /* max-width: 1000px; */
+        padding: 10px 10px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .container,
+    .mcontainer-custom-2 {
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .main_content_custom-4 {
+        padding-top: 65px;
+    }
+
+    .container,
+    .mcontainer-custom-4 {
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .container,
+    .mcontainer-custom-3 {
+        padding: 10px 10px;
+        max-width: 1500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .selection-left-column {
+        display: block;
+        width: 100%;
+        /* max-height: 48.5vw !important; */
+        padding-right: 14px;
+        border-radius: 10px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .header_widgets .is_link,
+    .header_search {
+        display: none;
+    }
+    .main_content_custom {
+        /* padding-top: 65px !important; */
+        /* padding-bottom: 50px; */
+    }
+    .container,
+    .mcontainer_custom {
+        padding: 10px 15px;
+    }
+}
+
+.is-collapse .main_content_custom {
+    margin-left: 1px;
+}
+
+.is-small .main_content_custom {
+    margin-left: 1px;
+}
+
+.is_message .main_content_custom {
+    margin-bottom: 0 !important;
+}
+
+.main_content_custom {
+    padding-top: 15px;
+}
+
+/* custom icon */
+.icon-and-text {
+    display: inline-flex;
+}
+
+.span-inline-icon {
+    margin-top: 5px;
+}
+
+.icon-custom {
+    margin-right: 10px;
+    height: 32px;
+    width: 32px;
+}
+
+.icon-custom2 {
+    height: 32px;
+    width: 32px;
+}
+
+/* Reposition the music note icon */
+.iconx-music {
+    right: 5px;
+}
+
+/* breadcrumb */
+.ps-breadcrumb {
+    padding: 20px 0;
+    background-color: #f1f1f1;
+}
+
+.ps-container {
+    max-width: 1650px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.rounded-custom {
+    border-radius: 0.6rem;
+}
+
+div.ex4 {
+    background-color: lightblue;
+    width: 110px;
+    height: 110px;
+    overflow: visible;
+}
+.fixed-top-mid {
+    width: 1083px;
+    background-color: #999;
+    z-index: 10;
+    position: fixed;
+    right: 290px;
+    top: 143px;
+}
+
+.selection-left-scroll {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 810px;
+}
+
+.company-details-scroll {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 400px;
+}
+
+.selection-result-scroll {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 400px;
+}
+
+/* .selection-left-column {
+    display: block;
+    width: 100%;
+    max-height: 48.5vw !important;
+    padding-right: 14px;
+    border-radius: 10px;
+} */
+
+.selection-left-column-inner {
+    /* max-height: 70vw; */
+}
+
+.selection-company-details-right {
+    height: 420px;
+    border-radius: 10px;
+}
+
+.selection-company-details-left {
+    height: 800px;
+}
+
+#selections-prev-slide,
+#selections-next-slide {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(128, 128, 128, 0.1); /* Transparent gray */
+    border: 2px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#selections-prev-slide:hover,
+#selections-next-slide:hover {
+    background-color: gray; /* Normal gray */
+}
+
+#companiesProfilePictureDiv {
+    height: auto;
+    overflow: hidden;
+}
+
+#selectionMidColumnCompanyBanner {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.edit-company-details-height {
+    height: 400px;
+    /* margin: 0 auto !important;
+    overflow-x: auto !important; */
+}
+
+/* .edit-company-details-height2 {
+    max-height: 50vw;
+} */
+
+/* #image-upload > input {
+    display: none;
+} */
+
+.image-upload > input {
+    display: none;
+}
+
+.selectpicker-custom {
+    text-indent: 10px;
+    padding-right: 35px;
+}
+
+.indent-10px {
+    text-indent: 10px;
+}
+
+.selectpicker-option-custom {
+    margin: 1000px;
+    padding-right: 35px;
+    clear: both;
+    font-weight: normal;
+    line-height: 21px;
+    color: white;
+    border-radius: 6px;
+}
+
+.selectpicker-custom option {
+    /* display: block; */
+    /* padding: 7px 10px; */
+    padding-right: 35px;
+    clear: both;
+    font-weight: normal;
+    line-height: 21px;
+    /* color: #808080; */
+    /* color: red; */
+    color: black;
+    border-radius: 6px;
+}
+
+.dark .selectpicker-custom option {
+    /* display: block; */
+    /* padding: 7px 10px; */
+    padding-right: 35px;
+    clear: both;
+    font-weight: normal;
+    line-height: 21px;
+    /* color: #808080; */
+    /* color: red; */
+    color: white;
+    border-radius: 6px;
+}
+
+.a-p-0px a {
+    padding: 0px !important;
+}
+
+.pl-0px-m-5px {
+    padding-left: 0px !important;
+    margin: 5px !important;
+}
+
+.m-35px {
+    margin: 35px !important;
+}
+
+.m-15px {
+    margin: 15px !important;
+}
+
+/* --------------------------------- */
+/* january - trade events */
+/* --------------------------------- */
+.trade-category1-background-color {
+    background-color: #f8503e !important;
+}
+
+.trade-category1-background-color-hover:hover {
+    background-color: #f8503e !important;
+}
+
+/* hover background color in light mode */
+.trade-category1-background-color a:hover {
+    background-color: #b80000 !important;
+}
+
+/* hover background color in dark mode */
+.dark .trade-category1-a-hover a:hover {
+    background-color: #b80000 !important;
+    border-color: #b80000 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.trade-category1-list-box {
+    background-color: #b80000 !important;
+    background: #fff;
+    color: #474747;
+    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.trade-category1-list-box a:hover {
+    background-color: #f8503e !important;
+}
+
+.dark .trade-category1-list-box a:hover {
+    background-color: #f8503e !important;
+    border-color: #f8503e !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+/* --------------------------------- */
+/* february - trade events */
+/* --------------------------------- */
+
+/* .trade-category2-background-color {
+    background-color:#ef6d27 !important;
+}
+
+.trade-category2-background-color-hover:hover { 
+    background-color:#ef6d27 !important;
+}
+
+.trade-category2-background-color a:hover { 
+    background-color:#f34a12 !important;
+}
+
+.trade-category2-contact-list-box {
+    background-color:#f34a12 !important;
+    background: #fff;
+    color: #474747;
+    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.contact-list2-custom a:hover { 
+    background-color:#f34a12 !important;
+} */
+
+.trade-category2-background-color {
+    background-color: #ef6d27 !important;
+}
+
+.trade-category2-background-color-hover:hover {
+    background-color: #ef6d27 !important;
+}
+
+.trade-category2-list-box {
+    background-color: #dd5811 !important;
+    background: #fff;
+    color: #474747;
+    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+/* hover background color in light mode */
+.trade-category2-background-color a:hover {
+    background-color: #dd5811 !important;
+}
+
+/* hover background color in dark mode */
+.dark .trade-category2-a-hover a:hover {
+    background-color: #dd5811 !important;
+    border-color: #dd5811 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.trade-category2-list-box a:hover {
+    background-color: #ef6d27 !important;
+}
+
+.dark .trade-category2-list-box a:hover {
+    background-color: #ef6d27 !important;
+    border-color: #ef6d27 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+/* --------------------------------- */
+/* march - trade events */
+/* --------------------------------- */
+
+/* .trade-category3-background-color {
+    background-color:#f89a1c !important;
+}
+
+.trade-category3-background-color-hover:hover { 
+    background-color:#f89a1c !important;
+}
+
+.trade-category3-background-color a:hover { 
+    background-color:#f8841c !important;
+} */
+
+.trade-category3-background-color {
+    background-color: #f89a1c !important;
+}
+
+.trade-category3-background-color-hover:hover {
+    background-color: #f89a1c !important;
+}
+
+.trade-category3-list-box {
+    background-color: #ee8a07 !important;
+    background: #fff;
+    color: #474747;
+    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+/* hover background color in light mode */
+.trade-category3-background-color a:hover {
+    background-color: #ee8a07 !important;
+}
+
+/* hover background color in dark mode */
+.dark .trade-category3-a-hover a:hover {
+    background-color: #ee8a07 !important;
+    border-color: #ee8a07 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.trade-category3-list-box a:hover {
+    background-color: #f89a1c !important;
+}
+
+.dark .trade-category3-list-box a:hover {
+    background-color: #f89a1c !important;
+    border-color: #f89a1c !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+/* --------------------------------- */
+/* april - trade events */
+/* --------------------------------- */
+/* #f2b00b */
+.trade-category4-background-color {
+    background-color: #f2b00b !important;
+}
+
+.trade-category4-background-color-hover:hover {
+    background-color: #f2b00b !important;
+}
+
+.trade-category4-list-box {
+    background-color: #d99f0a !important;
+    background: #fff;
+    color: #474747;
+    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+/* hover background color in light mode */
+.trade-category4-background-color a:hover {
+    background-color: #d99f0a !important;
+}
+
+/* hover background color in dark mode */
+.dark .trade-category4-a-hover a:hover {
+    background-color: #d99f0a !important;
+    border-color: #d99f0a !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.trade-category4-list-box a:hover {
+    background-color: #f2b00b !important;
+}
+
+.dark .trade-category4-list-box a:hover {
+    background-color: #f2b00b !important;
+    border-color: #f2b00b !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+/* --------------------------------- */
+/* may - trade events */
+/* --------------------------------- */
+/* #70ad47 */
+.trade-category5-background-color {
+    background-color: #70ad47 !important;
+}
+
+.trade-category5-background-color-hover:hover {
+    background-color: #70ad47 !important;
+}
+
+.trade-category5-list-box {
+    background-color: #5a8b39 !important;
+    background: #fff;
+    color: #474747;
+    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+/* hover background color in light mode */
+.trade-category5-background-color a:hover {
+    background-color: #5a8b39 !important;
+}
+
+/* hover background color in dark mode */
+.dark .trade-category5-a-hover a:hover {
+    background-color: #5a8b39 !important;
+    border-color: #5a8b39 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.trade-category5-list-box a:hover {
+    background-color: #70ad47 !important;
+}
+
+.dark .trade-category5-list-box a:hover {
+    background-color: #70ad47 !important;
+    border-color: #70ad47 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+/* --------------------------------- */
+/* june - trade events */
+/* --------------------------------- */
+/* #4da596 */
+.trade-category6-background-color {
+    background-color: #4da596 !important;
+}
+
+.trade-category6-background-color-hover:hover {
+    background-color: #4da596 !important;
+}
+
+.trade-category6-list-box {
+    background-color: #3e8579 !important;
+    background: #fff;
+    color: #474747;
+    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+/* hover background color in light mode */
+.trade-category6-background-color a:hover {
+    background-color: #3e8579 !important;
+}
+
+/* hover background color in dark mode */
+.dark .trade-category6-a-hover a:hover {
+    background-color: #3e8579 !important;
+    border-color: #3e8579 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.trade-category6-list-box a:hover {
+    background-color: #4da596 !important;
+}
+
+.dark .trade-category6-list-box a:hover {
+    background-color: #4da596 !important;
+    border-color: #4da596 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+/* --------------------------------- */
+/* July - trade events */
+/* --------------------------------- */
+/* #01a7e3 */
+.trade-category7-background-color {
+    background-color: #01a7e3 !important;
+}
+
+.trade-category7-background-color-hover:hover {
+    background-color: #01a7e3 !important;
+}
+
+.trade-category7-list-box {
+    background-color: #0085b6 !important;
+    background: #fff;
+    color: #474747;
+    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+/* hover background color in light mode */
+.trade-category7-background-color a:hover {
+    background-color: #0085b6 !important;
+}
+
+/* hover background color in dark mode */
+.dark .trade-category7-a-hover a:hover {
+    background-color: #0085b6 !important;
+    border-color: #0085b6 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.trade-category7-list-box a:hover {
+    background-color: #01a7e3 !important;
+}
+
+.dark .trade-category7-list-box a:hover {
+    background-color: #01a7e3 !important;
+    border-color: #01a7e3 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+/* --------------------------------- */
+/* August - trade events */
+/* --------------------------------- */
+/* #0171c0 */
+.trade-category8-background-color {
+    background-color: #0171c0 !important;
+}
+
+.trade-category8-background-color-hover:hover {
+    background-color: #0171c0 !important;
+}
+
+.trade-category8-list-box {
+    background-color: #025a99 !important;
+    background: #fff;
+    color: #474747;
+    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+/* hover background color in light mode */
+.trade-category8-background-color a:hover {
+    background-color: #025a99 !important;
+}
+
+/* hover background color in dark mode */
+.dark .trade-category8-a-hover a:hover {
+    background-color: #025a99 !important;
+    border-color: #025a99 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.trade-category8-list-box a:hover {
+    background-color: #0171c0 !important;
+}
+
+.dark .trade-category8-list-box a:hover {
+    background-color: #0171c0 !important;
+    border-color: #0171c0 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+/* --------------------------------- */
+/* September - trade events */
+/* --------------------------------- */
+/* #9f5cfe */
+.trade-category9-background-color {
+    background-color: #9f5cfe !important;
+}
+
+.trade-category9-background-color-hover:hover {
+    background-color: #9f5cfe !important;
+}
+
+.trade-category9-list-box {
+    background-color: #7040b3 !important;
+    background: #fff;
+    color: #474747;
+    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+/* hover background color in light mode */
+.trade-category9-background-color a:hover {
+    background-color: #7040b3 !important;
+}
+
+/* hover background color in dark mode */
+.dark .trade-category9-a-hover a:hover {
+    background-color: #7040b3 !important;
+    border-color: #7040b3 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.trade-category9-list-box a:hover {
+    background-color: #9f5cfe !important;
+}
+
+.dark .trade-category9-list-box a:hover {
+    background-color: #9f5cfe !important;
+    border-color: #9f5cfe !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+/* --------------------------------- */
+/* October - trade events */
+/* --------------------------------- */
+/* #f571bf */
+.trade-category10-background-color {
+    background-color: #f571bf !important;
+}
+
+.trade-category10-background-color-hover:hover {
+    background-color: #f571bf !important;
+}
+
+.trade-category10-list-box {
+    background-color: #c45a98 !important;
+    background: #fff;
+    color: #474747;
+    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* hover background color in light mode */
+.trade-category10-background-color a:hover {
+    background-color: #c45a98 !important;
+}
+
+/* hover background color in dark mode */
+.dark .trade-category10-a-hover a:hover {
+    background-color: #c45a98 !important;
+    border-color: #c45a98 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.trade-category10-list-box a:hover {
+    background-color: #f571bf !important;
+}
+
+.dark .trade-category10-list-box a:hover {
+    background-color: #f571bf !important;
+    border-color: #f571bf !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.main_content_custom_v2 {
+    padding-top: 90px;
+}
+
+.main_content_custom_v3 {
+    padding-top: 90px;
+}
+
+.dark .swal-title {
+    color: black;
+}
+
+.dark .swal2-title {
+    color: black !important;
+}
+
+/* ===================================== */
+/* Orbitron [start]   */
+/* ===================================== */
+
+/* .orbitron {
+    font-family: 'Orbitron' !important; 
+    letter-spacing: 1px !important; 
+}
+
+
+.text-lg {
+    font-family: 'Orbitron' !important; 
+    letter-spacing: 1px !important; 
+    font-size: 16px !important;
+} 
+
+.text-2xl {
+    font-family: 'Orbitron' !important; 
+    letter-spacing: 1px !important; 
+}
+
+.text-xl {
+    font-family: 'Orbitron' !important; 
+    letter-spacing: 1px !important; 
+}
+
+.capitalize {
+    font-family: 'Orbitron' !important; 
+    letter-spacing: 1px !important; 
+}
+
+.font-semibold {
+    font-family: 'Orbitron' !important; 
+    letter-spacing: 1px !important; 
+}
+
+.font-medium {
+    font-family: 'Orbitron' !important; 
+    letter-spacing: 1px !important; 
+}
+
+.text-sm {
+    font-family: 'Orbitron' !important; 
+    letter-spacing: 1px !important; 
+}
+
+.text-xs {
+    font-family: 'Orbitron' !important; 
+    letter-spacing: 1px !important; 
+} */
+
+/* ===================================== */
+/* Orbitron [end]   */
+/* ===================================== */
+
+@media screen and (min-width: 1px) and (max-width: 768px) {
+    .coverImg {
+        background-image: url('/uploads/landing/cover-image-mobile5.png');
+        background-repeat: no-repeat;
+        width: auto !important;
+        height: inherit;
+    }
+
+    .main_content_custom {
+        padding-top: 90px;
+    }
+
+    .main_content_custom_v2 {
+        padding-top: 29px;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 5000px) {
+    .coverImg {
+        background-image: url('/uploads/landing/map5.png');
+        background-repeat: no-repeat;
+    }
+}
+
+/* ===================================== */
+/* landing page background image [end]   */
+/* ===================================== */
+.hero-image {
+    background-image: url('../../uploads/landing/map.jpg');
+    background-color: #cccccc;
+    height: 900px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+.hero-text {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+}
+
+.responsive {
+    width: 100%;
+    height: auto;
+}
+
+.-mb-20px {
+    margin-bottom: -20px;
+}
+
+/* ===================================== */
+/* landing page background image [end]   */
+/* ===================================== */
+
+/* Extra small devices (phones, 600px and down) */
+/* @media only screen and (max-width: 600px) {...} */
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+/* @media only screen and (min-width: 600px) {...} */
+
+/* Medium devices (landscape tablets, 768px and up) */
+/* @media only screen and (min-width: 768px) {...} */
+
+/* Large devices (laptops/desktops, 992px and up) */
+/* @media only screen and (min-width: 992px) {...} */
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+/* @media only screen and (min-width: 1200px) {...} */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

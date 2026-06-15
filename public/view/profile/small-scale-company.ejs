@@ -1,0 +1,1330 @@
+<%- include('../includes/head/index.ejs') %>
+
+  <body>
+    <!-- Navbar goes here -->
+    <%- include('../includes/nav/primary-navigation.ejs') %>
+
+      <div id="wrapper" class="is-collapse is-active">
+
+        <!-- ==================== -->
+        <!-- MAIN CONTENT - START -->
+        <!-- ==================== -->
+        <div class="main_content">
+          <div class="mcontainer">
+            <!-- ============================================================= -->
+            <!-- BANNER, LOGO, NAV TAB, BUTTON FUNCTIONS FOR TRADING - START   -->
+            <!-- ============================================================= -->
+            <div class="profile user-profile">
+              <div class="profiles_banner image-upload">
+                <form action="javascript:void(0);" method="POST" id="editcompanyBanner" name="editcompanyBanner"
+                  enctype="multipart/form-data" accept-charset="utf-8">
+                  <label for="companyBanner">
+                    <img id="companyBannerPreview" src="uploads/placeholder/banner-placeholder2.jpg" />
+                  </label>
+                  <input type="file" id="companyBanner" name="companyBanner" />
+                  <input type="text" id="companyBannerId" name="companyBannerId" />
+                </form>
+              </div>
+              <div class="profiles_content">
+                <form action="javascript:void(0);" method="POST" id="editcompanyLogo" name="editcompanyLogo"
+                  enctype="multipart/form-data" accept-charset="utf-8">
+                  <div class="profile_avatar image-upload">
+                    <div class="profile_avatar_holder">
+                      <label for="companyLogo">
+                        <img id="companyLogoPreview" src="uploads/placeholder/logo-placeholder2.jpg" />
+                      </label>
+                    </div>
+
+                    <input type="file" id="companyLogo" name="companyLogo" />
+                    <input type="text" id="companyLogoId" name="companyLogoId" />
+                    <div class="user_status status_online"></div>
+                    <div class="icon_change_photo" hidden>
+                      <ion-icon name="camera" class="text-xl"></ion-icon>
+                    </div>
+                  </div>
+                </form>
+
+                <h5 class="mb-2 text-3xl font-bold text-gray-900 orbitron" id="displayBusinessNameH1">
+                </h5>
+                <p class="mb-5 text-base text-gray-500 sm:text-lg dark:text-gray-400 orbitron"
+                  id="displayBusinessTagLineH1"></p>
+                <h5 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white orbitron" id="userType"></h5>
+
+              </div>
+
+
+              <div class="flex justify-between lg:border-t border-gray-100 flex-col-reverse lg:flex-row pt-2">
+                <nav class="responsive-nav pl-3">
+                  <ul uk-switcher="connect: #timeline-tab; animation: uk-animation-fade">
+                    <li class="active orbitron" id="liTabCompanyDetails"><a href="#" id="tabCompanyDetails">About</a>
+                    </li>
+                    <li id="liTabMediaFiles" style="display: none;"><a href="#" class="orbitron"
+                        id="tabMediaFiles">Brochure </a></li>
+                    <li id="liTabVideos" style="display: none;"><a href="#" class="orbitron" id="tabVideos">Videos</a>
+                    </li>
+                    <li style="display: none;"><a href="#0" class="orbitron">Dashboard</a></li>
+                    <li id="liTabSettings" style="display: none;"><a href="#0" class="orbitron"
+                        id="tabSettings">Settings</a></li>
+                    <li id="liTabPaymentAccount" style="display: none;"><a href="#0" class="orbitron"
+                        id="tabPaymentAccount">Payment</a></li>
+                  </ul>
+                </nav>
+              </div>
+
+              <div class="flex justify-between lg:border-t border-gray-100 flex-col-reverse lg:flex-row pt-2 mx-3.5" style="display: none;">
+                <div class="grid md:grid-cols-4 grid-cols-1 gap-1">
+                  <!-- create communicator links -->
+                  <div>
+                    <div class="m-1">
+                      <a href="#" onclick="createCommunicatorLink();"
+                        class="my-3.5 flex h-9 items-center justify-center px-5 rounded-md bg-blue-600 font-medium text-white text-sm hover:text-white blue-white-hover">
+                        <svg class="h-5 pr-1 rounded-full w-6 fill-current" id="veiw-more" fill="none"
+                          stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                          aria-hidden="false" style="">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z">
+                          </path>
+                        </svg>
+                        Create Links
+                      </a>
+                    </div>
+                  </div>
+                  <!-- download current visitor data -->
+                  <div>
+                    <div class="m-1">
+                      <a href="#" onclick="downloadCurrentVisitorData();"
+                        class="my-3.5 flex h-9 items-center justify-center px-5 rounded-md bg-blue-600 font-medium text-white text-sm hover:text-white blue-white-hover">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5">
+                          <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                            clip-rule="evenodd"></path>
+                        </svg>
+                        <span> Current Visitor </span>
+                      </a>
+                    </div>
+                  </div>
+                  <!-- Payment Account -->
+                  <div>
+                    <div class="m-1">
+                      <a href="#" onclick="paymentAccount();"
+                        class="my-3.5 flex h-9 items-center justify-center px-5 rounded-md bg-blue-600 font-medium text-white text-sm hover:text-white blue-white-hover">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5">
+                          <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                            clip-rule="evenodd"></path>
+                        </svg>
+                        <span> Payment </span>
+                      </a>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="m-1">
+
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+            <!-- ============================================================= -->
+            <!-- BANNER, LOGO, NAV TAB, BUTTON FUNCTIONS FOR TRADING - END   -->
+            <!-- ============================================================= -->
+
+
+
+            <div class="lg:flex lg:space-x-10">
+              <div class="lg:w-2/4">
+                <!-- ===============================  -->
+                <!-- DISPLAY COMPANY DETAILS - START  -->
+                <!-- ===============================  -->
+                <div class="card mb-4" id="divCompanyDetails" style="display: block;">
+                  <div class="border-b flex items-center justify-between p-4">
+                    <div>
+                      <h2 class="text-lg font-semibold">
+                        Company Details
+                        <a class="hover:border-gray-100" href="#">
+                          <span class="icon-feather-info" style="font-size: 16px; font-family: inherit"
+                            uk-tooltip="title: Completion of Company Details can help boost your searchability.; pos: right">
+                          </span>
+                        </a>
+                      </h2>
+                    </div>
+                    <div class="text-right">
+                      <button class="button blue-white-hover orbitron" type="button" id="btnCompanyDetailsEdit">
+                        Update
+                      </button>
+                    </div>
+                  </div>
+                  <div class="p-4 -mt-1.5">
+                    <div id="showCompanyDetails">
+                      <div class="flex-1 space-y-4 p-4">
+                        <p class="text-xs text-gray-400 mb-2 orbitron"> Company Name </p>
+                        <p class="orbitron" id="displayCompanyName"></p>
+
+                        <p class="text-xs text-gray-400 mb-2 orbitron"> Business Tagline </p>
+                        <p class="orbitron" id="displayCompanyTagline"></p>
+
+                        <p class="text-xs text-gray-400 mb-2 orbitron"> Business Email Address </p>
+                        <p class="orbitron" id="displayBusinessEmail"></p>
+
+                        <p class="text-xs text-gray-400 mb-2 orbitron"> Business Contact Number</p>
+                        <p class="orbitron" id="displayBusinessContact"></p>
+
+                        <p class="text-xs text-gray-400 mb-2 orbitron"> Business Website</p>
+                        <p class="orbitron" id="displayBusinessWebsite"></p>
+
+                        <p class="text-xs text-gray-400 mb-2 orbitron"> Business Social Media Contact Number </p>
+                        <p class="orbitron" id="displayBusinessSocialMediaContact"></p>
+
+                        <p class="text-xs text-gray-400 mb-2 orbitron"> Business Address </p>
+                        <p class="orbitron" id=""> <span id="displayBusinessAddress"> </span> <span
+                            id="displayBusinessAddressCity"></span> <span id="displayBusinessAddressStates"> </span>
+                          <span id="displayBusinessAddressCountry"> </span>
+                        </p>
+                        <div class="line" style="display: none;">
+                          <p class="text-xs text-gray-400 mb-2 orbitron"> Operation Time (Local) </p>
+                          <p class="orbitron" id="local-operating-time"> N/A </p>
+                        </div>
+                        <div class="line" style="display: none;">
+                          <p class="text-xs text-gray-400 mb-2 orbitron"> Operation Time (UCT) </p>
+                          <p class="orbitron" id="uct-operating-time"> N/A </p>
+                        </div>
+                        <div class="line" style="display: none;">
+                          <p class="text-xs text-gray-400 mb-2 orbitron"> Trade Category </p>
+                          <p class="orbitron" id="displayBusinessTradeCategory"> </p>
+                        </div>
+                        <div class="line" style="display: none;">
+                          <p class="text-xs text-gray-400 mb-2 orbitron"> Sub Category </p>
+                          <p class="orbitron" id="displayBusinessSubCategory"> </p>
+                        </div>
+                        <div class="line" style="display: none;">
+                          <p class="text-xs text-gray-400 mb-2 orbitron"> Minor Sub Category (Optional) </p>
+                          <p class="orbitron" id="displayBusinessMinorCategory"> </p>
+                        </div>
+                        <div class="line" style="display: none;">
+                          <p class="text-xs text-gray-400 mb-2 orbitron"> Business Scale </p>
+                          <p class="orbitron" id="displayBusinessScale"> </p>
+                        </div>
+                        <div>
+                          <p class="text-xs text-gray-400 mb-2 orbitron"> Language Of Communication </p>
+                          <div class="flex flex-wrap gap-2 orbitron" id="displayLanguageOfComm"> </div>
+                        </div>
+
+                        <div style="display: none;">
+                          <p class="text-xs text-gray-400 mb-2 orbitron"> Tags (Business Industry Belong To) </p>
+                          <div class="flex flex-wrap gap-2 orbitron" id="displayBusinessTags">
+                          </div>
+                        </div>
+
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- ===============================  -->
+                <!-- DISPLAY COMPANY DETAILS - END  -->
+                <!-- ===============================  -->
+
+                <!-- =============================== -->
+                <!-- UPDATE COMPANY DETAILS - START  -->
+                <!-- =============================== -->
+                <div class="mb-4 bg-white rounded-lg dark:bg-white" id="divUpdateCompanyDetails" style="display: none;">
+                  <form action="javascript:void(0);" method="POST" id="editCompanyDetails" name="editCompanyDetails"
+                    enctype="multipart/form-data" accept-charset="utf-8">
+
+                    <div class="border-b flex items-center justify-between p-4">
+                      <div>
+                        <h2 class="text-lg font-semibold">
+                          Company Details
+                          <a class="hover:border-gray-100" href="#">
+                            <span class="icon-feather-info" style="font-size: 16px; font-family: inherit"
+                              uk-tooltip="title: Completion of Company Details can help boost your searchability; pos: right">
+                            </span>
+                          </a>
+                        </h2>
+                      </div>
+                      <div class="text-right">
+                        <button class="p-2 px-4 rounded bg-gray-50 text-red-500 orbitron"
+                          id="btnCompanyDetailsCancelEdit">
+                          Cancel
+                        </button>
+                        <button class="button blue-white-hover orbitron" type="button" id="btnUpdateCompanyDetails">
+                          Save
+                        </button>
+                      </div>
+                    </div>
+                    <div class="p-4 -mt-1.5">
+                      <div id="showCompanyDetails">
+                        <div class="flex-1 space-y-4 p-4">
+                          <div>
+                            <label for="" class="orbitron">Company Name</label>
+                            <input type="text" placeholder=""
+                              class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                              id="companyName" name="companyName">
+                            <p class="text-red-500" id="companyNameValidation"></p>
+                          </div>
+                          <div>
+                            <label for="" class="orbitron">Business Tagline</label>
+                            <input type="text" placeholder=""
+                              class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                              id="tagline" name="tagline">
+                            <p class="text-red-500" id="taglineValidation"></p>
+                          </div>
+                          <div>
+                            <label for="" class="orbitron">Business Email Address</label>
+                            <input type="text" placeholder=""
+                              class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                              id="businessEmailAddress" name="businessEmailAddress">
+                            <p class="text-red-500" id="businessEmailAddressValidation"></p>
+                          </div>
+                          <div>
+                            <label for="" class="orbitron">Business Contact Number</label>
+                            <input type="text" placeholder=""
+                              class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                              id="businessContactNumber" name="businessContactNumber"
+                              oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                            <p class="text-red-500" id="businessContactNumberValidation"></p>
+                          </div>
+                          <div>
+                            <label for="" class="orbitron">Business Website</label>
+                            <input type="text" placeholder=""
+                              class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                              id="website" name="website">
+                            <p class="text-red-500" id="websiteValidation"></p>
+                          </div>
+                          <label for="" class="orbitron">Business Social Media / Messaging App</label>
+                          <div class="grid grid-cols-2 gap-3">
+                            <div>
+                              <select id="businessSocialMediaContactType" name="businessSocialMediaContactType"
+                                class="shadow-none selectpicker with-border ">
+                              </select>
+                            </div>
+                            <div>
+                              <input type="text" placeholder="Mobile Number"
+                                class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                id="businessSocialMediaContactNumber" name="businessSocialMediaContactNumber"
+                                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                              <p class="text-red-500" id="businessSocialMediaContactNumberValidation"></p>
+                            </div>
+                          </div>
+                          <div>
+                            <label for="" class="orbitron">Business Address</label>
+                            <input type="text" placeholder=""
+                              class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                              id="businessAddress" name="businessAddress">
+                            <p class="text-red-500" id="businessAddressValidation"></p>
+                          </div>
+                          <div>
+                            <label for="" class="orbitron">Business Country Location</label>
+                            <select id="editBusinessCountryLocation" name="editBusinessCountryLocation"
+                              class="shadow-none selectpicker with-border ">
+                            </select>
+                            <p class="text-red-500" id="editBusinessCountryLocationValidation"></p>
+                          </div>
+                          <div>
+                            <label for="" class="orbitron">Business States Location</label>
+                            <select id="editBusinessStatesLocation" name="editBusinessStatesLocation"
+                              class="shadow-none selectpicker with-border ">
+                            </select>
+                            <p class="text-red-500" id="editBusinessStatesLocationValidation"></p>
+                          </div>
+                          <div>
+                            <label for="" class="orbitron">Business City Location</label>
+                            <select id="editBusinessCityLocation" name="editBusinessCityLocation"
+                              class="shadow-none selectpicker with-border ">
+                            </select>
+                            <p class="text-red-500" id="editBusinessCityLocationValidation"></p>
+                          </div>
+                          <div class="grid grid-cols-2 gap-3" style="display: none;">
+                            <div>
+                              <label for="" class="orbitron">Start of Operating Hour
+                                <span class="icon-feather-info" style="font-size: 16px; font-family: inherit"
+                                  uk-tooltip="title: Local Time; pos: right">
+                                </span>
+                              </label>
+                              <input type="time"
+                                class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600 indent-10px"
+                                placeholder="" id="startOperatingHour" name="startOperatingHour">
+                              <p class="text-red-500" id="startOperatingHourValidation"></p>
+                            </div>
+                            <div>
+                              <label for="" class="orbitron">End of Operating Hour
+                                <span class="icon-feather-info" style="font-size: 16px; font-family: inherit"
+                                  uk-tooltip="title: Local Time; pos: right">
+                                </span>
+                              </label>
+                              <input type="time"
+                                class="flex-1 px-3 py-2 text-gray-700 with-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600 indent-10px"
+                                placeholder="" id="endOperatingHour" name="endOperatingHour">
+                              <p class="text-red-500" id="endOperatingHourValidation"></p>
+                            </div>
+                          </div>
+
+                          <label for="" class="orbitron">Languages of communication</label>
+                          <select class="selectpicker" id="editLanguagesOfCommunication"
+                            name="editLanguagesOfCommunication" multiple>
+                          </select>
+                          <p class="text-red-500" id="editLanguagesOfCommunicationValidation"></p>
+                          <div class="col-span-2" style="display:none;">
+                            <label for="" class="mb-0 ml-2 text-gray-600 text-sm"> Languages of
+                              communication </label>
+                            <textarea type="text" rows="5" class="shadow-none with-border"
+                              id="currentLanguagesOfCommunication" name="currentLanguagesOfCommunication" placeholder=""
+                              class=""></textarea>
+                          </div>
+
+                          <div style="display: none;">
+                            <label for="" class="orbitron">Trade Category</label>
+                            <select class="selectpicker" id="editTradeCategory" name="editTradeCategory">
+                            </select>
+                            <p class="text-red-500" id="editTradeCategoryValidation"></p>
+                          </div>
+
+                          <!-- trial start  -->
+                          <div style="display: none;">
+                            <label for="" class="orbitron">Sub Category</label>
+                            <select class="selectpicker" id="sub-category-select" name="subCategorySelect"></select>
+                            <input type="text" id="sub-category-manual" name="subCategoryManual" style="display: none;">
+                            <p class="text-red-500" id="editTradeCategoryValidation"></p>
+                          </div>
+
+                          <div style="display: none;">
+                            <label for="" class="orbitron">Minor Sub Category</label>
+                            <select class="selectpicker" id="minor-sub-category-select"
+                              name="minorSubCategorySelect"></select>
+                            <input type="text" id="minor-sub-category-manual" name="minorSubCategoryManual"
+                              style="display: none;">
+                            <p class="text-red-500" id="editTradeCategoryValidation"></p>
+                          </div>
+                          <!-- trial end  -->
+
+
+                          <div style="display: none;">
+                            <label for="" class="orbitron">How do you rank your own company</label>
+                            <select id="editBusinessScale" name="editBusinessScale"
+                              class="shadow-none selectpicker with-border ">
+                            </select>
+                            <p class="text-red-500" id="editBusinessScaleValidation"></p>
+                          </div>
+
+                          <div style="display: none;">
+                            <label for="" class="orbitron">Search Keywords (Maximum of 20)</label>
+                            <div class="flex flex-wrap bg-white border rounded-lg shadow-md">
+                              <input id="tag-input" name="tags"
+                                class="flex-1 px-3 py-2 text-gray-700 border-none rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                type="text" placeholder="Add tags">
+                              <button id="add-tag-button"
+                                class="px-4 py-2 text-white bg-blue-600 rounded-r-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                                Add
+                              </button>
+                            </div>
+                            <div id="tag-list" class="flex flex-wrap mt-2"></div>
+                            <div id="validation-message" class="hidden text-red-500">You have
+                              reached the maximum number of tags (20)</div>
+                          </div>
+
+                          <div class="col-span-2" style="display:none;">
+                            <label for="" class="mb-0 ml-2 text-gray-600 text-sm">Tag List</label>
+                            <textarea type="text" rows="5" class="shadow-none with-border" id="textAreaAddKeywords"
+                              name="textAreaAddKeywords" placeholder="" class=""></textarea>
+                          </div>
+                          <!-- <div class="col-span-2" style="display:block;">
+                            <label for="" class="mb-0 ml-2 text-gray-600 text-sm">Current Tag List</label>
+                            <textarea type="text" rows="5" class="shadow-none with-border" id="textAreaCurrentKeywords"
+                              name="textAreaCurrentKeywords" placeholder="" class=""></textarea>
+                          </div> -->
+                          <br />
+                          <br />
+                          <br />
+                          <br />
+                        </div>
+                      </div>
+                    </div>
+
+                  </form>
+
+                </div>
+                <!-- =============================== -->
+                <!-- UPDATE COMPANY DETAILS - END  -->
+                <!-- =============================== -->
+              </div>
+
+
+
+
+              <div class="lg:w-2/4 w-full" id="divCompanyRepresentative" style="display: block;">
+                <!-- ======================================  -->
+                <!-- COMPANY REPRESENTATIVE DISPLAY - START  -->
+                <!-- ======================================  -->
+                <div class="card mb-4" style="display: block;">
+                  <div class="border-b flex items-center justify-between p-4">
+                    <div>
+                      <h2 class="text-lg font-semibold">Representative</h2>
+                    </div>
+                    <div class="text-right">
+                      <!-- <button class="button blue-white-hover" type="button" id="">Update</button> -->
+                    </div>
+                  </div>
+                  <div class="flex-1 space-y-4 p-6">
+                    <h4 class="text-base text-gray-500 font-medium mb-2 orbitron" id="displayReprestativeFullname">
+                    </h4>
+                    <p class="orbitron" id="displayReprestativeEmailAddress"> </p>
+                    <p class="orbitron" id="displayReprestativeContactNumber"> </p>
+                    <p class="orbitron">
+                      <span id="displayReprestativeAddress"> </span>
+                      <span id="displayReprestativeAddressCity"> </span>
+                      <span id="displayReprestativeAddressStates"> </span>
+                      <span id="displayReprestativeAddressCountry"> </span>
+                    </p>
+                    <br />
+
+                  </div>
+                </div>
+                <!-- ======================================  -->
+                <!-- COMPANY REPRESENTATIVE DISPLAY - END  -->
+                <!-- ======================================  -->
+
+                <!-- =============================================  -->
+                <!-- COMPANY REGION OF OPERATION DISPLAY - START    -->
+                <!-- =============================================  -->
+                <div class="card mb-4" id="divDisplayRegionOfOperation" style="display: none;">
+                  <div class="border-b flex items-center justify-between p-4">
+                    <div>
+                      <h2 class="text-lg font-semibold">Region Of Operation</h2>
+                    </div>
+                    <div class="text-right">
+                      <button class="button blue-white-hover" type="button"
+                        id="btnRegionOfOperationEdit">Update</button>
+                    </div>
+                  </div>
+                  <div class="flex-1 space-y-4 p-6">
+                    <p class="text-xs text-gray-400 mb-2 orbitron"> Global Region of Operation </p>
+                    <p class="orbitron" id="displayBusinessRegionOfOperation"> </p>
+
+                    <p class="text-xs text-gray-400 mb-2 orbitron"> Country of Operation </p>
+                    <p class="orbitron" id="displayBusinessCountryOfOperation"> </p>
+
+                    <p class="text-xs text-gray-400 mb-2 orbitron"> State / Province of Operation </p>
+                    <p class="orbitron" id="displayBusinessStatesOfOperation"> </p>
+
+                    <p class="text-xs text-gray-400 mb-2 orbitron"> City of Operation </p>
+                    <p class="orbitron" id="displayBusinessCityOfOperation"> </p>
+
+
+                  </div>
+                </div>
+                <!-- =============================================  -->
+                <!-- COMPANY REGION OF OPERATION DISPLAY - END    -->
+                <!-- =============================================  -->
+
+                <!-- =============================================  -->
+                <!-- COMPANY REGION OF OPERATION UPDATE - START    -->
+                <!-- =============================================  -->
+                <div class=" mb-4 bg-white rounded-lg dark:bg-white" id="divUpdateRegionOfOperation"
+                  style="display: none;">
+                  <form action="javascript:void(0);" method="POST" id="editRegionOfOperation" name="editRegionOfOperation"
+                    enctype="multipart/form-data" accept-charset="utf-8">
+                    <div class="border-b flex items-center justify-between p-4">
+                      <div>
+                        <h2 class="text-lg font-semibold">Region Of Operation</h2>
+                      </div>
+                      <div class="text-right">
+                        <button class="p-2 px-4 rounded bg-gray-50 text-red-500 orbitron"
+                          id="btnRegionOfOperationCancelUpdate">
+                          Cancel
+                        </button>
+                        <button class="button blue-white-hover orbitron" type="button" id="btnRegionOfOperationUpdate">
+                          Save
+                        </button>
+                      </div>
+                    </div>
+                    <div class="flex-1 space-y-4 p-6">
+                      <div class="space-y-3">
+
+                        <div class="flex justify-between items-center">
+                          <div>
+                            <h4 class="orbitron">I operate on a World Wide Level</h4>
+                          </div>
+                          <div class="switches-list -mt-8 is-large">
+                            <div class="switch-container">
+                              <label class="switch">
+                                <input type="checkbox" id="iOperateOnAWorldWideLevelRadioButton"
+                                  name="iOperateOnAWorldWideLevelRadioButton">
+                                <span class="switch-button"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <label for=""></label>
+                        <!-- NOTE: <label for=""></label> serves as space -->
+
+                        <div>
+                          <div class="flex justify-between items-center">
+                            <div>
+                              <h4 class="orbitron">I operate on a Global Regional Level</h4>
+                            </div>
+                            <div class="switches-list -mt-8 is-large">
+                              <div class="switch-container">
+                                <label class="switch">
+                                  <input type="checkbox" id="iOperateOnAGlobalRegionalLevelRadioButton"
+                                    name="iOperateOnAGlobalRegionalLevelRadioButton">
+                                  <span class="switch-button"></span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <label for="" class="orbitron"></label>
+                          <div id="divRegionOfOperation">
+
+                            <select class="selectpicker" id="traderRegionOfOperation" name="traderRegionOfOperation"
+                              multiple>
+                            </select>
+
+                          </div>
+                          <p class="text-red-500" id="traderRegionOfOperationValidation"></p>
+                        </div>
+
+                        <div>
+                          <div class="flex justify-between items-center">
+                            <div>
+                              <h4 class="orbitron">I operate on a National Level</h4>
+                            </div>
+                            <div class="switches-list -mt-8 is-large">
+                              <div class="switch-container">
+                                <label class="switch">
+                                  <input type="checkbox" id="iOperateOnANationalLevelRadioButton"
+                                    name="iOperateOnANationalLevelRadioButton">
+                                  <span class="switch-button"></span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <label for=""></label>
+                          <div id="divCountryOfOperation">
+                            <select id="traderCountryOfOperation" name="traderCountryOfOperation"
+                              class="shadow-none selectpicker with-border " multiple>
+                            </select>
+                          </div>
+                          <p class="text-red-500" id="traderCountryOfOperationValidation"></p>
+                        </div>
+
+                        <div class="">
+                          <div class="flex justify-between items-center">
+                            <div>
+                              <h4 class="orbitron">I operate on a Provincial/State Level</h4>
+                            </div>
+                            <div class="switches-list -mt-8 is-large">
+                              <div class="switch-container">
+                                <label class="switch">
+                                  <input type="checkbox" id="iOperateOnAStateLevelRadioButton"
+                                    name="iOperateOnAStateLevelRadioButton" checked="checked">
+                                  <span class="switch-button"></span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div id="divStatesOfOperation">
+                            <label for="" class="orbitron"></label>
+                            <div>
+                              <select id="countryForStateOperation" name="countryForStateOperation"
+                                class="shadow-none selectpicker with-border ">
+                              </select>
+                            </div>
+                            <label for="" class="orbitron"></label>
+                            <div>
+                              <select id="traderStatesOfOperation" name="traderStatesOfOperation"
+                                class="shadow-none selectpicker with-border ">
+                              </select>
+                            </div>
+                          </div>
+                          <p class="text-red-500" id="traderStatesOfOperationValidation"></p>
+                        </div>
+
+                        <label for=""></label>
+                        <!-- NOTE: <label for=""></label> serves as space -->
+                        <div>
+                          <div class="flex justify-between items-center mt-2">
+                            <div class="">
+                              <h4 class="orbitron">I operate on a City Level</h4>
+                            </div>
+                            <div class="switches-list -mt-8 is-large">
+                              <div class="switch-container">
+                                <label class="switch">
+                                  <input type="checkbox" id="iOperateOnACityLevelRadioButton"
+                                    name="iOperateOnACityLevelRadioButton" checked="checked">
+                                  <span class="switch-button"></span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div id="divCityOfOperation">
+                            <label for="" class="orbitron"></label>
+                            <div id="">
+                              <select id="countryForCityOperation" name="countryForCityOperation"
+                                class="shadow-none selectpicker with-border ">
+                              </select>
+                            </div>
+                            <label for="" class="orbitron"></label>
+                            <div id="">
+                              <select id="statesForCityOperation" name="statesForCityOperation"
+                                class="shadow-none selectpicker with-border ">
+                              </select>
+                            </div>
+                            <label for="" class="orbitron"></label>
+                            <div id="">
+                              <select id="traderCityOfOperation" name="traderCityOfOperation"
+                                class="shadow-none selectpicker with-border ">
+                              </select>
+                            </div>
+                          </div>
+                          <p class="text-red-500" id="traderCityOfOperationValidation"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <!-- =============================================  -->
+                <!-- COMPANY REGION OF OPERATION UPDATE - END    -->
+                <!-- =============================================  -->
+              </div>
+            </div>
+
+
+            <!-- ===========================  -->
+            <!-- Brochure Div - START  -->
+            <!-- ===========================  -->
+            <div class="relative">
+              <div class="" id="divMediaFiles" style="display: none;">
+                <div class="flex items-center justify-between p-4">
+                  <div>
+                    <h2 class="text-lg font-semibold">Brochure</h2>
+                  </div>
+                  <a href="#upload-brochure-modal" uk-toggle
+                    class="flex items-center justify-center h-9 lg:px-5 px-2 rounded-md bg-blue-600 text-white space-x-1.5 blue-white-hover">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5">
+                      <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                        clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="md:block hidden"> Upload Brochure </span>
+                  </a>
+                </div>
+
+                <!-- Upload Brochure Modal - START -->
+                <div id="upload-brochure-modal" class="create-post" uk-modal>
+                  <div
+                    class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical shadow-2xl uk-animation-slide-bottom-small">
+                    <div class="py-4 border-b flex  justify-between px-6">
+                      <h3 class="text-lg font-semibold"> Upload Brochure </h3>
+                      <div>
+                        <button
+                          class="uk-modal-close-default hover:bg-gray-100 rounded-full p-2.5 block uk-icon uk-close mt-0.5"
+                          type="button" uk-close>
+                          <i class="icon-feather-close"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="create-post-modal-body space-x-6 p-5 overflow-x-hidden mr-1" data-simplebar>
+                      <form action="" class="space-y-4 g:w-8/12" enctype="multipart/form-data" method="post"
+                        id="uploadBrochureForm">
+                        <label> Brochure </label>
+                        <div class="relative uk-transition-toggle overflow-hidden">
+                          <div
+                            class="bg-gray-100 border-2 border-dashed flex flex-col h-40 items-center justify-center relative w-full rounded-lg dark:bg-gray-800 dark:border-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                              class="w-12">
+                              <path
+                                d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z" />
+                              <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
+                            </svg>
+                          </div>
+                          <div class="w-full" uk-form-custom>
+                            <div class="uk-position-bottom uk-transition-bottom-small">
+                              <input type="file" id="brochure" name="brochure">
+                              <a href="#"
+                                class="flex font-medium h-9 items-center justify-center px-5 rounded-b-xl text-blue-600 text-white"
+                                id="brochureFilename" style="margin-bottom: 25px;">
+                                Choose file</a>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <label> Title </label>
+                          <input type="text" class="with-border" placeholder="" id="brochureTitle" name="brochureTitle">
+                        </div>
+                      </form>
+                    </div>
+                    <div class="flex items-center w-full justify-between p-3 border-t">
+                      <div class="flex items-center space-x-2">
+                      </div>
+                      <div class="flex space-x-2">
+                        <button type="button" class="button bg-blue-700" id="btnUploadBrochure"> Save </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Upload Brochure Modal - END -->
+
+                <!-- Edit Upload Brochure Modal - START -->
+                <div id="edit-upload-brochure-modal" class="create-post" uk-modal>
+                  <div
+                    class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical shadow-2xl uk-animation-slide-bottom-small">
+                    <div class="py-4 border-b flex  justify-between px-6">
+                      <h3 class="text-lg font-semibold" id="uploadBrochureHeadTitle"> Upload Brochure </h3>
+                      <div>
+                        <button
+                          class="uk-modal-close-default hover:bg-gray-100 rounded-full p-2.5 block uk-icon uk-close mt-0.5"
+                          type="button" uk-close>
+                          <i class="icon-feather-close"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="create-post-modal-body space-x-6 p-5 overflow-x-hidden mr-1" data-simplebar>
+                      <form action="" class="space-y-4 g:w-8/12" enctype="multipart/form-data" method="post"
+                        id="editUploadBrochureForm">
+                        <label> Brochure </label>
+                        <div class="relative uk-transition-toggle overflow-hidden">
+                          <div
+                            class="bg-gray-100 border-2 border-dashed flex flex-col h-40 items-center justify-center relative w-full rounded-lg dark:bg-gray-800 dark:border-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                              class="w-12">
+                              <path
+                                d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z" />
+                              <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
+                            </svg>
+                          </div>
+                          <div class="w-full" uk-form-custom>
+                            <div class="uk-position-bottom uk-transition-bottom-small">
+                              <input type="file" id="editBrochure" name="editBrochure">
+                              <a href="#"
+                                class="flex font-medium h-9 items-center justify-center px-5 rounded-b-xl text-blue-600 text-white"
+                                id="editBrochureFilename" style="margin-bottom: 25px;">
+                                Choose file</a>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <label> Title </label>
+                          <input type="text" class="with-border" placeholder="" id="editBrochureTitle"
+                            name="editBrochureTitle">
+                          <input type="text" class="with-border" placeholder="" id="editBrochureId"
+                            name="editBrochureId" style="display: none;">
+                        </div>
+                      </form>
+                    </div>
+                    <div class="flex items-center w-full justify-between p-3 border-t">
+                      <div class="flex items-center space-x-2">
+                      </div>
+                      <div class="flex space-x-2">
+                        <button type="button" class="button bg-blue-700" id="btnEditUploadBrochure"> Save </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Edit Upload Brochure Modal - END -->
+
+                <div class="uk-slider-container">
+                  <ul class="uk-child-width-1-3@m uk-child-width-1-3@s uk-child-width-1-2 uk-grid-small uk-grid"
+                    id="businessBrochureList">
+                    <!-- loop and display here the brochure coming from database -->
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <!-- ===========================  -->
+            <!-- Brochure Div - END  -->
+            <!-- ===========================  -->
+
+
+            <!-- ===========================  -->
+            <!-- Videos Div - START  -->
+            <!-- ===========================  -->
+            <div class="card">
+              <div id="divVideos" style="display: none;">
+                <!-- ===========================  -->
+                <!-- Videos List - START  -->
+                <!-- ===========================  -->
+                <div id="videoLists" style="display: none;">
+                  <div class="border-b flex items-center justify-between p-4">
+                    <div>
+                      <h2 class="text-lg font-semibold">Videos</h2>
+                    </div>
+                    <a href="#create-post-modal" uk-toggle
+                      class="flex items-center justify-center h-9 lg:px-5 px-2 rounded-md bg-blue-600 text-white space-x-1.5 blue-white-hover">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5">
+                        <path fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                          clip-rule="evenodd"></path>
+                      </svg>
+                      <span class="md:block hidden"> Upload Video </span>
+                    </a>
+                  </div>
+
+                  <!-- Craete video post modal - START -->
+                  <div id="create-post-modal" class="create-post" uk-modal>
+                    <div
+                      class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical shadow-2xl uk-animation-slide-bottom-small">
+                      <div class="py-4 border-b flex  justify-between px-6">
+                        <h3 class="text-lg font-semibold"> Create Video </h3>
+                        <div>
+                          <button
+                            class="uk-modal-close-default hover:bg-gray-100 rounded-full p-2.5 block uk-icon uk-close mt-0.5"
+                            type="button" uk-close>
+                            <i class="icon-feather-close"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="create-post-modal-body space-x-6 p-5 overflow-x-hidden mr-1" data-simplebar>
+                        <form action="" class="space-y-4 g:w-8/12" enctype="multipart/form-data" method="post"
+                          id="uploadFileForm">
+                          <label> Videos </label>
+                          <div class="relative uk-transition-toggle overflow-hidden">
+                            <div
+                              class="bg-gray-100 border-2 border-dashed flex flex-col h-40 items-center justify-center relative w-full rounded-lg dark:bg-gray-800 dark:border-gray-600">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                class="w-12">
+                                <path
+                                  d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z" />
+                                <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
+                              </svg>
+                            </div>
+                            <div class="w-full" uk-form-custom>
+                              <div class="uk-position-bottom uk-transition-bottom-small">
+                                <input type="file" id="videoInput" name="videoInput">
+                                <a href="#"
+                                  class="flex font-medium h-9 items-center justify-center px-5 rounded-b-xl text-blue-600 text-white"
+                                  id="videoName" style="margin-bottom: 25px;">
+                                  Choose file</a>
+                              </div>
+                            </div>
+                          </div>
+                          <label> Thumbnail </label>
+                          <div class="relative uk-transition-toggle overflow-hidden">
+                            <div
+                              class="bg-gray-100 border-2 border-dashed flex flex-col h-40 items-center justify-center relative w-full rounded-lg dark:bg-gray-800 dark:border-gray-600">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                class="w-12">
+                                <path
+                                  d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z" />
+                                <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
+                              </svg>
+                            </div>
+                            <div class="w-full" uk-form-custom>
+                              <div class="uk-position-bottom uk-transition-bottom-small">
+                                <input type="file" id="thumbnailInput" name="thumbnailInput">
+                                <a href="#"
+                                  class="flex font-medium h-9 items-center justify-center px-5 rounded-b-xl text-blue-600 text-white"
+                                  id="thumbnailName" style="margin-bottom: 25px;">
+                                  Choose file</a>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="font-semibold text-lg"> Details </div>
+                          <div>
+                            <label> Title </label>
+                            <input type="text" class="with-border" placeholder="" id="videoTitle" name="videoTitle">
+                          </div>
+                          <div>
+                            <label> Description </label>
+                            <textarea rows="3" class="with-border w-full p-4" placeholder="Video Description."
+                              id="videoDescription" name="videoDescription"></textarea>
+                          </div>
+                        </form>
+                      </div>
+                      <div class="flex items-center w-full justify-between p-3 border-t">
+                        <div class="flex items-center space-x-2">
+                        </div>
+                        <div class="flex space-x-2">
+                          <button type="button" class="button bg-blue-700 blue-white-hover" id="btnUploadFile"> Save
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Craete video post modal - END -->
+
+
+
+
+
+                  <div class="p-4 -mt-1.5">
+                    <!-- ===============================  -->
+                    <!-- Media Files Display - START  -->
+                    <!-- ===============================  -->
+                    <div id="">
+                      <div class="flex-1 space-y-4">
+                        <!-- === TRADERS VIDEO - START === -->
+                        <!-- === TRADERS VIDEO SLIDES - START === -->
+                        <div class="relative">
+                          <div class="px-1 py-3">
+                            <ul
+                              class="uk-child-width-1-4@m uk-child-width-1-3@s uk-child-width-1-2 uk-grid-small uk-grid mr-2"
+                              id="businessVideosList">
+                            </ul>
+                          </div>
+                        </div>
+                        <!-- === TRADERS VIDEO SLIDES - END === -->
+                        <!-- === TRADERS VIDEO - END === -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- ===========================  -->
+                <!-- Videos List - END  -->
+                <!-- ===========================  -->
+
+                <!-- ===========================  -->
+                <!-- Video Play - START  -->
+                <!-- ===========================  -->
+                <div id="videoPlay" style="display: none;">
+                  <div class="p-4 -mt-1.5">
+                    <div class="embed-video rounded">
+                      <iframe id="iframeVideoPlay" src="" frameborder="0" uk-video="automute: true" allowfullscreen
+                        uk-responsive></iframe>
+                    </div>
+                  </div>
+                </div>
+                <!-- ===========================  -->
+                <!-- Videos Play - END  -->
+                <!-- ===========================  -->
+              </div>
+            </div>
+            <!-- ===========================  -->
+            <!-- Videos Files Div - END  -->
+            <!-- ===========================  -->
+
+
+            <!-- ===========================  -->
+            <!-- Settings Div - START  -->
+            <!-- ===========================  -->
+            <div uk-sticky="media @m ; offset:80 ; bottom : true" class="card">
+              <div id="divSettings" style="display: none;">
+                <div class="border-b flex items-center justify-between p-4">
+                  <div>
+                    <h2 class="text-lg font-semibold">Business Visibility</h2>
+                  </div>
+                </div>
+                <div id="">
+                  <!-- ================================= -->
+                  <!-- Trader Visibility Details - START -->
+                  <!-- ================================= -->
+                  <div class="bg-white rounded-md lg:shadow-lg shadow col-span-2 lg:p-6 p-4 lg:mx-16">
+                    <div class="space-y-3">
+                      <div class="flex justify-between items-center">
+                        <div>
+                          <h4> Visible to your own country only?</h4>
+                        </div>
+                        <div class="switches-list -mt-8 is-large">
+                          <div class="switch-container">
+                            <label class="switch">
+                              <input type="checkbox" id="traderVisibleToYourOwnCountryOnly"
+                                name="traderVisibleToYourOwnCountryOnly" checked>
+                              <span class="switch-button"></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="flex justify-between items-center">
+                        <div>
+                          <h4> Visible in B2C, Micro and Small Enterprises, Retailers Category
+                            (Y/N)? </h4>
+                        </div>
+                        <div class="switches-list -mt-8 is-large">
+                          <div class="switch-container">
+                            <label class="switch">
+                              <input type="checkbox" id="traderVisibleToMicroSmallRetailers"
+                                name="traderVisibleToMicroSmallRetailers">
+                              <span class="switch-button"></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="flex justify-between items-center">
+                        <div>
+                          <h4> Visible in B2B, Medium & Large Enterprise, Wholesale, High End,
+                            High Tech Category (Y/N)?</h4>
+                        </div>
+                        <div class="switches-list -mt-8 is-large">
+                          <div class="switch-container">
+                            <label class="switch">
+                              <input type="checkbox" id="traderVisibleToBtbMediumLargeWholesaleHighEnd"
+                                name="traderVisibleToBtbMediumLargeWholesaleHighEnd" checked>
+                              <span class="switch-button"></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="flex justify-between items-center">
+                        <div>
+                          <h4> Visible to all ranks?</h4>
+                        </div>
+                        <div class="switches-list -mt-8 is-large">
+                          <div class="switch-container">
+                            <label class="switch">
+                              <input type="checkbox" id="traderVisibleToAllBusinessScale"
+                                name="traderVisibleToAllBusinessScale">
+                              <span class="switch-button"></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="flex justify-between items-center">
+                        <div>
+                          <h4> Visible to ranks close to yours? </h4>
+                        </div>
+                        <div class="switches-list -mt-8 is-large">
+                          <div class="switch-container">
+                            <label class="switch">
+                              <input type="checkbox" id="traderVisibleToCloseRanks" name="traderVisibleToCloseRanks"
+                                checked>
+                              <span class="switch-button"></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="flex justify-between items-center">
+                        <div>
+                          <h4> Visible to your rank and lower ranks?</h4>
+                        </div>
+                        <div class="switches-list -mt-8 is-large">
+                          <div class="switch-container">
+                            <label class="switch">
+                              <input type="checkbox" id="traderVisibleToYourRankToLower"
+                                name="traderVisibleToYourRankToLower">
+                              <span class="switch-button"></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="flex justify-between items-center">
+                        <div>
+                          <h4> Visible to your rank and higher ranks?</h4>
+                        </div>
+                        <div class="switches-list -mt-8 is-large">
+                          <div class="switch-container">
+                            <label class="switch">
+                              <input type="checkbox" id="traderVisibleToYourRankToHigher"
+                                name="traderVisibleToYourRankToHigher" checked>
+                              <span class="switch-button"></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="flex justify-between items-center">
+                        <div>
+                          <h4> Visible to your rank only?</h4>
+                        </div>
+                        <div class="switches-list -mt-8 is-large">
+                          <div class="switch-container">
+                            <label class="switch">
+                              <input type="checkbox" id="traderVisibleToYourRankOnly"
+                                name="traderVisibleToYourRankOnly">
+                              <span class="switch-button"></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <hr>
+                    </div>
+                  </div>
+                  <!-- =============================== -->
+                  <!-- Trader Visibility Details - END -->
+                  <!-- =============================== -->
+
+                </div>
+              </div>
+            </div>
+            <!-- ===========================  -->
+            <!-- Settings Div - END  -->
+            <!-- ===========================  -->
+
+            <!-- ===========================  -->
+            <!-- Settings Div - START  -->
+            <!-- ===========================  -->
+            <div uk-sticky="media @m ; offset:80 ; bottom : true" class="card">
+              <div id="divPaymentAccount" style="display: none;">
+                <div class="border-b flex items-center justify-between p-4">
+                  <div>
+                    <h2 class="text-lg font-semibold"> Payment</h2>
+                  </div>
+                </div>
+                <div id="">
+                  <!-- ================================= -->
+                  <!-- Trader Visibility Details - START -->
+                  <!-- ================================= -->
+                  <div class="bg-white rounded-md lg:shadow-lg shadow col-span-2 lg:p-6 p-4 lg:mx-16">
+                    <div class="space-y-3">
+                      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white orbitron">
+                        How to send payment details
+                      </h5>
+                      <ul class="list-disc pl-8 mt-2 mb-2 space-y-1 orbitron">
+                        <li>To join a Trade Show, forward the Trade Show rate of PhP 2,500 (per account per 2 to 4
+                          days
+                          Trade Show) via our GCash or Bank Account(s)</li>
+                        <li>You may join with more than one account by registering another account with different
+                          account
+                          names.</li>
+                        <li>Payment Details are as follow:</li>
+                        <!-- ... -->
+                      </ul>
+                      <!-- <div class="grid grid-cols-1 gap-1 md:grid-cols-2 lg:grid-cols-2 mb-4"> -->
+                      <div class="columns-2">
+                        <div class="flex items-center rounded-lg border border-gray-200 shadow-md m-1">
+                          <div
+                            class="max-w-sm bg-white border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+                            <a href="" onclick="return false;">
+                              <img class="rounded-t-lg w-full" src="/uploads/payment_accounts/3.png" alt="" />
+                            </a>
+                            <div class="p-5">
+                              <a href="" onclick="return false;">
+                                <h5
+                                  class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white orbitron">
+                                  BDO
+                                </h5>
+                              </a>
+                              <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 orbitron">Charlie Pena</p>
+                              <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 orbitron">000 260 103 497
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="flex items-center rounded-lg border border-gray-200 shadow-md m-1">
+                          <div
+                            class="max-w-sm bg-white border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+                            <a href="" onclick="return false;">
+                              <img class="rounded-t-lg w-full" src="/uploads/payment_accounts/4.png" alt="" />
+                            </a>
+                            <div class="p-5">
+                              <a href="" onclick="return false;">
+                                <h5
+                                  class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white orbitron">
+                                  GCash
+                                </h5>
+                              </a>
+                              <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 orbitron">Charlie Pena</p>
+                              <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 orbitron">0922 8954554</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <ul class="list-disc pl-8 mt-2 mb-2 space-y-1 orbitron">
+                        <li>Please send back image or screen shot of "PROOF OF PAYMENT" using the "EMAIL ADDRESS TO BE
+                          SEND", together with some essential information:</li>
+                        <ul class="list-disc pl-8 mt-2 mb-2 space-y-1 list-inside">
+                          <li>Account Name (Exactly the same as profile):</li>
+                          <li>Major Category:</li>
+                          <li>Subcategory:</li>
+                          <li>Minor Subcategory (optional):</li>
+                          <li>Trade Show Date:</li>
+                          <!-- ... -->
+                        </ul>
+                        <li>If payment is received after the cut-off time (one month before Trade Show) it will be
+                          automatically considered as payment for joining the Trade Show for the succeeding
+                          month.</li>
+                        <li>Expect a confirmation email showing your status of Joining of Trade Show.</li>
+                        <!-- ... -->
+                      </ul>
+                    </div>
+                  </div>
+                  <!-- =============================== -->
+                  <!-- Trader Visibility Details - END -->
+                  <!-- =============================== -->
+
+                </div>
+              </div>
+            </div>
+            <!-- ===========================  -->
+            <!-- Settings Div - END  -->
+            <!-- ===========================  -->
+          </div>
+        </div>
+        <!-- ==================== -->
+        <!-- MAIN CONTENT - END -->
+        <!-- ==================== -->
+
+      </div>
+      <%- include('../modal/email-if-help-and-suggest-link-not-available.ejs') %>
+        <%- include('../includes/scripts/index.ejs') %>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js"></script>
+          <script src="assets/js/traders-profile-v2.js"></script>
+          <script src="assets/js/timezone.js"></script>
+          <script src="assets/js/dropdown-select-option-with-input-other.js"></script>
+          <script src="assets/js/tags.js"></script>
+          <script src="assets/js/region-of-operation-toogle.js"></script>
+
+          <!-- <script src="assets/js/traders-profile.js"></script> -->
+          <!-- <script src="assets/js/global-countries.js"></script> -->
+          <!-- <script src="assets/js/getStatesNameToBeDisplayUsingCode.js"></script> -->
+          <!-- <script src="assets/js/getCityNameToBeDisplayUsingCode.js"></script> -->
+
+
+          <script type="text/javascript">
+            const sessionType = `<%= data.type %>`;
+            const sessionFirstName = `<%= data.first_name %>`;
+            const sessionLastName = `<%= data.last_name %>`;
+            const sessionEmail = `<%= data.email %>`;
+
+            const userNameElement = document.getElementById('user-name');
+            const upgradeAccountElement = document.getElementById('upgrade-account');
+            const userTypeElement = document.getElementById('user-type');
+            const userTypeTextElement = document.getElementById('userType');
+            const rightSideWithSessionElement = document.getElementById('right_side_with_session');
+            const rightSideWithNoSessionElement = document.getElementById('right_side_with_no_session');
+
+            if (!sessionType) {
+              window.location = `${host}/login`;
+            } else {
+              rightSideWithSessionElement.style.display = 'block';
+              rightSideWithNoSessionElement.style.display = 'none';
+            }
+
+            userNameElement.innerHTML = sessionFirstName ? `${sessionFirstName} ${sessionLastName}` : '';
+
+            switch (parseInt(sessionType)) {
+              case 1:
+                upgradeAccountElement.disabled = true;
+                upgradeAccountElement.style.display = 'none';
+                userTypeElement.innerHTML = 'Trader';
+                userTypeTextElement.innerHTML = 'TRADER PROFILE';
+                break;
+              case 2:
+                upgradeAccountElement.disabled = false;
+                upgradeAccountElement.style.display = 'block';
+                userTypeElement.innerHTML = 'Large Scale';
+                userTypeTextElement.innerHTML = 'MEMBER PROFILE (Large Scale)';
+                break;
+              case 3:
+                upgradeAccountElement.disabled = false;
+                upgradeAccountElement.style.display = 'block';
+                userTypeElement.innerHTML = 'Medium Scale';
+                userTypeTextElement.innerHTML = 'MEMBER PROFILE (Medium Scale)';
+                break;
+              case 4:
+                userTypeElement.innerHTML = 'Small Scale';
+                userTypeTextElement.innerHTML = 'MEMBER PROFILE (Small Scale)';
+                break;
+            }
+          </script>
+          <script type="text/javascript">
+
+          </script>
+
+  </body>
+
+  </html>

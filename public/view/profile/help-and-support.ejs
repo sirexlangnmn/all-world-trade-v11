@@ -1,0 +1,128 @@
+<%- include('../includes/head/index.ejs') %>
+<body>
+    <!-- Navbar goes here -->
+    <%- include('../includes/nav/primary-navigation.ejs') %>
+    <div id="wrapper" class="is-collapse is-active">
+        <!-- === HEADER - START === -->
+        <!-- === HEADER - END === -->
+        <!-- Main Contents -->
+        <div class="main_content">
+            <div class="mcontainer">
+                <!-- ===============================  -->
+                <!-- PROFILE DIV - START  -->
+                <!-- ===============================  -->
+                <div class="profile user-profile">
+                    <div class="profiles_banner image-upload">
+                        <form action="javascript:void(0);" id="" name="" enctype="multipart/form-data" accept-charset="utf-8">
+                            <label for="companyBanner">
+                            <img id="companyBannerPreview" src="uploads/placeholder/banner-placeholder2.jpg" />
+                            </label>
+                        </form>
+                    </div>
+                    <div class="profiles_content">
+                        <form action="javascript:void(0);" id="" name="" enctype="multipart/form-data" accept-charset="utf-8">
+                            <div class="profile_avatar image-upload">
+                                <div class="profile_avatar_holder">
+                                    <label for="companyLogo">
+                                    <img id="companyLogoPreview" src="uploads/placeholder/logo-placeholder2.jpg" />
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="profile_info">
+                            <h1 id="displayBusinessNameH1" class="orbitron"> Call Center Name </h1>
+                            <p style="text-align: center;" id="displayBusinessTagLineH1"> Call Center Email Address </p>
+                            <h1 id="userType" class="orbitron" style="text-align: center;"> </h1>
+                        </div>
+                    </div>
+                    <div class="flex justify-between lg:border-t border-gray-100 flex-col-reverse lg:flex-row pt-2">
+                        <nav class="responsive-nav pl-3">
+                            <ul uk-switcher="connect: #timeline-tab; animation: uk-animation-fade">
+                                <li class="active" id="liTabCompanyDetails"><a href="#" id="tabCompanyDetails">Caller List</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="flex justify-between lg:border-t border-gray-100 flex-col-reverse lg:flex-row pt-2 mx-3.5">
+                        <div class="grid md:grid-cols-4 grid-cols-1 gap-1">
+                        	<!-- create communicator links [start]-->
+                            <div>
+                                <div class="m-1">
+                                    <a href="#" id="btnCreateHelpAndSupportCommunicatorLink"
+                                        class="my-3.5 bg-blue-100 flex font-medium h-9 items-center justify-center px-5 rounded-md bg-blue-600 font-medium text-white text-sm hover:text-white blue-white-hover">
+                                        <svg class="h-5 pr-1 rounded-full w-6 fill-current" id="veiw-more" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                            aria-hidden="false" style="">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z">
+                                            </path>
+                                        </svg>
+                                        Create New Links 
+                                    </a>
+                                </div>
+                            </div>
+                        	<!-- create communicator links [end]-->
+							<!-- drop communicator links [start]-->
+                            <div>
+                                <div class="m-1">
+                                    <a href="#" id="btnDropHelpAndSupportCommunicatorLink"
+                                        class="my-3.5 bg-blue-100 flex font-medium h-9 items-center justify-center px-5 rounded-md bg-blue-600 font-medium text-white text-sm hover:text-white blue-white-hover">
+                                    Drop Links </a>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="m-1">
+                                    <a href="#" id="btnSendEmailMarketing"
+                                        class="my-3.5 bg-blue-100 flex font-medium h-9 items-center justify-center px-5 rounded-md bg-blue-600 font-medium text-white text-sm hover:text-white blue-white-hover">
+                                        Send Email Marketing 
+                                    </a>
+                                </div>
+                            </div>
+							<!-- drop communicator links [end]-->
+
+                            <!-- <div>
+                                <div class="m-1">
+                                  <a href="#"
+                                    class="my-3.5 bg-blue-100 flex font-medium h-9 items-center justify-center px-5 rounded-md bg-blue-600 font-medium text-white text-sm hover:text-white blue-white-hover">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5">
+                                      <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                                        clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span> Button 1 </span>
+                                  </a>
+                                </div>
+                                </div> -->
+                            <!-- <div>
+                                <div class="m-1">
+                                  <a href="#"
+                                    class="my-3.5 bg-blue-100 flex font-medium h-9 items-center justify-center px-5 rounded-md bg-blue-600 font-medium text-white text-sm hover:text-white blue-white-hover">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5">
+                                      <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                                        clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span> Button 2 </span>
+                                  </a>
+                                </div>
+                                </div>  -->
+                            <div>
+                                <div class="m-1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ===============================  -->
+                <!-- PROFILE DIV - END  -->
+                <!-- ===============================  -->
+            </div>
+        </div>
+    </div>
+    <%- include('../includes/scripts/index.ejs') %>
+	<script  src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js"></script>
+    <script src="assets/js/help-and-support-profile.js"></script>
+    <script>
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<html lang="en" class="_neKTiNR9ODo9dbROzCM">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- <link href="uploads/placeholder/logo-placeholder2.jpg" rel="icon" type="image/png" /> -->
+    <link rel="icon" type="image/png" sizes="32x32" href="uploads/favicon_io/favicon.ico" />
+
+    <meta name="description" content="All World Trade - Home" />
+
+    <!-- <link rel="stylesheet" href="<%= process.env.AWT_HOSTNAME %>assets/css/icons.css" /> -->
+    <link  rel="stylesheet" href="<%= process.env.AWT_HOSTNAME %>assets/css-min/icons.min.css" />
+
+    <!-- <link rel="stylesheet" href="<%= process.env.AWT_HOSTNAME %>assets/css/uikit.css" /> -->
+    <link  rel="stylesheet" href="<%= process.env.AWT_HOSTNAME %>assets/css-min/uikit.min.css" />
+
+    <!-- <link rel="stylesheet" href="<%= process.env.AWT_HOSTNAME %>assets/css/style.css" /> -->
+    <link  rel="stylesheet" href="<%= process.env.AWT_HOSTNAME %>assets/css-min/style.min.css" />
+
+    <link rel="stylesheet" href="<%= process.env.AWT_HOSTNAME %>assets/css/custom.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <link  rel="stylesheet" href="<%= process.env.AWT_HOSTNAME %>assets/css-tailwind/custom.css" /> -->
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.css"
+        rel="stylesheet" />
+    <script src="<%= process.env.AWT_HOSTNAME %>assets/js/global.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <!-- === HEADER - START === -->
+    <div class="mb-20">
+    <%- include('../includes/nav/primary-navigation.ejs') %>
+    </div>
+
+    <main class="mx-4 my-16 mt-44">
+        <div class="text-center">
+          <h1 class="mb-4 text-2xl font-normal md:text-3xl lg:text-4xl">
+            Our <span class="font-semibold">plans</span> for your <span class="font-semibold">strategies</span>
+          </h1>
+          <p class="text-sm font-normal text-gray-400">
+            See below our main three plans for your business, for your startup and agency.
+          </p>
+          <p class="text-sm font-normal text-gray-400">
+            It start from here! You can teach yourself what you really like.
+          </p>
+        </div>
+    
+       
+    
+        <!-- Plans -->
+        <div class="flex flex-col items-center justify-center mt-16 space-y-8 lg:flex-row lg:items-stretch lg:space-x-8 lg:space-y-0">
+       
+        
+            <section class="flex flex-col w-full max-w-sm p-12 space-y-6 bg-white rounded-lg shadow-md">
+              <!-- Price -->
+              <div class="flex-shrink-0">
+                <span class="text-4xl font-medium tracking-tight text-green-500" :class="plan.name == 'Basic' ? 'text-green-500' : ''" x-text="`$${billPlan == 'monthly' ? plan.price.monthly : plan.price.annually}`">FREE</span>
+                <!-- <span class="text-gray-400" x-text="billPlan == 'monthly' ? '/month' : '/year'">/month</span> -->
+              </div>
+    
+              <!--  -->
+              <div class="flex-shrink-0 pb-6 space-y-2 border-b">
+                <h2 class="text-2xl font-normal" x-text="plan.name">Medium Scale</h2>
+                <p class="text-sm text-gray-400" x-text="plan.discretion">
+                    Visitor Members looking for Medium Scale Company
+                </p>
+              </div>
+    
+    
+              <!-- Button -->
+              <div class="flex-shrink-0 pt-4">
+                <!-- <button class="inline-flex items-center justify-center w-full max-w-xs px-4 py-2 transition-colors border rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:bg-indigo-500 hover:text-white" :class="plan.name == 'Basic' ? 'bg-indigo-500 text-white hover:bg-indigo-700' : 'hover:bg-indigo-500 hover:text-white'" x-text="`Get ${plan.name}`">
+                    Upgrade
+                </button> -->
+                <div class="flex-shrink-0 pt-4">
+                    <button class="inline-flex items-center justify-center w-full max-w-xs px-4 py-2 transition-colors border rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 bg-indigo-500 text-white hover:bg-indigo-700" :class="plan.name == 'Basic' ? 'bg-indigo-500 text-white hover:bg-indigo-700' : 'hover:bg-indigo-500 hover:text-white'" x-text="`Get ${plan.name}`">Upgrade to Medium Scale</button>
+                </div>
+                  
+              </div>
+            </section>
+          
+            <section class="flex flex-col w-full max-w-sm p-12 space-y-6 bg-white rounded-lg shadow-md">
+              <!-- Price -->
+              <div class="flex-shrink-0">
+                <span class="text-4xl font-medium tracking-tight text-green-500" :class="plan.name == 'Basic' ? 'text-green-500' : ''" x-text="`$${billPlan == 'monthly' ? plan.price.monthly : plan.price.annually}`">FREE</span>
+                <!-- <span class="text-gray-400" x-text="billPlan == 'monthly' ? '/month' : '/year'">/month</span> -->
+              </div>
+    
+              <!--  -->
+              <div class="flex-shrink-0 pb-6 space-y-2 border-b">
+                <h2 class="text-2xl font-normal" x-text="plan.name">Large Scale</h2>
+                <p class="text-sm text-gray-400" x-text="plan.discretion">
+                    Visitor Members looking for
+                    Large Scale or
+                    High Technology Company
+                </p>
+              </div>
+    
+    
+              <!-- Button -->
+              <div class="flex-shrink-0 pt-4">
+                <button class="inline-flex items-center justify-center w-full max-w-xs px-4 py-2 transition-colors border rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 bg-indigo-500 text-white hover:bg-indigo-700" :class="plan.name == 'Basic' ? 'bg-indigo-500 text-white hover:bg-indigo-700' : 'hover:bg-indigo-500 hover:text-white'" x-text="`Get ${plan.name}`">Upgrade to Large Scale</button>
+              </div>
+            </section>
+          
+            <section class="flex flex-col w-full max-w-sm p-12 space-y-6 bg-white rounded-lg shadow-md">
+              <!-- Price -->
+              <div class="flex-shrink-0">
+                <span class="text-4xl font-medium tracking-tight text-green-500" :class="plan.name == 'Basic' ? 'text-green-500' : ''" x-text="`$${billPlan == 'monthly' ? plan.price.monthly : plan.price.annually}`">2, 500</span>
+                <span class="text-gray-400" x-text="billPlan == 'monthly' ? '/month' : '/year'">/month</span>
+              </div>
+    
+              <!--  -->
+              <div class="flex-shrink-0 pb-6 space-y-2 border-b mb-52">
+                <h2 class="text-2xl font-normal" x-text="plan.name">Trader</h2>
+                <p class="text-sm text-gray-400" x-text="plan.discretion">
+                    Need Company And Marketing Information.
+                    Traders are automatically Visitors
+                </p>
+              </div>
+
+    
+              <!-- Button -->
+              <div class="flex-shrink-0 pt-4 mt-52">
+                <button class="inline-flex items-center justify-center w-full max-w-xs px-4 py-2 transition-colors border rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 bg-indigo-500 text-white hover:bg-indigo-700" :class="plan.name == 'Basic' ? 'bg-indigo-500 text-white hover:bg-indigo-700' : 'hover:bg-indigo-500 hover:text-white'" x-text="`Get ${plan.name}`">Upgrade to Trader</button>
+                </div>
+            </section>
+          </div>
+      </main>
+    
+        <!-- <script src="<%= process.env.AWT_HOSTNAME %>assets/js/toggle-dark-light.js"></script> -->
+        <script  src="<%= process.env.AWT_HOSTNAME %>assets/js-min/toggle-dark-light.min.js"></script>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <!-- <script src="assets/js/upgrade-plan.js"></script> -->
+        <!-- <script src="assets/js/global.js"></script> -->
+        <!-- <script  src="<%= process.env.AWT_HOSTNAME %>assets/js/tippy.all.min.js"></script> -->
+        
+        <!-- <script src="<%= process.env.AWT_HOSTNAME %>assets/js/uikit.js"></script> -->
+        <script  src="<%= process.env.AWT_HOSTNAME %>assets/js-min/uikit.min.js"></script>
+
+        <!-- <script src="<%= process.env.AWT_HOSTNAME %>assets/js/simplebar.js"></script> -->
+        <script  src="<%= process.env.AWT_HOSTNAME %>assets/js-min/simplebar.min.js"></script>
+
+        <!-- <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script> -->
+        <!-- <script src="assets/css/slim-scroll-master/dist/slimscroll.min.js"></script> -->
+
+
+        <!-- <script src="<%= process.env.AWT_HOSTNAME %>assets/js/custom.js"></script> -->
+        <script  src="<%= process.env.AWT_HOSTNAME %>assets/js-min/custom.min.js"></script>
+
+        <!-- <script src="<%= process.env.AWT_HOSTNAME %>assets/js/bootstrap-select.min.js"></script> -->
+        <script  src="<%= process.env.AWT_HOSTNAME %>assets/js-min/bootstrap-select.min.js"></script>
+
+        <script nomodule="" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>
+
+</body>
+
+</html>
