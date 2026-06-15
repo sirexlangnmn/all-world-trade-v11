@@ -30,14 +30,20 @@
       <%- include('../includes/nav/primary-navigation.ejs') %>
         <!-- === HEADER - END === -->
 
+        <style>
+          #nav-height-spacer {
+            transition: padding-top 0.2s ease;
+          }
+        </style>
+
         <!-- Main Contents -->
         <!-- <div class="bg-gray-200 main_content_custom"> -->
-        <div class="main_content_custom">
+        <div class="main_content_custom" id="nav-height-spacer">
           <div class="mcontainer_custom">
             <!--  breadcrumb -->
-            <div class="w-full mt-10 lg:w-6/6">
-              <div class="mb-2 card">
-                <div class="py-0 breadcrumb-area">
+            <div class="w-full mt-2 mb-4 lg:mb-6">
+              <div class="card">
+                <div class="breadcrumb-area">
                   <div class="breadcrumb">
                     <ul class="p-4" id="displaySearchParameter">
                     </ul>
@@ -505,6 +511,15 @@
       <!-- <script src="assets/js/getStatesAndCitiesOptions.js"></script> -->
       
 
+      <style>
+        /* Hide panel switcher on desktop — !important beats .header_dropdown.profile_dropdown a specificity */
+        @media (min-width: 1024px) {
+          .panel-switcher-nav {
+            display: none !important;
+          }
+        }
+      </style>
+
       <script type="text/javascript">
         // Mobile panel switching via profile avatar dropdown (only active below lg breakpoint)
         (function() {
@@ -549,6 +564,26 @@
               panels.middle.classList.remove('hidden');
             }
           });
+        })();
+      </script>
+
+      <script>
+        (function() {
+          'use strict';
+          var nav = document.querySelector('nav.sticky');
+          var spacer = document.getElementById('nav-height-spacer');
+          if (nav && spacer) {
+            function adjustSpacer() {
+              spacer.style.paddingTop = nav.offsetHeight + 'px';
+            }
+            adjustSpacer();
+            if (window.ResizeObserver) {
+              var ro = new ResizeObserver(adjustSpacer);
+              ro.observe(nav);
+            } else {
+              window.addEventListener('resize', adjustSpacer);
+            }
+          }
         })();
       </script>
   </body>

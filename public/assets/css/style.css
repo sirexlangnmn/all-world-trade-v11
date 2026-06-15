@@ -9607,8 +9607,7 @@ body.story-active header .header_widgets .is_link {
 .breadcrumb-area {
     position: relative;
     padding: 10px 0;
-    margin-bottom: 5px;
-    /* original: margin-bottom: 10px; */
+    margin-bottom: 10px;
 }
 
 .breadcrumb-area .breadcrumb ul li a {
@@ -9640,7 +9639,7 @@ body.story-active header .header_widgets .is_link {
 
 .breadcrumb ul li a {
     font-size: 15px;
-    line-height: 70px;
+    line-height: 1.5;
     font-weight: 500;
     color: #434343;
 }

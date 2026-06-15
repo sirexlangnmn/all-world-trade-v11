@@ -8409,7 +8409,7 @@ body.story-active header .left_side .slide_menu {
 .breadcrumb-area {
     position: relative;
     padding: 10px 0;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 .breadcrumb-area .breadcrumb ul li a {
     line-height: initial;
@@ -8434,7 +8434,7 @@ body.story-active header .left_side .slide_menu {
 }
 .breadcrumb ul li a {
     font-size: 15px;
-    line-height: 70px;
+    line-height: 1.5;
     font-weight: 500;
     color: #434343;
 }
