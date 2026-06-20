@@ -1641,41 +1641,41 @@ server {
 # =====================
 # DATABASE CONFIGURATION
 # =====================
-DB_SERVERHOST=localhost          # MySQL server hostname
-DB_USERNAME=remote1              # MySQL database user
-DB_PASSWORD=                     # MySQL database password
-DB_NAME=awt_prod_db_02_01        # MySQL database name
-DB_DIALECT=mysql                 # Database dialect (mysql)
+DB_SERVERHOST=          # MySQL server hostname
+DB_USERNAME=            # MySQL database user
+DB_PASSWORD=            # MySQL database password
+DB_NAME=                # MySQL database name
+DB_DIALECT=             # Database dialect (mysql)
 
 # =====================
 # APPLICATION CONFIGURATION
 # =====================
-PORT=3000                        # Application listen port
-NODE_ENV=localhost               # Environment (localhost/production)
-AWT_HOSTNAME=http://localhost:3000/  # Public-facing base URL
+PORT=                   # Application listen port
+NODE_ENV=               # Environment (localhost/production)
+AWT_HOSTNAME=           # Public-facing base URL
 
 # =====================
 # SECURITY CONFIGURATION
 # =====================
-API_KEY_SECRET=all_world_trade_default_secret   # MiroTalk meeting API key
-SESSION_SECRET=all_world_trade_secret_random_string  # Session encryption secret
-JWT_SECRET=all_world_trade_jwt_super_secret     # JWT signing secret
+API_KEY_SECRET=         # MiroTalk meeting API key
+SESSION_SECRET=         # Session encryption secret
+JWT_SECRET=             # JWT signing secret
 
 # =====================
 # EMAIL CONFIGURATION (SMTP)
 # =====================
-EMAIL_SERVERHOST=mail.allworldtrade.com  # SMTP server host
-EMAIL_PORT=587                           # SMTP port (587=STARTTLS)
-EMAIL_SECURE=false                       # Use TLS (false for STARTTLS)
-EMAIL_USER=verification@allworldtrade.com  # SMTP username
-EMAIL_PASSWORD=                          # SMTP password
-EMAIL_SENDER_ADDRESS=verification@allworldtrade.com  # From address
+EMAIL_SERVERHOST=       # SMTP server host
+EMAIL_PORT=             # SMTP port (587=STARTTLS)
+EMAIL_SECURE=           # Use TLS (false for STARTTLS)
+EMAIL_USER=             # SMTP username
+EMAIL_PASSWORD=         # SMTP password
+EMAIL_SENDER_ADDRESS=   # From address
 
 # =====================
 # NOTIFICATION EMAILS
 # =====================
-PAYMENT_EMAIL_ADDRESS=payment@allworldtrade.com          # Payment notifications
-SUPPORT_RECEIVER_EMAIL_ADDRESS=care@allworldtrade.com    # Support tickets
+PAYMENT_EMAIL_ADDRESS=              # Payment notifications
+SUPPORT_RECEIVER_EMAIL_ADDRESS=     # Support tickets
 ```
 
 ### 14.2 Variable Explanations
