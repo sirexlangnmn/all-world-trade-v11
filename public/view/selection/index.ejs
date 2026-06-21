@@ -27,7 +27,7 @@
   <body>
     <div id="wrapper" class="is-collapse is-active">
       <!-- === HEADER - START === -->
-      <%- include('../includes/nav/primary-navigation.ejs') %>
+      <%- include('../includes/nav/selection-navigation.ejs') %>
         <!-- === HEADER - END === -->
 
         <style>
@@ -547,10 +547,10 @@
               panels[key].classList.toggle('hidden', key !== panelToShow);
             });
 
-            // Close the profile dropdown via UIkit API
-            var drop = target.closest('[uk-drop]');
-            if (drop && window.UIkit) {
-              window.UIkit.dropdown(drop).hide();
+            // Close the profile dropdown
+            var drop = document.getElementById('avatar-dropdown');
+            if (drop) {
+              drop.classList.remove('is-open');
             }
           });
 

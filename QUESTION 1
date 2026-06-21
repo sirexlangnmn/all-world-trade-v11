@@ -1,0 +1,18 @@
+read my public/view/includes/header_avatar/index.ejs
+I have
+<div uk-drop="mode: click;offset:5" class="header_dropdown profile_dropdown">
+. . . .
+</div>
+
+about the
+My Account,
+Night mode,
+Log Out,
+Show Left Panel,
+Show Middle Panel,
+Show Right Panel,
+
+when in I use the developer tools to inspect the element and change the screen sizes, and click the avatar, that div with options showing.
+It perfectly works to what I expect and intent.
+
+But if I change in the developer tool to mobile view, if I click tha avatar, the div dont show up.
