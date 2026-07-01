@@ -27,5 +27,6 @@ db.user_download_histories = require('./user_download_histories.model.js')(seque
 
 db.prospects = require('./prospects.models.js')(sequelize, Sequelize);
 db.contact_requests = require('./contact_requests.model.js')(sequelize, Sequelize);
+db.waiting_rooms = require('./waiting_rooms.model.js')(sequelize, Sequelize);
 
 module.exports = db;

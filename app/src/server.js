@@ -596,6 +596,11 @@ app.get(['/profile'], (req, res) => {
                 data: sessionData,
             });
         }
+        if (req.session.user.type == 5) {
+            res.render(path.join(__dirname, '../../', 'public/view/profile/customer-service'), {
+                data: sessionData,
+            });
+        }
     }
 });
 

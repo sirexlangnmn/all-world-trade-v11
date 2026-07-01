@@ -13,6 +13,7 @@ controller.registration_v2 = require('./registration_v2.controller.js');
 controller.update_trader = require('./update-trader.controller.js');
 controller.region_of_operation = require('./region_of_operation.controller.js');
 controller.join = require('./join.controller.js');
+controller.waiting_rooms = require('./waiting_rooms.controller.js');
 
 controller.update_traders = require('./update-traders.controller.js'); // delete in future
 controller.update_large_scale_company = require('./update-large-scale-company.controller.js'); // delete in future

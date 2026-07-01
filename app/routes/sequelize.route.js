@@ -30,6 +30,7 @@ module.exports = (app) => {
     const regionOfOperation = controllers.region_of_operation;
 
     const joinController = controllers.join;
+    const waitingRoomsController = controllers.waiting_rooms;
 
     const updateTraders = controllers.update_traders; // delete in future
     const updateLarge = controllers.update_large_scale_company; // delete in future
@@ -91,7 +92,11 @@ module.exports = (app) => {
 
     app.post(['/api/v2/post/check-if-trader-is-active'], usersAccountsController.checkIfTraderIsActive);
 
+    app.post(['/api/v2/post/generate-waiting-room'], waitingRoomsController.generateWaitingRoom);
+
+
     app.post(['/api/v2/post/update-company-details'], updateTraders.update); // delete in future
     app.post(['/api/v2/post/update-large-scale-company'], updateLarge.update); // delete in future
     app.post(['/api/v2/post/update-medium-scale-company'], updateMedium.update); // delete in future
+
 };

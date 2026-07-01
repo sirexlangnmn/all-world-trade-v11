@@ -1,18 +1,8 @@
-read my public/view/includes/header_avatar/index.ejs
-I have
-<div uk-drop="mode: click;offset:5" class="header_dropdown profile_dropdown">
-. . . .
-</div>
-
-about the
-My Account,
-Night mode,
-Log Out,
-Show Left Panel,
-Show Middle Panel,
-Show Right Panel,
-
-when in I use the developer tools to inspect the element and change the screen sizes, and click the avatar, that div with options showing.
-It perfectly works to what I expect and intent.
-
-But if I change in the developer tool to mobile view, if I click tha avatar, the div dont show up.
+1. create an account for AWT Online Assistance
+2. users_accounts.type = 5
+3. it must not show in the Selection page.
+4. in the profile page, which is customer-service page, the user able to create a link.
+   the created link save to 
+5. the created link serve as a room. Whoever click to specific company in Selection page, it will redirect to the created link of customer service.
+6. the created link able to enter the any users and the trader. Then the customer-service able to exit the room and allow the user and trader talk.
+6. then every time the customer-service create a new link it serves another room. Then same cycle.
