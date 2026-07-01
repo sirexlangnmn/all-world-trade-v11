@@ -1,35 +1,19 @@
-read my public/view/includes/header_avatar/index.ejs
-I have
-<div uk-drop="mode: click;offset:5" class="header_dropdown profile_dropdown">
-. . . .
-</div>
-
-about the
-My Account,
-Night mode,
-Log Out,
-Show Left Panel,
-Show Middle Panel,
-Show Right Panel,
-
-I already deploy this to prod.
-On the first load of page, when I click the avatar the div with options
-My Account,
-Night mode,
-Log Out,
-Show Left Panel,
-Show Middle Panel,
-Show Right Panel,
-is showing.
+read my waiting_rooms.controller.js file
 
 
-But after a couple of clicking to the other part of web page and click again the avatar, the div with options
-My Account,
-Night mode,
-Log Out,
-Show Left Panel,
-Show Middle Panel,
-Show Right Panel,
-is no longer showing
 
-Dunno if this is a bug or not, but it seems like the dropdown is not working properly after the first click. It could be an issue with the JavaScript that handles the dropdown functionality. You may want to check if there are any errors in the console or if there are any conflicts with other scripts on the page. Additionally, you could try reinitializing the dropdown after each click to see if that resolves the issue.
+"
+const db = require('../db_models/index.js');
+const sequelizeConfig = require('../config/sequelize.config.js');
+const WaitingRooms = db.waiting_rooms;
+const Op = db.Sequelize.Op;
+const { v4: uuidV4 } = require('uuid');
+
+exports.generateWaitingRoom = async (req, res) => {
+    const uuid = uuidV4();
+    console.log('generateWaitingRoom called');
+    console.log('generateWaitingRoom uuid:', uuid);
+
+    // create sequelize query to insert the value of uuid in waiting_rooms.model.js waiting_room column
+};
+"

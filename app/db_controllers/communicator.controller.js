@@ -3,6 +3,7 @@ const sequelizeConfig = require('../config/sequelize.config.js');
 
 const Support_links = db.support_links;
 const Users_businesses = db.users_businesses;
+const Waiting_rooms = db.waiting_rooms;
 
 const Op = db.Sequelize.Op;
 
@@ -12,6 +13,7 @@ exports.findCommunicator = async (req, res) => {
 
     var supportLinksCondition = paramsLink ? { communicator_link: { [Op.like]: `%${paramsLink}%` }, status: 0 } : null;
     var usersBusinessesCondition = paramsLink ? { communicator: { [Op.like]: `%${paramsLink}%` } } : null;
+    var waitingRoomsCondition = paramsLink ? { waiting_room: { [Op.like]: `%${paramsLink}%` } } : null;
 
     const getRowsInSupporLinks = await Support_links.findAll({ where: supportLinksCondition })
         .then((data) => {
@@ -31,7 +33,16 @@ exports.findCommunicator = async (req, res) => {
             return 'Some error occurred while retrieving tutorials.';
         });
 
-    if (getRowsInSupporLinks.length > 0 || getRowsInUsersBusinesses.length > 0) {
+    const getRowsInWaitingRooms = await Waiting_rooms.findAll({ where: waitingRoomsCondition })
+        .then((data) => {
+            return data;
+        })
+        .catch((err) => {
+            console.log('Some error occurred while retrieving tutorials.');
+            return 'Some error occurred while retrieving tutorials.';
+        });
+
+    if (getRowsInSupporLinks.length > 0 || getRowsInUsersBusinesses.length > 0 || getRowsInWaitingRooms.length > 0) {
         let data = { message: 'valid' };
         res.send(data);
     } else {
