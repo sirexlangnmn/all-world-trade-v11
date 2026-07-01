@@ -4,6 +4,7 @@ const sequelizeConfig = require('../config/sequelize.config.js');
 
 const Users_accounts = db.users_accounts;
 const Users_businesses = db.users_businesses;
+const Waiting_rooms = db.waiting_rooms;
 
 const Op = db.Sequelize.Op;
 
@@ -74,18 +75,29 @@ exports.checkIfTraderIsActive = async (req, res) => {
             if (loginStatus == 1) {
                 res.send({ isActive: loginStatus });
             } else {
-                const queryObject = { uuid: '61f980d3-3f7e-43bd-9ff3-87dd4276f981' };
-
-                const userAccounts = await Users_businesses.findOne({
-                    where: queryObject,
-                    attributes: ['communicator'],
+                const latestWaitingRoom = await Waiting_rooms.findOne({
+                    order: [['createdAt', 'DESC']],
+                    attributes: ['waiting_room'],
                 });
 
-                const communicatorAWT = userAccounts.get('communicator');
+                const communicatorAWT = latestWaitingRoom ? latestWaitingRoom.get('waiting_room') : null;
                 console.log('controller checkIfTraderIsActive communicatorAWT', communicatorAWT);
 
                 res.send({ isActive: communicatorAWT });
             }
+            // else {
+            //     const queryObject = { uuid: '61f980d3-3f7e-43bd-9ff3-87dd4276f981' };
+
+            //     const userAccounts = await Users_businesses.findOne({
+            //         where: queryObject,
+            //         attributes: ['communicator'],
+            //     });
+
+            //     const communicatorAWT = userAccounts.get('communicator');
+            //     console.log('controller checkIfTraderIsActive communicatorAWT', communicatorAWT);
+
+            //     res.send({ isActive: communicatorAWT });
+            // }
         } else {
             console.log('controller checkIfTraderIsActive response::: Trader not found');
         }

@@ -1,19 +1,23 @@
-read my waiting_rooms.controller.js file
+read my users-accounts.controller.js file
 
-
+I have code like this
 
 "
-const db = require('../db_models/index.js');
-const sequelizeConfig = require('../config/sequelize.config.js');
-const WaitingRooms = db.waiting_rooms;
-const Op = db.Sequelize.Op;
-const { v4: uuidV4 } = require('uuid');
+if (data) {
 
-exports.generateWaitingRoom = async (req, res) => {
-    const uuid = uuidV4();
-    console.log('generateWaitingRoom called');
-    console.log('generateWaitingRoom uuid:', uuid);
+            const recordTradersVisitorsRes = await recordTradersVisitors(visitorUuid, traderUuid);
+            console.log('Record recordTradersVisitorsRes:', recordTradersVisitorsRes);
 
-    // create sequelize query to insert the value of uuid in waiting_rooms.model.js waiting_room column
-};
+            const loginStatus = data.get('login_Status'); // Extract the login_Status value
+            console.log(`controller checkIfTraderIsActive response::: `, loginStatus);
+
+            if (loginStatus == 1) {
+                res.send({ isActive: loginStatus });
+            } else {
+                // create a sequelize query here to get the latest waiting_room column value in the waiting_rooms table or model
+                console.log('controller checkIfTraderIsActive communicatorAWT', communicatorAWT);
+
+                res.send({ isActive: communicatorAWT });
+            }
+        }
 "
