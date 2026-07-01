@@ -1534,8 +1534,9 @@ const generateWaitingRoom = () => {
     })
         .then((response) => response.json())
         .then((data) => {
-            if (data.communicator) {
-                window.open(API_URL.communicator_domain + data.communicator, '_blank');
+            console.log('generateWaitingRoom data: ', data);
+            if (data.uuid) {
+                window.open(API_URL.communicator_domain + data.uuid, '_blank');
             }
         })
         .catch((error) => console.error(error));
