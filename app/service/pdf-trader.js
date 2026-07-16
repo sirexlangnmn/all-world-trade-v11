@@ -1,4 +1,6 @@
 const PDFDocument = require('pdfkit');
+const path = require('path');
+const fs = require('fs');
 
 function buildPDF(dataCallback, endCallback, traderData) {
     const doc = new PDFDocument({ bufferPages: true, font: 'Courier' });
@@ -6,8 +8,6 @@ function buildPDF(dataCallback, endCallback, traderData) {
     doc.on('end', endCallback);
 
     let date_time = traderData.date_created;
-
-    doc.fontSize(15).text(`Current Trader Details - ${date_time}`);
 
     const title = [
         'Company Name: ',
@@ -52,17 +52,30 @@ function buildPDF(dataCallback, endCallback, traderData) {
     let i,
         invoiceTableTop = 70;
 
+    doc.save();
+    doc.rect(0, 0, doc.page.width, doc.page.height).fill('#02514c');
+    doc.restore();
+
+    const logoPath = path.join(__dirname, '../../public/uploads/logo/AWT-circle-logo-green-with-white-background.jpg');
+    const logoBuffer = fs.readFileSync(logoPath);
+    doc.image(logoBuffer, 30, 20, { width: 50, height: 50 });
+
+    doc.fillColor('#ffffff');
+
+    // doc.fontSize(15).text(`Current Trader Details - ${date_time}`, { fill: '#ffffff' });
+
     for (i = 0; i < 17; i++) {
         const position = invoiceTableTop + (i + 1) * 30;
         generateTableRow(doc, position, title[i], data[i], dataSpace[i]);
     }
+    doc.restore();
     doc.end();
 }
 
 function generateTableRow(doc, y, title, data, dataSpace) {
-    doc.fontSize(12).font('Times-Roman').text(title, 75, y);
+    doc.fillColor('#ffffff').fontSize(12).font('Times-Roman').text(title, 75, y, { fill: '#ffffff' });
 
-    doc.fontSize(12).font('Times-Bold').text(data, dataSpace, y);
+    doc.fillColor('#ffffff').fontSize(12).font('Times-Bold').text(data, dataSpace, y, { fill: '#ffffff' });
 }
 
 module.exports = { buildPDF };
