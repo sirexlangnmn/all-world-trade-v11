@@ -857,7 +857,21 @@ function displayTopCompanyDetails(currentIndex) {
 // responsiveness of height in selection [start]
 // ===============================================
 window.addEventListener('load', handleSelectionPageResize);
-window.addEventListener('resize', handleSelectionPageResize);
+window.addEventListener('resize', handleMobileKeyboardSafe(handleSelectionPageResize));
+
+// On mobile, the virtual keyboard triggers a resize event that shrinks
+// window.innerHeight. This causes layout jumps. Ignore resize events
+// where only the height changed (keyboard open/close) by comparing
+// width before and after.
+function handleMobileKeyboardSafe(fn) {
+    var lastWidth = window.innerWidth;
+    return function () {
+        var currentWidth = window.innerWidth;
+        if (currentWidth === lastWidth) return; // height-only change (keyboard), skip
+        lastWidth = currentWidth;
+        fn();
+    };
+}
 
 function handleSelectionPageResize() {
     const screenHeight = window.innerHeight;

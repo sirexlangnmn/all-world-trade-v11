@@ -554,14 +554,19 @@
           });
 
           // Reset to default layout on resize across the lg breakpoint
+          var wasWide = window.innerWidth >= 1024;
           window.addEventListener('resize', function() {
-            if (window.innerWidth < 1024) {
+            var isWide = window.innerWidth >= 1024;
+            // Only reset panels when actually crossing the lg breakpoint,
+            // not on every resize (e.g. mobile keyboard open/close)
+            if (wasWide && !isWide) {
               panels.left.classList.add('hidden');
               panels.middle.classList.remove('hidden');
               panels.right.classList.add('hidden');
-            } else {
+            } else if (!wasWide && isWide) {
               panels.middle.classList.remove('hidden');
             }
+            wasWide = isWide;
           });
         })();
       </script>
