@@ -169,6 +169,7 @@ Model.getAllBySearchParameter = (param, result) => {
         ON users_businesses.uuid = users_business_characteristics.uuid 
         JOIN users_business_medias 
         ON users_businesses.uuid = users_business_medias.uuid 
+        AND users_businesses.isPaid = 1
         WHERE users_business_medias.banner != ''`;
 
     if (param.trade_categories) {
