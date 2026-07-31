@@ -534,6 +534,40 @@ async function fetchAdditionalCompanies() {
     }
 }
 
+
+async function fetchNextFiveCompanies() {
+    console.log('[fetchNextFiveCompanies] companyDetailsJsonObj2[0] before:', companyDetailsJsonObj2[0]);
+    const lastCompany = companyDetailsJsonObj2[0][companyDetailsJsonObj2[0].length - 1];
+    const lastId = lastCompany ? lastCompany.id : 0;
+    console.log('[fetchNextFiveCompanies] lastId:', lastId);
+    try {
+        const response = await fetch('/api/get/get-next-five-companies', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                lastId: lastId,
+                limit: 5,
+            }),
+        });
+
+        const data = await response.json();
+
+        console.log('const data = await response.json() :', data);
+
+        if (data.length > 0) {
+            companyDetailsJsonObj2[0] = [...companyDetailsJsonObj2[0], ...data];
+            console.log('companyDetailsJsonObj2[0] 2:', companyDetailsJsonObj2[0]);
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.error('Error fetching additional companies:', error);
+        return false;
+    }
+}
+
 async function handleSlideNavigation(direction) {
     const totalItems = companyDetailsJsonObj2[0].length;
     let newIndex = currentIndex;
@@ -544,7 +578,7 @@ async function handleSlideNavigation(direction) {
         // Check if we're at the last item and need to fetch more
         if (newIndex === 0 && currentIndex === totalItems - 1) {
             companiesProfilePicture.innerHTML = '';
-            const fetched = await fetchAdditionalCompanies();
+            const fetched = await fetchNextFiveCompanies();
             console.log('handleSlideNavigation fetched:', fetched);
             if (fetched === true) {
                 const updatedTotalItems = companyDetailsJsonObj2[0].length;
@@ -570,7 +604,7 @@ async function handleSlideNavigation(direction) {
         // Check if we're at the first item and need to fetch more
         if (newIndex === totalItems - 1 && currentIndex === 0) {
             companiesProfilePicture.innerHTML = '';
-            const fetched = await fetchAdditionalCompanies();
+            const fetched = await fetchNextFiveCompanies();
             if (fetched === true) {
                 // newIndex = totalItems; // Move to the newly added item
                 const updatedTotalItems = companyDetailsJsonObj2[0].length;

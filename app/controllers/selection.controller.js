@@ -2,6 +2,8 @@ const Model = require('../models/selection.model.js');
 
 exports.findCompaniesRelatedToCurrentUser = (req, res) => {};
 
+exports.findNextFiveCompanies = (req, res) => {};
+
 exports.findAllBySearchParameter = (req, res) => {};
 
 exports.findRandomCompanies = (req, res) => {};
@@ -14,6 +16,22 @@ exports.findCompaniesRelatedToCurrentUser = (req, res) => {
     };
 
     Model.getCompaniesRelatedToCurrentUser(parameters, (err, data) => {
+        if (err)
+            res.status(500).send({
+                message: err.message || 'Some error occurred while retrieving companies.',
+            });
+        else res.send(data);
+    });
+};
+
+exports.findNextFiveCompanies = (req, res) => {
+    const parameters = {
+        uuid: req.session.user.uuid,
+        lastId: req.body.lastId,
+        limit: req.body.limit,
+    };
+
+    Model.getNextFiveCompanies(parameters, (err, data) => {
         if (err)
             res.status(500).send({
                 message: err.message || 'Some error occurred while retrieving companies.',
