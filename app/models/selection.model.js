@@ -84,8 +84,10 @@ const Model = function (model) {};
 // };
 
 Model.getCompaniesRelatedToCurrentUser = (param, result) => {
-    sql.query(
-        `SELECT 
+    const startId = Number(param.randomNumber) || 1;
+    const limit = Number(param.limit) || 5;
+
+    const selectColumns = `SELECT 
         users_businesses.id, 
         users_businesses.business_name, 
         users_businesses.business_tagline,
@@ -112,26 +114,42 @@ Model.getCompaniesRelatedToCurrentUser = (param, result) => {
         users_business_characteristics.business_sub_category,
         users_business_characteristics.business_minor_sub_category,
         users_business_characteristics.business_scale,
-        users_business_medias.banner
-        FROM users_businesses 
-        JOIN users_business_characteristics 
-        ON users_businesses.uuid = users_business_characteristics.uuid 
-        JOIN users_business_medias 
-        ON users_businesses.uuid = users_business_medias.uuid 
-        AND users_businesses.isPaid = 1
+        users_business_medias.banner`;
+
+    const fromClause = `FROM users_businesses
+        JOIN users_business_characteristics
+        ON users_businesses.uuid = users_business_characteristics.uuid
+        JOIN users_business_medias
+        ON users_businesses.uuid = users_business_medias.uuid
+        WHERE users_businesses.isPaid = 1
         AND users_business_medias.banner != ''
-        OR users_business_medias.banner != null
-        ORDER BY RAND()
-        LIMIT 5`,
-        (err, res) => {
+        AND users_business_medias.banner IS NOT NULL`;
+
+    const firstQuery = `${selectColumns} ${fromClause} AND users_businesses.id > ? ORDER BY users_businesses.id ASC LIMIT ?`;
+    const secondQuery = `${selectColumns} ${fromClause} AND users_businesses.id <= ? ORDER BY users_businesses.id ASC LIMIT ?`;
+
+    sql.query(firstQuery, [startId, limit], (err, tail) => {
+        if (err) {
+            result(null, err);
+            return;
+        }
+
+        if (tail.length >= limit) {
+            result(null, tail);
+            return;
+        }
+
+        const remaining = limit - tail.length;
+
+        sql.query(secondQuery, [startId, remaining], (err, head) => {
             if (err) {
                 result(null, err);
                 return;
-            } else {
-                result(null, res);
             }
-        },
-    );
+
+            result(null, [...tail, ...head]);
+        });
+    });
 };
 
 Model.getNextFiveCompanies = (param, result) => {

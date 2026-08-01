@@ -92,10 +92,15 @@ $(function () {
 });
 
 function getCompaniesRelatedToCurrentUser() {
+    const randomNumber = Math.floor(Math.random() * 934) + 1;
+
     $.ajax({
         url: '/api/get/get-companies-related-to-current-user',
         type: 'POST',
         async: false,
+        data: {
+            randomNumber: randomNumber,
+        },
         success: function (data) {
             if (data.length > 0) {
                 console.log('getCompaniesRelatedToCurrentUser data:', data);

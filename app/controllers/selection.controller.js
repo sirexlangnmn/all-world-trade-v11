@@ -13,6 +13,8 @@ exports.findCompaniesRelatedToCurrentUser = (req, res) => {
         uuid: req.session.user.uuid,
         country: req.session.user.country,
         state_or_province: req.session.user.state_or_province,
+        randomNumber: Number(req.body.randomNumber) || 1,
+        limit: 5,
     };
 
     Model.getCompaniesRelatedToCurrentUser(parameters, (err, data) => {
