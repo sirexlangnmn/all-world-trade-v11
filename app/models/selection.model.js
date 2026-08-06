@@ -114,7 +114,8 @@ Model.getCompaniesRelatedToCurrentUser = (param, result) => {
         users_business_characteristics.business_sub_category,
         users_business_characteristics.business_minor_sub_category,
         users_business_characteristics.business_scale,
-        users_business_medias.banner`;
+        users_business_medias.banner,
+        users_business_medias.logo`;
 
     const fromClause = `FROM users_businesses
         JOIN users_business_characteristics
@@ -123,7 +124,9 @@ Model.getCompaniesRelatedToCurrentUser = (param, result) => {
         ON users_businesses.uuid = users_business_medias.uuid
         WHERE users_businesses.isPaid = 1
         AND users_business_medias.banner != ''
-        AND users_business_medias.banner IS NOT NULL`;
+        AND users_business_medias.banner IS NOT NULL
+        AND users_business_medias.logo != ''
+        AND users_business_medias.logo IS NOT NULL`;
 
     const firstQuery = `${selectColumns} ${fromClause} AND users_businesses.id > ? ORDER BY users_businesses.id ASC LIMIT ?`;
     const secondQuery = `${selectColumns} ${fromClause} AND users_businesses.id <= ? ORDER BY users_businesses.id ASC LIMIT ?`;
@@ -182,7 +185,8 @@ Model.getNextFiveCompanies = (param, result) => {
         users_business_characteristics.business_sub_category,
         users_business_characteristics.business_minor_sub_category,
         users_business_characteristics.business_scale,
-        users_business_medias.banner`;
+        users_business_medias.banner,
+        users_business_medias.logo`;
 
     const fromClause = `FROM users_businesses 
         JOIN users_business_characteristics 
@@ -191,7 +195,9 @@ Model.getNextFiveCompanies = (param, result) => {
         ON users_businesses.uuid = users_business_medias.uuid 
         AND users_businesses.isPaid = 1
         AND users_business_medias.banner != ''
-        OR users_business_medias.banner != null`;
+        AND users_business_medias.banner IS NOT NULL
+        AND users_business_medias.logo != ''
+        AND users_business_medias.logo IS NOT NULL`;
 
     sql.query(
         `${selectColumns} ${fromClause} WHERE users_businesses.id > ? ORDER BY users_businesses.id ASC LIMIT 5`,
@@ -253,14 +259,16 @@ Model.getAllBySearchParameter = (param, result) => {
         users_business_characteristics.business_sub_category,
         users_business_characteristics.business_minor_sub_category,
         users_business_characteristics.business_scale,
-        users_business_medias.banner
+        users_business_medias.banner,
+        users_business_medias.logo,
         FROM users_businesses 
         JOIN users_business_characteristics 
         ON users_businesses.uuid = users_business_characteristics.uuid 
         JOIN users_business_medias 
         ON users_businesses.uuid = users_business_medias.uuid 
         AND users_businesses.isPaid = 1
-        WHERE users_business_medias.banner != ''`;
+        WHERE users_business_medias.banner != ''
+        AND users_business_medias.logo != ''`;
 
     if (param.trade_categories) {
         query += ` AND users_business_characteristics.business_major_category = '${param.trade_categories}'`;
@@ -396,13 +404,15 @@ Model.getRandomCompanies = (result) => {
         users_business_characteristics.business_sub_category,
         users_business_characteristics.business_minor_sub_category,
         users_business_characteristics.business_scale,
-        users_business_medias.banner
+        users_business_medias.banner,
+        users_business_medias.logo
         FROM users_businesses 
         JOIN users_business_characteristics 
         ON users_businesses.uuid = users_business_characteristics.uuid 
         JOIN users_business_medias 
         ON users_businesses.uuid = users_business_medias.uuid 
         WHERE users_business_medias.banner != ''
+        AND users_business_medias.logo != ''
         AND users_businesses.isPaid = 1
         ORDER BY RAND()  
         LIMIT 5`,

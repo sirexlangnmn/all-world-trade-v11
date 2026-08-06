@@ -84,19 +84,20 @@ let currentIndex = 0; // start at first item
 const HEADER_OFFSET = 125;
 
 $(function () {
+    detectDeviceType();
     getCompaniesRelatedToCurrentUser();
     displayFirstCompanyDetails();
     displayTopCompany();
     handleSlideChange(currentIndex);
     handleSelectionPageResize();
-    detectDeviceType();
 });
+
+let deviceType = 'desktop';
 
 function detectDeviceType() {
     const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const isMobileOrTablet = /Android|iPhone|iPad|iPod|Windows Phone|webOS|BlackBerry/i.test(navigator.userAgent);
 
-    let deviceType;
     if (hasTouch && isMobileOrTablet) {
         const isTablet = /iPad|Android/i.test(navigator.userAgent) && window.innerWidth >= 768;
         deviceType = isTablet ? 'tablet' : 'mobile';
@@ -111,6 +112,28 @@ function detectDeviceType() {
     console.log('Screen size:', window.innerWidth + 'x' + window.innerHeight);
     console.log('Has touch:', hasTouch);
     console.log('OS:', navigator.platform);
+}
+
+function isMobileOrTabletDevice() {
+    return deviceType === 'mobile' || deviceType === 'tablet';
+}
+
+function getCompanyImageFilename(company) {
+    if (isMobileOrTabletDevice()) {
+        return company.logo || company.banner;
+    }
+    return company.banner;
+}
+
+function applyCompanyImageStyles(img, adjustedScreenHeight) {
+    if (isMobileOrTabletDevice()) {
+        img.style.width = '100%';
+        img.style.height = `${adjustedScreenHeight}px`;
+        img.style.objectFit = 'contain';
+        img.style.objectPosition = 'center';
+    } else {
+        img.style.height = `${adjustedScreenHeight}px`;
+    }
 }
 
 function getCompaniesRelatedToCurrentUser() {
@@ -134,8 +157,7 @@ function getCompaniesRelatedToCurrentUser() {
                 img.className = 'companyBannerPreview';
                 img.id = 'companyBannerPreview';
                 img.onload = function () {
-                    this.style.height = '';
-                    this.style.height = `${adjustedScreenHeight}px`;
+                    applyCompanyImageStyles(this, adjustedScreenHeight);
                 };
 
                 let adjustedScreenHeight2 = (window.innerHeight - 125) / 2;
@@ -148,7 +170,8 @@ function getCompaniesRelatedToCurrentUser() {
                 for (let i = data.length - 1; i >= 0; i--) {
                     const bannerTitle = getCompaniesProfilePicture(data[i]['id'], data[i]['uuid']);
                     if (bannerTitle) {
-                        const bannerSrc = host + '/uploads/users_upload_files/' + bannerTitle[0].banner;
+                        const companyImage = getCompanyImageFilename(data[i]);
+                        const bannerSrc = host + '/uploads/users_upload_files/' + companyImage;
                         img.src = bannerSrc;
                     }
 
@@ -385,7 +408,7 @@ function handleSlideChange(index) {
     console.log('Current banner:', business.banner);
 
     updateBusinessDetails(business);
-    renderCompanyBanners(business.banner);
+    renderCompanyBanners(getCompanyImageFilename(business));
     setupResizeHandler();
     displayTopCompany();
 }
@@ -516,7 +539,14 @@ function handleResize() {
     const height = getAdjustedHeight();
 
     document.querySelectorAll('.companyBannerPreview').forEach((img) => {
-        img.style.maxHeight = `${height}px`;
+        if (isMobileOrTabletDevice()) {
+            img.style.width = '100%';
+            img.style.height = `${height}px`;
+            img.style.objectFit = 'contain';
+            img.style.objectPosition = 'center';
+        } else {
+            img.style.maxHeight = `${height}px`;
+        }
     });
 
     positionNavigationButtons();
@@ -707,10 +737,10 @@ function displayTopCompanyImage() {
     console.log('displayTopCompanyImage bannerTitle1:', bannerTitle1);
     console.log('displayTopCompanyImage business_name2:', companyDetailsJsonObj2[0][0].business_name);
     const img = new Image();
-    img.src = host + '/uploads/users_upload_files/' + bannerTitle1[0].banner;
+    img.src = host + '/uploads/users_upload_files/' + getCompanyImageFilename(companyDetailsJsonObj2[0][0]);
     img.onload = function () {
         const adjustedScreenHeight = window.innerHeight - 125;
-        img.style.height = `${adjustedScreenHeight}px`;
+        applyCompanyImageStyles(img, adjustedScreenHeight);
         const li = document.createElement('li');
         li.appendChild(img);
         companiesProfilePicture.appendChild(li);
@@ -731,10 +761,10 @@ function displayTopCompanyImage() {
                 i + ' - ' + companyDetailsJsonObj2[0][i].business_name,
             );
             const img = new Image();
-            img.src = host + '/uploads/users_upload_files/' + bannerTitle2[0].banner;
+            img.src = host + '/uploads/users_upload_files/' + getCompanyImageFilename(companyDetailsJsonObj2[0][i]);
             img.onload = function () {
                 const adjustedScreenHeight = window.innerHeight - 125;
-                img.style.height = `${adjustedScreenHeight}px`;
+                applyCompanyImageStyles(img, adjustedScreenHeight);
                 const li = document.createElement('li');
                 li.appendChild(img);
                 companiesProfilePicture.appendChild(li);
@@ -963,7 +993,7 @@ function handleSelectionPageResize() {
     // Initialize image height in selection
     const images = document.querySelectorAll('.uk-slideshow-items img');
     images.forEach((image) => {
-        image.style.height = `${adjustedScreenHeight}px`;
+        applyCompanyImageStyles(image, adjustedScreenHeight);
     });
 }
 // ============================================
@@ -1026,7 +1056,7 @@ function getImageName() {
 
         // Loop through all images inside the ul element and set their height to 1000px
         document.querySelectorAll('.uk-slideshow-items img').forEach((img) => {
-            img.style.height = `${adjustedScreenHeight}px`;
+            applyCompanyImageStyles(img, adjustedScreenHeight);
         });
         //=========================================================
         // SET image height in selection [END]
@@ -1049,7 +1079,9 @@ function getImageName() {
 }
 
 function displayCompanyDetailsUsingImageName(filename) {
-    const companyDetails = companyDetailsJsonObj2[0].find((details) => details.banner === filename);
+    const companyDetails = companyDetailsJsonObj2[0].find(
+        (details) => getCompanyImageFilename(details) === filename,
+    );
     if (!companyDetails) return;
 
     const {
@@ -1598,11 +1630,11 @@ function selectionSearchParameter() {
                 const fragment = document.createDocumentFragment();
 
                 if (bannerTitle1) {
-                    const bannerSrc = host + '/uploads/users_upload_files/' + bannerTitle1[0].banner;
+                    const bannerSrc = host + '/uploads/users_upload_files/' + getCompanyImageFilename(data[0]);
                     img.src = bannerSrc;
                     img.onload = function () {
                         const adjustedScreenHeight = window.innerHeight - 125;
-                        img.style.height = `${adjustedScreenHeight}px`;
+                        applyCompanyImageStyles(img, adjustedScreenHeight);
                         const li = document.createElement('li');
                         li.appendChild(img.cloneNode());
                         fragment.appendChild(li);
@@ -1616,7 +1648,8 @@ function selectionSearchParameter() {
                         const bannerTitle = getCompaniesProfilePicture(data[i]['id'], data[i]['uuid']);
                         if (bannerTitle != bannerTitle1) {
                             if (bannerTitle) {
-                                const bannerSrc = host + '/uploads/users_upload_files/' + bannerTitle[0].banner;
+                                const bannerSrc =
+                                    host + '/uploads/users_upload_files/' + getCompanyImageFilename(data[i]);
                                 console.log('bannerSrc: ', bannerSrc);
                                 console.log('bannerSrc i: ', i);
                                 img.src = bannerSrc;
@@ -1780,11 +1813,11 @@ function showRandomChoices() {
                     const fragment = document.createDocumentFragment();
 
                     if (bannerTitle1) {
-                        const bannerSrc = host + '/uploads/users_upload_files/' + bannerTitle1[0].banner;
+                        const bannerSrc = host + '/uploads/users_upload_files/' + getCompanyImageFilename(data[0]);
                         img.src = bannerSrc;
                         img.onload = function () {
                             const adjustedScreenHeight = window.innerHeight - 125;
-                            img.style.height = `${adjustedScreenHeight}px`;
+                            applyCompanyImageStyles(img, adjustedScreenHeight);
                             const li = document.createElement('li');
                             li.appendChild(img.cloneNode());
                             fragment.appendChild(li);
@@ -1799,7 +1832,8 @@ function showRandomChoices() {
                             const bannerTitle = getCompaniesProfilePicture(data[i]['id'], data[i]['uuid']);
                             if (bannerTitle != bannerTitle1) {
                                 if (bannerTitle) {
-                                    const bannerSrc = host + '/uploads/users_upload_files/' + bannerTitle[0].banner;
+                                    const bannerSrc =
+                                        host + '/uploads/users_upload_files/' + getCompanyImageFilename(data[i]);
                                     console.log('showRandomChoices bannerSrc: ', bannerSrc);
                                     console.log('showRandomChoices bannerSrc i: ', i);
                                     img.src = bannerSrc;
@@ -1908,7 +1942,7 @@ function downloadOrContact(filename) {
     let communicator_link;
 
     for (let i = 0; i < leng; i++) {
-        if (companyDetailsJsonObj2[0][i].banner === filename) {
+        if (getCompanyImageFilename(companyDetailsJsonObj2[0][i]) === filename) {
             companyName = companyDetailsJsonObj2[0][i].business_name;
             communicator_link = companyDetailsJsonObj2[0][i].communicator;
             trader_uuid = companyDetailsJsonObj2[0][i].uuid;
