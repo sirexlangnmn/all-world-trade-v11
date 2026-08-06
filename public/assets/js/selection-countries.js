@@ -23,8 +23,8 @@ function getUsersAddress() {
             // selectionCity.innerHTML += '<div class="filterByCityClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50 orbitron" data-el="">Any</div>';
             subCategories.innerHTML +=
                 '<div class="filterBySubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="">Wedding, Bridal & Events</div>';
-            minorSubCategories.innerHTML +=
-                '<div class="filterByMinorSubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="">Any</div>';
+            // minorSubCategories.innerHTML +=
+            //     '<div class="filterByMinorSubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="">Any</div>';
             // selectedCountry.value = data[0].country;
             // selectedState.value = data[0].state_or_province;
             // selectedCity.value = data[0].city;
