@@ -89,7 +89,29 @@ $(function () {
     displayTopCompany();
     handleSlideChange(currentIndex);
     handleSelectionPageResize();
+    detectDeviceType();
 });
+
+function detectDeviceType() {
+    const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isMobileOrTablet = /Android|iPhone|iPad|iPod|Windows Phone|webOS|BlackBerry/i.test(navigator.userAgent);
+
+    let deviceType;
+    if (hasTouch && isMobileOrTablet) {
+        const isTablet = /iPad|Android/i.test(navigator.userAgent) && window.innerWidth >= 768;
+        deviceType = isTablet ? 'tablet' : 'mobile';
+    } else if (hasTouch && window.innerWidth < 1024) {
+        deviceType = 'tablet';
+    } else {
+        deviceType = 'desktop';
+    }
+
+    console.log('Device type:', deviceType);
+    console.log('User agent:', navigator.userAgent);
+    console.log('Screen size:', window.innerWidth + 'x' + window.innerHeight);
+    console.log('Has touch:', hasTouch);
+    console.log('OS:', navigator.platform);
+}
 
 function getCompaniesRelatedToCurrentUser() {
     const randomNumber = Math.floor(Math.random() * 934) + 1;
@@ -606,27 +628,32 @@ async function handleSlideNavigation(direction) {
     } else if (direction === 'prev') {
         newIndex = (currentIndex - 1 + totalItems) % totalItems;
 
+        currentIndex = newIndex;
+        console.log('handleSlideChange newIndex 2:', newIndex);
+        console.log('handleSlideChange currentIndex 2:', currentIndex);
+        handleSlideChange(currentIndex);
+
         // Check if we're at the first item and need to fetch more
-        if (newIndex === totalItems - 1 && currentIndex === 0) {
-            companiesProfilePicture.innerHTML = '';
-            const fetched = await fetchNextFiveCompanies();
-            if (fetched === true) {
-                // newIndex = totalItems; // Move to the newly added item
-                const updatedTotalItems = companyDetailsJsonObj2[0].length;
-                if (updatedTotalItems > totalItems) {
-                    newIndex = totalItems; // Move to the newly added item
-                    currentIndex = newIndex;
-                    console.log('handleSlideChange newIndex 1:', newIndex);
-                    console.log('handleSlideChange currentIndex 1:', currentIndex);
-                    handleSlideChange(currentIndex);
-                }
-            }
-        } else {
-            currentIndex = newIndex;
-            console.log('handleSlideChange newIndex 2:', newIndex);
-            console.log('handleSlideChange currentIndex 2:', currentIndex);
-            handleSlideChange(currentIndex);
-        }
+        // if (newIndex === totalItems - 1 && currentIndex === 0) {
+        //     companiesProfilePicture.innerHTML = '';
+        //     const fetched = await fetchNextFiveCompanies();
+        //     if (fetched === true) {
+        //         // newIndex = totalItems; // Move to the newly added item
+        //         const updatedTotalItems = companyDetailsJsonObj2[0].length;
+        //         if (updatedTotalItems > totalItems) {
+        //             newIndex = totalItems; // Move to the newly added item
+        //             currentIndex = newIndex;
+        //             console.log('handleSlideChange newIndex 1:', newIndex);
+        //             console.log('handleSlideChange currentIndex 1:', currentIndex);
+        //             handleSlideChange(currentIndex);
+        //         }
+        //     }
+        // } else {
+        //     currentIndex = newIndex;
+        //     console.log('handleSlideChange newIndex 2:', newIndex);
+        //     console.log('handleSlideChange currentIndex 2:', currentIndex);
+        //     handleSlideChange(currentIndex);
+        // }
     }
 
     // currentIndex = newIndex;
