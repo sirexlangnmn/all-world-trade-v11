@@ -90,6 +90,7 @@ $(function () {
     displayTopCompany();
     handleSlideChange(currentIndex);
     handleSelectionPageResize();
+    getMinorCategory('selectedSubCategories', 'minor-sub-categories');
 });
 
 let deviceType = 'desktop';
@@ -1298,6 +1299,7 @@ async function getTradeCategories() {
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        console.log('getTradeCategories data:', data);
         return data;
     } catch (error) {
         console.error('Error fetching trade categories:', error);
@@ -1314,9 +1316,17 @@ getTradeCategories()
           data-el="${category.id}">${category.title}</div>`,
             )
             .join('');
+        
+        // OLD
+        // tradeCategories.insertAdjacentHTML(
+        //     'beforeend',
+        //     `<div class="filterByTradeCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50 orbitron" data-el="">Any</div>${categories}`,
+        // );
+
+        // NEW
         tradeCategories.insertAdjacentHTML(
             'beforeend',
-            `<div class="filterByTradeCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50 orbitron" data-el="">Any</div>${categories}`,
+            `${categories}`,
         );
     })
     .catch((error) => {
@@ -1324,30 +1334,39 @@ getTradeCategories()
     });
 
 function getSubCategory(tradeCategoriesElementId, subCategoriesElementId) {
-    displaySelectedSubCategories.innerHTML = 'Any';
+    displaySelectedSubCategories.innerHTML = 'Wedding, Bridal & Events' //'Any';
     displaySelectedMinorSubCategories.innerHTML = 'Any';
 
     const subCategoriesElement = document.getElementById(subCategoriesElementId);
     subCategoriesElement.innerHTML = '';
 
-    const tradeCategoryId = document.getElementById(tradeCategoriesElementId).value;
+    // OLD
+    // const tradeCategoryId = document.getElementById(tradeCategoriesElementId).value;
+
+    // NEW
+    const tradeCategoryId = 9; // Beauty
     if (tradeCategoryId) {
         fetch(`${host}/api/get/sub-categories-by-trade-category-id/${tradeCategoryId}`)
             .then((response) => response.json())
             .then((data) => {
                 subCategoriesElement.innerHTML = `
-            <div class="filterBySubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="">Any</div>
-            ${data
-                .map(
-                    (subCategory) => `
-              <div class="filterBySubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="${subCategory.id}">
-                ${subCategory.title}
-              </div>
-            `,
-                )
-                .join('')}
-          `;
-            });
+                <div class="filterBySubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="">Wedding, Bridal & Events</div>`;
+            }
+            // OLD
+            //     {
+            //         subCategoriesElement.innerHTML = `
+            //     <div class="filterBySubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="">Wedding, Bridal & Events</div>
+            //     ${data
+            //         .map(
+            //             (subCategory) => `
+            //       <div class="filterBySubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="${subCategory.id}">
+            //         ${subCategory.title}
+            //       </div>
+            //     `,
+            //         )
+            //         .join('')}
+            //   `;}
+            );
     } else {
         subCategoriesElement.innerHTML = '';
     }
@@ -1357,7 +1376,8 @@ async function getMinorCategory(subCategoriesElementId, minorSubCategoriesElemen
     const minorSubCategories = document.querySelector(`#${minorSubCategoriesElementId}`);
     minorSubCategories.innerHTML = '';
 
-    const subCategoryId = document.querySelector(`#${subCategoriesElementId}`).value;
+    // const subCategoryId = document.querySelector(`#${subCategoriesElementId}`).value;
+    const subCategoryId = 38;
     if (!subCategoryId) {
         return;
     }

@@ -232,7 +232,8 @@ Model.getNextFiveCompanies = (param, result) => {
 
 Model.getAllBySearchParameter = (param, result) => {
     console.log('getAllBySearchParameter param :', param);
-    let query = `SELECT 
+
+    const selectColumns = `SELECT 
         users_businesses.id, 
         users_businesses.business_name, 
         users_businesses.business_tagline,
@@ -260,65 +261,109 @@ Model.getAllBySearchParameter = (param, result) => {
         users_business_characteristics.business_minor_sub_category,
         users_business_characteristics.business_scale,
         users_business_medias.banner,
-        users_business_medias.logo,
-        FROM users_businesses 
+        users_business_medias.logo`;
+
+    const baseConditions = [
+        `users_businesses.isPaid = 1`,
+        `users_business_medias.banner != ''`,
+        `users_business_medias.banner IS NOT NULL`,
+        `users_business_medias.logo != ''`,
+        `users_business_medias.logo IS NOT NULL`,
+    ];
+
+    const orConditions = [];
+    const queryParams = [];
+
+    const addEqual = (column, value) => {
+        orConditions.push(`${column} = ?`);
+        queryParams.push(value);
+    };
+
+    const addLike = (column, value) => {
+        orConditions.push(`${column} LIKE ?`);
+        queryParams.push(`%${value}%`);
+    };
+
+    if (param.trade_categories) {
+        addEqual('users_business_characteristics.business_major_category', param.trade_categories);
+    }
+    if (param.regionOfOperationCode) {
+        addEqual('users_businesses.region_of_operation', param.regionOfOperationCode);
+    }
+    if (param.countryCode) {
+        addLike('users_businesses.country_of_operation', param.countryCode);
+    }
+    if (param.selectionState) {
+        addEqual('users_businesses.states_of_operation', param.selectionState);
+    }
+    if (param.selectionCity) {
+        addEqual('users_businesses.business_city', param.selectionCity);
+        addEqual('users_businesses.city_of_operation', param.selectionCity);
+    }
+    if (param.language) {
+        addLike('users_businesses.business_language_of_communication', param.language);
+    }
+    if (param.business_scale) {
+        addEqual('users_business_characteristics.business_scale', param.business_scale);
+    }
+    if (param.sub_categories) {
+        addEqual('users_business_characteristics.business_sub_category', param.sub_categories);
+    }
+    if (param.minor_sub_categories) {
+        addEqual('users_business_characteristics.business_minor_sub_category', param.minor_sub_categories);
+    }
+
+    const searchTerms = [];
+    if (param.product_service_input) {
+        searchTerms.push(param.product_service_input);
+    }
+    if (param.company_name_input) {
+        searchTerms.push(param.company_name_input);
+    }
+
+    if (searchTerms.length > 0) {
+        const termGroups = [];
+
+        searchTerms.forEach((term) => {
+            const words = term.replace(/#/g, '').split(/[\s,]+/).filter(Boolean);
+            if (words.length === 0) return;
+
+            const wordConditions = words.map((word) => {
+                const like = `%${word}%`;
+                queryParams.push(like, like);
+                return `(users_businesses.business_name LIKE ?
+                    OR REPLACE(users_business_characteristics.business_industry_belong_to, '#', '') LIKE ?)`;
+            });
+
+            termGroups.push(`(${wordConditions.join(' OR ')})`);
+        });
+
+        if (termGroups.length > 0) {
+            orConditions.push(`(${termGroups.join(' OR ')})`);
+        }
+    }
+
+    const fromClause = `FROM users_businesses 
         JOIN users_business_characteristics 
         ON users_businesses.uuid = users_business_characteristics.uuid 
         JOIN users_business_medias 
-        ON users_businesses.uuid = users_business_medias.uuid 
-        AND users_businesses.isPaid = 1
-        WHERE users_business_medias.banner != ''
-        AND users_business_medias.logo != ''`;
+        ON users_businesses.uuid = users_business_medias.uuid`;
 
-    if (param.trade_categories) {
-        query += ` AND users_business_characteristics.business_major_category = '${param.trade_categories}'`;
-        //query += `users_business_characteristics.business_major_category = '${param.trade_categories}'`;
-    }
-    if (param.regionOfOperationCode) {
-        // query += `AND users_businesses.region_of_operation LIKE '%${param.regionOfOperationCode}%'`;
-        query += `AND users_businesses.region_of_operation = '${param.regionOfOperationCode}'`;
-    }
-    query += `AND users_businesses.isPaid = 1`;
-    if (param.countryCode && !param.selectionState && !param.selectionCity) {
-        // query += ` AND users_business.country_of_operation = '${param.countryCode}'`;
-        query += ` AND users_businesses.country_of_operation LIKE '%${param.countryCode}%'`;
-    }
-    if (param.countryCode && param.selectionState && !param.selectionCity) {
-        query += ` AND users_businesses.states_of_operation = '${param.selectionState}'`;
-    }
-    if (param.countryCode && param.selectionState && param.selectionCity) {
-        query += ` OR users_businesses.city_of_operation = '${param.selectionCity}'`;
-    }
-    if (param.language) {
-        query += ` AND users_businesses.business_language_of_communication LIKE '%${param.language}%'`;
-    }
-    if (param.business_scale) {
-        query += ` AND users_business_characteristics.business_scale = '${param.business_scale}'`;
-    }
-    if (param.sub_categories) {
-        query += ` AND users_business_characteristics.business_sub_category = '${param.sub_categories}'`;
-    }
-    if (param.minor_sub_categories) {
-        query += ` AND users_business_characteristics.business_minor_sub_category = '${param.minor_sub_categories}'`;
-    }
-    if (param.product_service_input) {
-        query += ` OR users_business_characteristics.business_industry_belong_to LIKE '%${param.product_service_input}%'`;
-    }
-    if (param.company_name_input) {
-        query += ` OR users_businesses.business_name LIKE '%${param.company_name_input}%'`;
+    let query = `${selectColumns} ${fromClause} WHERE ${baseConditions.join(' AND ')}`;
+
+    if (orConditions.length > 0) {
+        query += ` AND (${orConditions.join(' OR ')})`;
     }
 
-    // query += `AND users_businesses.isPaid = 1`;
+    // query += ` ORDER BY RAND() LIMIT 5`;
 
-    // query += ` AND users_business_medias.banner != ''`;
-    query += ` ORDER BY RAND () LIMIT 5`;
+    console.log('getAllBySearchParameter query :', query);
 
-    sql.query(query, (err, res) => {
+    sql.query(query, queryParams, (err, res) => {
         if (err) {
             result(null, err);
             return;
         } else {
-            // console.log('getAllBySearchParameter res :', res);
             result(null, res);
         }
     });

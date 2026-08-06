@@ -14,15 +14,15 @@ function getUsersAddress() {
             displaySelectedCity.innerHTML = 'Any';
             displaySelectedlanguage.innerHTML = 'Any';
             displaySelectedBusinessScale.innerHTML = 'Any';
-            displaySelectedTradeCategories.innerHTML = 'Any';
-            displaySelectedSubCategories.innerHTML = 'Any';
+            displaySelectedTradeCategories.innerHTML = 'Beauty'; // 'Any';
+            displaySelectedSubCategories.innerHTML = 'Wedding, Bridal & Events'; // 'Any';
             displaySelectedMinorSubCategories.innerHTML = 'Any';
 
             selectionState.innerHTML +=
                 '<div class="filterByStateClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50 orbitron" data-el="">Metro Manila</div>';
             // selectionCity.innerHTML += '<div class="filterByCityClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50 orbitron" data-el="">Any</div>';
             subCategories.innerHTML +=
-                '<div class="filterBySubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="">Any</div>';
+                '<div class="filterBySubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="">Wedding, Bridal & Events</div>';
             minorSubCategories.innerHTML +=
                 '<div class="filterByMinorSubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="">Any</div>';
             // selectedCountry.value = data[0].country;
@@ -299,7 +299,7 @@ document.addEventListener(
 
             displaySelectedTradeCategories.innerHTML = e.target.getAttribute('data-el')
                 ? getTradeCategoriesTitleById(e.target.getAttribute('data-el'))
-                : 'Any';
+                : 'Beauty'; // 'Any';
 
             if (e.target.getAttribute('data-el') == 'Trade Everyday') {
                 selectedTradeCategories.value = '';
@@ -322,7 +322,7 @@ document.addEventListener(
 
             displaySelectedSubCategories.innerHTML = e.target.getAttribute('data-el')
                 ? getSubCategoriesTitleById(e.target.getAttribute('data-el'))
-                : 'Any';
+                : 'Wedding, Bridal & Events'; // 'Any'
 
             selectedSubCategories.value = e.target.getAttribute('data-el');
             getMinorCategory('selectedSubCategories', 'minor-sub-categories');
