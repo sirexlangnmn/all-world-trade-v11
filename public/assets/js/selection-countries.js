@@ -309,8 +309,8 @@ document.addEventListener(
                 selectedTradeCategories.value = '';
             }
             getSubCategory('selectedTradeCategories', 'sub-categories');
-            minorSubCategories.innerHTML = '';
-            minorSubCategories.innerHTML = 'Any';
+            // minorSubCategories.innerHTML = '';
+            // minorSubCategories.innerHTML = 'Any';
             carouselOptionsRemoveActiveClass('filterByTradeCategoryClass');
             e.target.classList.add('bg-gray-200');
             selectionSearchParameter();
