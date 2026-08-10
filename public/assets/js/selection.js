@@ -1144,7 +1144,7 @@ function displaySearchParameter() {
     displaySearchParameterId.innerHTML = '';
     let html = `
       <li>
-        <a href="/">Home</a>
+        <a href="/">One Stop Event Planning</a>
       </li>
       <li class="active">
         <a href="" onclick="return false;">Selection </a>

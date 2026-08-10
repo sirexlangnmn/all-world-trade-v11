@@ -87,6 +87,109 @@
                     <!-- =========================== -->
                     <!-- SEARCH BY [end] -->
                     <!-- =========================== -->
+
+                    <!-- ============================= -->
+                    <!-- SELECTION BY CATEGORY [start] -->
+                    <!-- ============================= -->
+                    <div class="mb-4">
+                      <h2 class="text-lg font-semibold">SELECTION CATEGORY</h2>
+                      <hr />
+                    </div>
+                    <!-- <ul class="mb-52"> -->
+                    <ul class="mb-14" uk-accordion>
+                      <!-- <li style="font-weight: 700;">
+                        <div class="icon-and-text">
+                          <img alt="America icon" srcset="https://img.icons8.com/color/2x/stall.png 2x"
+                            class="icon-custom" />
+                          <span class="span-inline-icon"> Trade Category </span>
+                        </div>
+                        <select class="selectpicker" id="trade-categories" name="trade-categories">
+                        </select>
+                      </li>
+                      <br /> -->
+                      <li class="mb-6" id="selectionTradeCategoriesAccordion">
+                        <a class="uk-accordion-title -mb-20px" href="#">
+                          <div class="icon-and-text">
+                            <img alt="America icon" srcset="https://img.icons8.com/color/2x/stall.png 2x"
+                              class="icon-custom" />
+                            <div class="text-sm text-gray-500 mt-0.5">TRADE CATEGORY</div>
+                          </div>
+                        </a>
+                        <div class="relative p-1 uk-accordion-content bg-white2">
+                          <div id="trade-categories">
+                          </div>
+                        </div>
+                        <p id="displaySelectedTradeCategories"
+                        class="ml-12 text-base font-semibold capitalize text-md font-md text-white-900 dark:text-white-300">
+                          <!-- Selected Trade Category -->
+                        </p>
+                        <input type="text" id="selectedTradeCategories" name="selectedTradeCategories" placeholder=""
+                          class="" style="display: none;">
+                      </li>
+                      <!-- <nav class="mb-6 border-b"></nav> -->
+                      <!-- <li style="font-weight: 700;">
+                        <a href="">
+                          <ion-icon name="settings-outline" class="side-icon"></ion-icon>
+                          <span>Sub Category</span>
+                        </a>
+                        <select class="selectpicker" id="sub-categories" name="sub-categories">
+                        </select>
+                      </li> -->
+                      <li class="mb-6" id="selectionSubCategoriesAccordion">
+                        <a class="uk-accordion-title -mb-20px" href="#">
+                          <div class="icon-and-text">
+                            <img alt="America icon" srcset="https://img.icons8.com/color/2x/stall.png 2x"
+                              class="icon-custom" />
+                            <div class="text-sm text-gray-500 mt-0.5">SUB CATEGORY</div>
+                          </div>
+                        </a>
+                        <div class="relative p-1 uk-accordion-content bg-white2">
+                          <div id="sub-categories">
+                          </div>
+                        </div>
+                        <p id="displaySelectedSubCategories"
+                        class="ml-12 text-base font-semibold capitalize text-md font-md text-white-900 dark:text-white-300">
+                          <!-- Selected Sub Category -->
+                        </p>
+                        <input type="text" id="selectedSubCategories" name="selectedSubCategories" placeholder=""
+                          class="" style="display: none;">
+                      </li>
+                      <!-- <nav class="mb-6 border-b"></nav> -->
+                      <!-- <br />
+                      <li style="font-weight: 700;">
+                        <a href="">
+                          <ion-icon name="settings-outline" class="side-icon"></ion-icon>
+                          <span>Minor Sub Category</span>
+                        </a>
+                        <select class="selectpicker" id="minor-sub-categories" name="minor-sub-categories">
+                        </select>
+                      </li> -->
+                      <li class="mb-6" id="selectionMinorSubCategoriesAccordion">
+                        <a class="uk-accordion-title -mb-20px" href="#">
+                          <div class="icon-and-text">
+                            <img alt="America icon" srcset="https://img.icons8.com/color/2x/stall.png 2x"
+                              class="icon-custom" />
+                            <div class="text-sm text-gray-500 mt-0.5">MINOR SUB CATEGORY</div>
+                          </div>
+                        </a>
+                        <div class="relative p-1 uk-accordion-content bg-white2">
+                          <div id="minor-sub-categories">
+                          </div>
+                        </div>
+                        <p id="displaySelectedMinorSubCategories"
+                        class="ml-12 text-base font-semibold capitalize text-md font-md text-white-900 dark:text-white-300">
+                          <!-- Selected Sub Category -->
+                        </p>
+                        <input type="text" id="selectedMinorSubCategories" name="selectedMinorSubCategories"
+                          placeholder="" class="" style="display: none;">
+                      </li>
+                      <!-- <nav class="mb-6 border-b"></nav> -->
+                    </ul>
+                    <!-- =========================== -->
+                    <!-- SELECTION BY CATEGORY [end] -->
+                    <!-- =========================== -->
+
+
                      <div id="alert-border-4" class="" role="alert">
                        <div class="mb-2 ml-3 text-sm font-bold text-green-300">
                         More detail means more specific filtering
@@ -238,107 +341,6 @@
                         <!-- <nav class="mb-6 border-b"></nav> -->
                       </ul>
                     </div>
-
-                    <!-- ============================= -->
-                    <!-- SELECTION BY CATEGORY [start] -->
-                    <!-- ============================= -->
-                    <div class="mb-4">
-                      <h2 class="text-lg font-semibold">SELECTION CATEGORY</h2>
-                      <hr />
-                    </div>
-                    <!-- <ul class="mb-52"> -->
-                    <ul class="mb-14" uk-accordion>
-                      <!-- <li style="font-weight: 700;">
-                        <div class="icon-and-text">
-                          <img alt="America icon" srcset="https://img.icons8.com/color/2x/stall.png 2x"
-                            class="icon-custom" />
-                          <span class="span-inline-icon"> Trade Category </span>
-                        </div>
-                        <select class="selectpicker" id="trade-categories" name="trade-categories">
-                        </select>
-                      </li>
-                      <br /> -->
-                      <li class="mb-6" id="selectionTradeCategoriesAccordion">
-                        <a class="uk-accordion-title -mb-20px" href="#">
-                          <div class="icon-and-text">
-                            <img alt="America icon" srcset="https://img.icons8.com/color/2x/stall.png 2x"
-                              class="icon-custom" />
-                            <div class="text-sm text-gray-500 mt-0.5">TRADE CATEGORY</div>
-                          </div>
-                        </a>
-                        <div class="relative p-1 uk-accordion-content bg-white2">
-                          <div id="trade-categories">
-                          </div>
-                        </div>
-                        <p id="displaySelectedTradeCategories"
-                        class="ml-12 text-base font-semibold capitalize text-md font-md text-white-900 dark:text-white-300">
-                          <!-- Selected Trade Category -->
-                        </p>
-                        <input type="text" id="selectedTradeCategories" name="selectedTradeCategories" placeholder=""
-                          class="" style="display: none;">
-                      </li>
-                      <!-- <nav class="mb-6 border-b"></nav> -->
-                      <!-- <li style="font-weight: 700;">
-                        <a href="">
-                          <ion-icon name="settings-outline" class="side-icon"></ion-icon>
-                          <span>Sub Category</span>
-                        </a>
-                        <select class="selectpicker" id="sub-categories" name="sub-categories">
-                        </select>
-                      </li> -->
-                      <li class="mb-6" id="selectionSubCategoriesAccordion">
-                        <a class="uk-accordion-title -mb-20px" href="#">
-                          <div class="icon-and-text">
-                            <img alt="America icon" srcset="https://img.icons8.com/color/2x/stall.png 2x"
-                              class="icon-custom" />
-                            <div class="text-sm text-gray-500 mt-0.5">SUB CATEGORY</div>
-                          </div>
-                        </a>
-                        <div class="relative p-1 uk-accordion-content bg-white2">
-                          <div id="sub-categories">
-                          </div>
-                        </div>
-                        <p id="displaySelectedSubCategories"
-                        class="ml-12 text-base font-semibold capitalize text-md font-md text-white-900 dark:text-white-300">
-                          <!-- Selected Sub Category -->
-                        </p>
-                        <input type="text" id="selectedSubCategories" name="selectedSubCategories" placeholder=""
-                          class="" style="display: none;">
-                      </li>
-                      <!-- <nav class="mb-6 border-b"></nav> -->
-                      <!-- <br />
-                      <li style="font-weight: 700;">
-                        <a href="">
-                          <ion-icon name="settings-outline" class="side-icon"></ion-icon>
-                          <span>Minor Sub Category</span>
-                        </a>
-                        <select class="selectpicker" id="minor-sub-categories" name="minor-sub-categories">
-                        </select>
-                      </li> -->
-                      <li class="mb-6" id="selectionMinorSubCategoriesAccordion">
-                        <a class="uk-accordion-title -mb-20px" href="#">
-                          <div class="icon-and-text">
-                            <img alt="America icon" srcset="https://img.icons8.com/color/2x/stall.png 2x"
-                              class="icon-custom" />
-                            <div class="text-sm text-gray-500 mt-0.5">MINOR SUB CATEGORY</div>
-                          </div>
-                        </a>
-                        <div class="relative p-1 uk-accordion-content bg-white2">
-                          <div id="minor-sub-categories">
-                          </div>
-                        </div>
-                        <p id="displaySelectedMinorSubCategories"
-                        class="ml-12 text-base font-semibold capitalize text-md font-md text-white-900 dark:text-white-300">
-                          <!-- Selected Sub Category -->
-                        </p>
-                        <input type="text" id="selectedMinorSubCategories" name="selectedMinorSubCategories"
-                          placeholder="" class="" style="display: none;">
-                      </li>
-                      <!-- <nav class="mb-6 border-b"></nav> -->
-                    </ul>
-                    <!-- =========================== -->
-                    <!-- SELECTION BY CATEGORY [end] -->
-                    <!-- =========================== -->
 
                   </div>
                 </div>
