@@ -1,0 +1,130 @@
+read my files
+public/assets/js/selection.js
+
+in my
+public/assets/js/selection.js
+
+We have code like this
+function detectDeviceType() {
+    const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isMobileOrTablet = /Android|iPhone|iPad|iPod|Windows Phone|webOS|BlackBerry/i.test(navigator.userAgent);
+
+    let deviceType;
+    if (hasTouch && isMobileOrTablet) {
+        const isTablet = /iPad|Android/i.test(navigator.userAgent) && window.innerWidth >= 768;
+        deviceType = isTablet ? 'tablet' : 'mobile';
+    } else if (hasTouch && window.innerWidth < 1024) {
+        deviceType = 'tablet';
+    } else {
+        deviceType = 'desktop';
+    }
+
+    console.log('Device type:', deviceType);
+    console.log('User agent:', navigator.userAgent);
+    console.log('Screen size:', window.innerWidth + 'x' + window.innerHeight);
+    console.log('Has touch:', hasTouch);
+    console.log('OS:', navigator.platform);
+}
+
+
+
+Now, since we know the deviceType
+revise all my code about this
+"/uploads/users_upload_files/"
+
+The objective is if deviceType is desktop, use all the current code related to "/uploads/users_upload_files/" because its already optimized for desktop.
+So you need to familiarize yourself with the current code related to "/uploads/users_upload_files/" and keep it as is for desktop.
+Like 
+"
+const bannerTitle = getCompaniesProfilePicture(data[i]['id'], data[i]['uuid']);
+    if (bannerTitle) {
+        const bannerSrc = host + '/uploads/users_upload_files/' + bannerTitle[0].banner;
+        img.src = bannerSrc;
+    }
+",
+"
+function handleSlideChange(index) {
+    ...
+    renderCompanyBanners(business.banner);
+    ...
+}
+",
+"
+function renderCompanyBanners(banner) {
+    companiesProfilePicture.innerHTML = '';
+
+    const fragment = document.createDocumentFragment();
+    const bannerSrc = `${host}/uploads/users_upload_files/${banner}`;
+
+    for (let i = companyDetailsJsonObj2[0].length - 1; i >= 0; i--) {
+        fragment.appendChild(createBannerSlide(bannerSrc));
+    }
+
+    companiesProfilePicture.appendChild(fragment);
+    positionNavigationButtons();
+    handleSelectionPageResize();
+}
+",
+"
+function createBannerSlide(src) {
+    const img = new Image();
+    img.className = 'companyBannerPreview';
+    img.loading = 'lazy';
+    img.src = src;
+
+    img.onload = () => applyBannerStyles(img);
+
+    const li = document.createElement('li');
+    li.appendChild(img);
+
+    return li;
+}
+",
+"
+function displayTopCompanyImage() {
+...
+}
+",
+"function handleSelectionPageResize() {...}",
+"function displayCompanyDetailsUsingImageName(filename) {...}",
+and so on.
+Please be careful.
+
+
+
+
+And if deviceType is mobile or tablet, create if statement related on this code "/uploads/users_upload_files/" and use the image for logo.
+For reference,
+here is the sample object data
+"
+[
+    {
+        "id": 323,
+        "business_name": "Events by Edelbert Valenzuela",
+        ...
+        "banner": "companyBanner-1713163018250.webp",
+        "logo": "companyBanner-1713163018250.webp"
+    },
+    {
+        "id": 579,
+        "business_name": "Anytime Fitness Gym",
+        ...
+        "banner": "companyBanner-1713068718531.webp",
+        "logo": "companyLogo-1713068721089.webp"
+    },
+    {
+        "id": 2,
+        "business_name": "Little Twinkling Star Jewelry Store",
+        ...
+        "banner": "companyBanner-1768995423489.webp",
+        "logo": "companyLogo-1768995426395.webp"
+    },
+    {
+        "id": 37,
+        "business_name": "Matrix Creation Events Venue",
+        ...
+        "banner": "companyBanner-1768995307095.webp",
+        "logo": "companyLogo-1768995310636.webp"
+    }
+]
+"

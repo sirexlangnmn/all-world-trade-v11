@@ -1579,6 +1579,27 @@ company_name_input.addEventListener('change', function () {
     selectionSearchParameter();
 });
 
+company_name_input.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        selectionSearchParameter();
+        switchToMiddlePanelOnMobile();
+    }
+});
+
+function switchToMiddlePanelOnMobile() {
+    if (window.innerWidth >= 1024) return;
+
+    const leftPanel = document.querySelector('[data-panel="left"]');
+    const middlePanel = document.querySelector('[data-panel="middle"]');
+
+    if (!leftPanel || !middlePanel) return;
+    if (leftPanel.classList.contains('hidden')) return;
+
+    leftPanel.classList.add('hidden');
+    middlePanel.classList.remove('hidden');
+}
+
 function selectionSearchParameter() {
     let regionOfOperationCode = selectedRegionOfOperation.value;
     let countryCode = selectedCountry.value;
