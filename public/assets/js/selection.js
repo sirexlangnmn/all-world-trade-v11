@@ -82,6 +82,7 @@ let timer;
 let num = 0;
 let currentIndex = 0; // start at first item
 const HEADER_OFFSET = 125;
+let lastSelectionSearchKey = '';
 
 $(function () {
     detectDeviceType();
@@ -1651,6 +1652,25 @@ function selectionSearchParameter() {
     let minor_sub_categories = selectedMinorSubCategories.value;
     let productServiceInput = product_service_input.value;
     let companyNameInput = company_name_input.value;
+
+    const selectionSearchKey = JSON.stringify([
+        regionOfOperationCode,
+        countryCode,
+        selectionState,
+        selectionCity,
+        language,
+        business_scale,
+        trade_categories,
+        sub_categories,
+        minor_sub_categories,
+        productServiceInput,
+        companyNameInput,
+    ]);
+
+    if (selectionSearchKey === lastSelectionSearchKey) {
+        return;
+    }
+    lastSelectionSearchKey = selectionSearchKey;
 
     // console.log('selectionSearchParameter regionOfOperationCode', regionOfOperationCode);
     // console.log('selectionSearchParameter countryCode', countryCode);
