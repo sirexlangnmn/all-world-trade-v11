@@ -1649,14 +1649,23 @@ function selectionSearchParameter() {
             if (data.length > 0) {
                 const searchTerm = String(companyNameInput).trim().toLowerCase();
                 if (searchTerm) {
-                    const matchIndex = data.findIndex(
+                    let matchIndex = data.findIndex(
                         (company) =>
                             company.business_name &&
                             String(company.business_name).trim().toLowerCase() === searchTerm,
                     );
+
+                    if (matchIndex < 0) {
+                        matchIndex = data.findIndex(
+                            (company) =>
+                                company.business_name &&
+                                String(company.business_name).trim().toLowerCase().includes(searchTerm),
+                        );
+                    }
+
                     if (matchIndex >= 0) {
                         const [match] = data.splice(matchIndex, 1);
-                        data.push(match);
+                        data.unshift(match);
                     }
                 }
                 emptyCompanyDetailsDiv();

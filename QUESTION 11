@@ -1,0 +1,92 @@
+read my files
+public/assets/js/selection.js
+
+I have code like this.
+"
+function selectionSearchParameter() {
+ . . .
+}
+"
+
+then after the API url: '/api/post/selection-search-parameter' call and I received the response
+
+console.log('selectionSearchParameter data: ', data);
+this is the sample data I received from the API call:
+
+selectionSearchParameter data:
+[
+    {
+        "id": 2,
+        "business_name": "Little Twinkling Star Jewelry Store",
+        ...
+    },
+    {
+        "id": 126,
+        "business_name": "Eloquente Catering Services Inc.",
+        ...
+    },
+    {
+        "id": 900,
+        "business_name": "Matrix Creation Events Styling",
+        ...
+    },
+    {
+        "id": 916,
+        "business_name": "Klik District",
+        ...
+    },
+    {
+        "id": 917,
+        "business_name": "Lights & Colors Creative Media",
+        ...
+    },
+    {
+        "id": 931,
+        "business_name": "Chef Patrick's Kitchen",
+        ...
+    }
+]
+
+
+before this code to happen
+"
+emptyCompanyDetailsDiv();
+                while (companyDetailsJsonObj2.length > 0) {
+                    companyDetailsJsonObj2.pop();
+                }
+                while (dataForDisplaySearchParameter.length > 0) {
+                    dataForDisplaySearchParameter.pop();
+                }
+                companyDetailsJsonObj2.push(data);
+                dataForDisplaySearchParameter.push(data[0]);
+"
+
+
+I would like to make first in the array data the business_name similar to company_name_input: companyNameInput,
+
+then review this code also
+"
+ setTimeout(() => {
+                    for (let i = data.length - 1; i >= 1; i--) {
+                        const bannerTitle1 = getCompaniesProfilePicture(data[0]['id'], data[0]['uuid']);
+                        const bannerTitle = getCompaniesProfilePicture(data[i]['id'], data[i]['uuid']);
+                        if (bannerTitle != bannerTitle1) {
+                            if (bannerTitle) {
+                                const bannerSrc =
+                                    host + '/uploads/users_upload_files/' + getCompanyImageFilename(data[i]);
+                                console.log('bannerSrc: ', bannerSrc);
+                                console.log('bannerSrc i: ', i);
+                                img.src = bannerSrc;
+                            }
+                        }
+
+                        const li = document.createElement('li');
+                        li.appendChild(img.cloneNode());
+                        fragment.appendChild(li);
+                    }
+                    companiesProfilePicture.appendChild(fragment);
+                }, 500);
+"
+
+I would like to make first in the array data the business_name similar to company_name_input: companyNameInput,
+And show in the first the image of business_name similar to company_name_input: companyNameInput.
