@@ -710,10 +710,36 @@ async function handleSlideNavigation(direction) {
 //     }
 // }
 
+function moveSimilarCompanyToFirst(data, searchValue) {
+    const searchTerm = String(searchValue).trim().toLowerCase();
+    if (!searchTerm || !data || data.length === 0) return;
+
+    let matchIndex = data.findIndex(
+        (company) =>
+            company.business_name && String(company.business_name).trim().toLowerCase() === searchTerm,
+    );
+
+    if (matchIndex < 0) {
+        matchIndex = data.findIndex(
+            (company) =>
+                company.business_name && String(company.business_name).trim().toLowerCase().includes(searchTerm),
+        );
+    }
+
+    if (matchIndex >= 0) {
+        const [match] = data.splice(matchIndex, 1);
+        data.unshift(match);
+    }
+}
+
 function displayTopCompany() {
     topSelectionResultsId.innerHTML = '';
 
     const companies = companyDetailsJsonObj2[0];
+    if (!companies) return;
+
+    moveSimilarCompanyToFirst(companies, company_name_input.value);
+
     const length = companies.length;
 
     for (let i = 0; i < length; i++) {
@@ -1647,27 +1673,7 @@ function selectionSearchParameter() {
         success: function (data) {
             console.log('selectionSearchParameter data: ', data);
             if (data.length > 0) {
-                const searchTerm = String(companyNameInput).trim().toLowerCase();
-                if (searchTerm) {
-                    let matchIndex = data.findIndex(
-                        (company) =>
-                            company.business_name &&
-                            String(company.business_name).trim().toLowerCase() === searchTerm,
-                    );
-
-                    if (matchIndex < 0) {
-                        matchIndex = data.findIndex(
-                            (company) =>
-                                company.business_name &&
-                                String(company.business_name).trim().toLowerCase().includes(searchTerm),
-                        );
-                    }
-
-                    if (matchIndex >= 0) {
-                        const [match] = data.splice(matchIndex, 1);
-                        data.unshift(match);
-                    }
-                }
+                moveSimilarCompanyToFirst(data, companyNameInput);
                 emptyCompanyDetailsDiv();
                 while (companyDetailsJsonObj2.length > 0) {
                     companyDetailsJsonObj2.pop();
