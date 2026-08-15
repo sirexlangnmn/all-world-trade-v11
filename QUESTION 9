@@ -6,10 +6,62 @@ in my
 public/assets/js/selection.js
 We have code that if mobile view or mobile device,
 if will show the following options
-- Show Left Panel
-- Show Middle Panel
-- Show Right Panel
+- Filter (Show Left Panel)
+- Images (Show Middle Panel)
+- Info (Show Right Panel)
+
+review my code in 
+public/view/selection/index.ejs
+like this:
+1.
+"
+<div class="w-full mb-2 lg:w-4/6" id="companiesProfilePictureDiv" data-panel="middle">
+                <div class="card" id="selectionMidColumnCompanyBanner">
+
+                  <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slideshow>
+                    <ul class="uk-slideshow-items" id="companiesProfilePicture">
+                    </ul>
+                    <a class="p-4 text-white uk-position-center-left uk-position-small uk-hidden-hover" href="#"
+                      uk-slidenav-previous uk-slideshow-item="previous" id="selections-prev-slide"></a>
+                    <a class="p-4 text-white uk-position-center-right uk-position-small uk-hidden-hover" href="#"
+                      uk-slidenav-next uk-slideshow-item="next" id="selections-next-slide"></a>
+                  </div>
+
+                </div>
+              </div>
+"
+2.
+"
+<div class="selection-company-details-right bg-white mt-2.5" id="cardForCompanySearchResult" id="asdf"
+                  data-simplebar>
+                  <div class="p-4 -mt-1.5">
+                    <div class="mb-14 selection-left-column-inner">
+                      <div class="flex items-center justify-between border-b">
+                        <h2 class="text-lg font-semibold">RESULTS</h2>
+                      </div>
+                      <div class="p-4 -mt-1.5" id="top-selection-results">
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+"
 
 Currently, everything is working fine, but I want to add a code if I am in the mobile view or mobile device,
-And currently showing the left panel, and someone input in the company_name_input to search for a company and press enter,
-I want to automatically switch to the middle panel to show the search results.
+And currently showing the right panel,
+<div class="p-4 -mt-1.5" id="top-selection-results">
+because here show list of companies,
+and someone click on company name,
+I want to automatically switch from Info (Show Right Panel) to the Images (Show Middle Panel).
+Dont code change yet.
+Lets just discuss first.
+
+
+Just reuse the Option A.
+Just make sure that code changes affect and fix only the target concern and dont affect the other existing logic because its working properly
+And currently showing the right panel,
+<div class="p-4 -mt-1.5" id="top-selection-results">
+because here show list of companies,
+and someone click on company name,
+I want to automatically switch from Info (Show Right Panel) to the Images (Show Middle Panel).
+Go, apply the code changes.

@@ -18,31 +18,37 @@ selectionSearchParameter data:
     {
         "id": 2,
         "business_name": "Little Twinkling Star Jewelry Store",
+        "banner": "banner1.webp",
         ...
     },
     {
         "id": 126,
         "business_name": "Eloquente Catering Services Inc.",
+        "banner": "banner2.webp",
         ...
     },
     {
         "id": 900,
         "business_name": "Matrix Creation Events Styling",
+        "banner": "banner3.webp",
         ...
     },
     {
         "id": 916,
         "business_name": "Klik District",
+        "banner": "banner4.webp",
         ...
     },
     {
         "id": 917,
         "business_name": "Lights & Colors Creative Media",
+        "banner": "banner5.webp",
         ...
     },
     {
         "id": 931,
         "business_name": "Chef Patrick's Kitchen",
+        "banner": "banner6.webp",
         ...
     }
 ]
@@ -90,3 +96,131 @@ then review this code also
 
 I would like to make first in the array data the business_name similar to company_name_input: companyNameInput,
 And show in the first the image of business_name similar to company_name_input: companyNameInput.
+
+
+Review also this code
+"
+function displayTopCompany() {
+    topSelectionResultsId.innerHTML = '';
+
+    const companies = companyDetailsJsonObj2[0];
+    const length = companies.length;
+
+    for (let i = 0; i < length; i++) {
+        topSelectionResultsId.innerHTML += `
+            <div class="flex items-center space-x-4 rounded-md -mx-2 p-2 hover:bg-gray-50">
+                <div class="flex-1">
+                    <a href="#"
+                       onclick="displayTopCompanyDetails(${i})"
+                       class="text-base font-semibold capitalize">
+                        ${companies[i].business_name}
+                    </a>
+                </div>
+            </div>
+        `;
+    }
+}
+"
+
+looks like its also need to apply the same logic to make first in the array data the business_name similar to company_name_input: companyNameInput, and show in the first the image of business_name similar to company_name_input: companyNameInput.
+
+
+read my files
+public/assets/js/selection.js
+public/view/selection/index.ejs
+
+review my code in 
+public/view/selection/index.ejs
+like this:
+1.
+"
+<div class="w-full mb-2 lg:w-4/6" id="companiesProfilePictureDiv" data-panel="middle">
+                <div class="card" id="selectionMidColumnCompanyBanner">
+
+                  <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slideshow>
+                    <ul class="uk-slideshow-items" id="companiesProfilePicture">
+                    </ul>
+                    <a class="p-4 text-white uk-position-center-left uk-position-small uk-hidden-hover" href="#"
+                      uk-slidenav-previous uk-slideshow-item="previous" id="selections-prev-slide"></a>
+                    <a class="p-4 text-white uk-position-center-right uk-position-small uk-hidden-hover" href="#"
+                      uk-slidenav-next uk-slideshow-item="next" id="selections-next-slide"></a>
+                  </div>
+
+                </div>
+              </div>
+"
+2.
+"
+<div class="selection-company-details-right bg-white mt-2.5" id="cardForCompanySearchResult" id="asdf"
+                  data-simplebar>
+                  <div class="p-4 -mt-1.5">
+                    <div class="mb-14 selection-left-column-inner">
+                      <div class="flex items-center justify-between border-b">
+                        <h2 class="text-lg font-semibold">RESULTS</h2>
+                      </div>
+                      <div class="p-4 -mt-1.5" id="top-selection-results">
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+"
+
+
+after selectionSearchParameter API call, 
+we have data like this:
+"
+selectionSearchParameter data:
+[
+    {
+        "id": 2,
+        "business_name": "Little Twinkling Star Jewelry Store",
+        "banner": "banner1.webp",
+        ...
+    },
+    {
+        "id": 126,
+        "business_name": "Eloquente Catering Services Inc.",
+        "banner": "banner2.webp",
+        ...
+    },
+    {
+        "id": 900,
+        "business_name": "Matrix Creation Events Styling",
+        "banner": "banner3.webp",
+        ...
+    },
+    {
+        "id": 916,
+        "business_name": "Klik District",
+        "banner": "banner4.webp",
+        ...
+    },
+    {
+        "id": 917,
+        "business_name": "Lights & Colors Creative Media",
+        "banner": "banner5.webp",
+        ...
+    },
+    {
+        "id": 931,
+        "business_name": "Chef Patrick's Kitchen",
+        "banner": "banner6.webp",
+        ...
+    }
+]
+"
+I need to revise the code to show first in the array data the business_name similar to company_name_input: companyNameInput, 
+and show in the first the image of business_name similar to company_name_input: companyNameInput.
+and also, whatever now companyBannerPreview is showing must align to the list showed in id="top-selection-results".
+And every time I click the id="selections-next-slide", I must see the image in companyBannerPreview based on the list of company id="top-selection-results".
+
+
+
+so far so good.
+its working based on what I expect.
+Keep it.
+But I just felt there is something small bug.
+After pressing the enter key in the search input, the first image repeat twice after clicking the id="selections-next-slide" button. 
+Can you review it first and explain to me why this is happening?
+No code change, lets discuss it first.

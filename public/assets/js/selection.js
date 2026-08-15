@@ -820,7 +820,7 @@ function displayTopCompanyImage() {
 function displayTopCompanyDetails(currentIndex) {
     console.log('displayTopCompanyDetails currentIndex:', currentIndex);
     console.log('displayTopCompanyDetails companyDetailsJsonObj2:', companyDetailsJsonObj2);
-    switchToMiddlePanelOnMobile();
+    showMobilePanel('middle');
     handleSlideChange(currentIndex);
 }
 

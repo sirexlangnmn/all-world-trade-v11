@@ -556,6 +556,22 @@
             }
           });
 
+          // Expose a helper for other code (e.g. selection.js) to switch panels on mobile
+          window.showMobilePanel = function(panelToShow) {
+            // On desktop do nothing — preserve the 3-column layout
+            if (window.innerWidth >= 1024) return;
+
+            Object.keys(panels).forEach(function(key) {
+              panels[key].classList.toggle('hidden', key !== panelToShow);
+            });
+
+            // Close the profile dropdown
+            var drop = document.getElementById('avatar-dropdown');
+            if (drop) {
+              drop.classList.remove('is-open');
+            }
+          };
+
           // Reset to default layout on resize across the lg breakpoint
           var wasWide = window.innerWidth >= 1024;
           window.addEventListener('resize', function() {
