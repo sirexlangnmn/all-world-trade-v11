@@ -114,6 +114,18 @@ function detectDeviceType() {
     console.log('Screen size:', window.innerWidth + 'x' + window.innerHeight);
     console.log('Has touch:', hasTouch);
     console.log('OS:', navigator.platform);
+
+    swapHomepageBackgroundImage();
+}
+
+function swapHomepageBackgroundImage() {
+    const img = document.querySelector('.homepage-background img');
+    if (!img) return;
+
+    const isMobileOrTablet = deviceType === 'mobile' || deviceType === 'tablet';
+    img.src = isMobileOrTablet
+        ? '../../uploads/landing/AWT-Landing-Page-2026-Aug-27-mobile.webp'
+        : '../../uploads/landing/AWT-Landing-Page-2026-January-26.webp';
 }
 
 function isMobileOrTabletDevice() {

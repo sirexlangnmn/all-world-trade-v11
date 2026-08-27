@@ -1460,3 +1460,20 @@ mediaPartnerData.forEach((mediaPartner) => {
 
 // Append the fragment containing all list items to the UL element
 mediaPartnerList.appendChild(mediaPartnerListFragment);
+
+// Swap the homepage background image based on device type
+(function swapHomepageBackgroundForDevice() {
+    const img = document.querySelector('.homepage-background img');
+    if (!img) return;
+
+    const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isMobileOrTablet = /Android|iPhone|iPad|iPod|Windows Phone|webOS|BlackBerry/i.test(navigator.userAgent);
+    const isTablet = /iPad|Android/i.test(navigator.userAgent) && window.innerWidth >= 768;
+    const deviceType = (hasTouch && isMobileOrTablet)
+        ? (isTablet ? 'tablet' : 'mobile')
+        : (hasTouch && window.innerWidth < 1024 ? 'tablet' : 'desktop');
+
+    img.src = (deviceType === 'mobile' || deviceType === 'tablet')
+        ? '../../uploads/landing/AWT-Landing-Page-2026-Aug-27-mobile.webp'
+        : '../../uploads/landing/AWT-Landing-Page-2026-January-26.webp';
+})();
