@@ -486,7 +486,7 @@ const tradersVideoData = [
     {
         title: 'Infinity and Co',
         text: 'Infinity and Co',
-        imageSrc: 'uploads/users_upload_files/companyBanner-1785990348309.jpg',
+        imageSrc: 'uploads/users_upload_files/',
         imageAlt: 'Infinity and Co | All World Trade',
         youtubeLink: 'https://www.facebook.com/reel/2084840985447798',
         duration: '01:11',
