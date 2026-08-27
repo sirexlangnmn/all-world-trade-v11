@@ -456,9 +456,42 @@ const tradersVideoData = [
         text: 'Waters Independent Distributors',
         imageSrc: 'uploads/users_upload_files/companyBanner-1785990348309.jpg',
         imageAlt: 'Waters Independent Distributors | All World Trade',
-        youtubeLink: 'https://www.facebook.com/reel/775824217836195',
-        duration: '3:25',
+        youtubeLink: 'https://www.youtube.com/watch?v=OHxNn9Q68Dg',
+        duration: '15:37',
     },
+    {
+        title: 'Joan Lao Events Management',
+        text: 'Joan Lao Events Management',
+        imageSrc: 'uploads/users_upload_files/companyBanner-1783989906657.jpg',
+        imageAlt: 'Joan Lao Events Management | All World Trade',
+        youtubeLink: 'https://vimeo.com/1075036115?share=copy&fl=sv&fe=ci',
+        duration: '00:57',
+    },
+    {
+        title: 'The Kakanin Buffet of the Stars',
+        text: 'The Kakanin Buffet of the Stars',
+        imageSrc: 'uploads/users_upload_files/companyBanner-1769529492527.jpg',
+        imageAlt: 'The Kakanin Buffet of the Stars | All World Trade',
+        youtubeLink: 'https://www.facebook.com/reel/1028664828185621',
+        duration: '00:18',
+    },
+    {
+        title: 'Symphony Rhythm Strings - Wedding & Events Musicians',
+        text: 'Symphony Rhythm Strings - Wedding & Events Musicians',
+        imageSrc: 'uploads/users_upload_files/companyLogo-1786524828134.jpeg',
+        imageAlt: 'Symphony Rhythm Strings - Wedding & Events Musicians | All World Trade',
+        youtubeLink: 'https://www.youtube.com/watch?v=13TPKT4hbNw',
+        duration: '03:16',
+    },
+    {
+        title: 'Infinity and Co',
+        text: 'Infinity and Co',
+        imageSrc: 'uploads/users_upload_files/companyBanner-1785990348309.jpg',
+        imageAlt: 'Infinity and Co | All World Trade',
+        youtubeLink: 'https://www.facebook.com/reel/2084840985447798',
+        duration: '01:11',
+    },
+
 
 
     // {
