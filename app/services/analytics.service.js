@@ -1,4 +1,4 @@
-const { getTodayStart, getTodayEnd, readableDateTime } = require('../utils/date.utils');
+const { getPreviousDayRange, readableDateTime } = require('../utils/date.utils');
 
 class AnalyticsService {
     constructor(db) {
@@ -109,7 +109,7 @@ class AnalyticsService {
     }
 
     async getDailyMetrics(dateRange = null) {
-        const range = dateRange || { start: getTodayStart(), end: getTodayEnd() };
+        const range = dateRange || getPreviousDayRange();
         console.log('Calculating daily metrics for range:', range);
 
         const [userIds, visitors, loginCount, tradersVisitorsCount, downloadsCountOnCompanyDetails] = await Promise.all([

@@ -1,4 +1,4 @@
-const CLIENT_EMAIL_RECIPIENTS = ['matrixcreationmarketing@gmail.com', 'allworldtrade.com@gmail.com', 'potolin.federex@gmail.com'];
+const { CLIENT_EMAIL_RECIPIENTS } = require('./email-recipients.config');
 
 const MIDNIGHT_REPORT_SUBJECT = 'All World Trade - Daily Activity Report';
 

@@ -19,6 +19,24 @@ function formatPhDate(date) {
     return `${get('year')}-${get('month')}-${get('day')} ${get('hour')}:${get('minute')}:${get('second')}.${get('fractionalSecond')}`;
 }
 
+function getPhDateTimeString(date) {
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+        timeZone: TIMEZONE,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+    });
+
+    const parts = formatter.formatToParts(date);
+    const get = (type) => parts.find((p) => p.type === type).value;
+
+    return `${get('year')}-${get('month')}-${get('day')} ${get('hour')}:${get('minute')}:${get('second')}`;
+}
+
 function readableDateTime(dateTime) {
     console.log('Converting to readable date time:', dateTime);
     const date = new Date(dateTime.replace(" ", "T"));
@@ -35,14 +53,32 @@ function getPhTime() {
 function getTodayStart() {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
-    return formatPhDate(now);
+    return getPhDateTimeString(now);
 }
 
 function getTodayEnd() {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
     now.setDate(now.getDate() + 1);
-    return formatPhDate(now);
+    return getPhDateTimeString(now);
+}
+
+function getPreviousDayStart() {
+    const now = new Date();
+    now.setDate(now.getDate() - 1);
+    now.setHours(0, 0, 0, 0);
+    return getPhDateTimeString(now);
+}
+
+function getPreviousDayEnd() {
+    return getTodayStart();
+}
+
+function getPreviousDayRange() {
+    return {
+        start: getPreviousDayStart(),
+        end: getPreviousDayEnd(),
+    };
 }
 
 function getDateRange(date = new Date()) {
@@ -60,10 +96,14 @@ function getDateRange(date = new Date()) {
 
 module.exports = {
     formatPhDate,
+    getPhDateTimeString,
     readableDateTime,
     getPhTime,
     getTodayStart,
     getTodayEnd,
+    getPreviousDayStart,
+    getPreviousDayEnd,
+    getPreviousDayRange,
     getDateRange,
     TIMEZONE,
 };

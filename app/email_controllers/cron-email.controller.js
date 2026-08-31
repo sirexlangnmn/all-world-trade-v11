@@ -1,6 +1,6 @@
 const cron = require('node-cron');
 const db = require('../db_models');
-const { getTodayStart, getTodayEnd, getPhTime } = require('../utils/date.utils');
+const { getPreviousDayRange, getPhTime } = require('../utils/date.utils');
 const AnalyticsService = require('../services/analytics.service');
 const emailService = require('../services/email.service');
 const Logger = require('../src/Logger');
@@ -13,10 +13,7 @@ async function sendMidnightEmail() {
     try {
         logger.debug('Starting midnight email job');
 
-        const dateRange = {
-            start: getTodayStart(),
-            end: getTodayEnd(),
-        };
+        const dateRange = getPreviousDayRange();
 
         logger.debug('Date range:', dateRange);
 
@@ -56,11 +53,11 @@ function autoLogout() {
 }
 
 function scheduleJobs() {
-    cron.schedule('0 0 * * *', () => {
+    cron.schedule('1 0 * * *', () => {
         sendMidnightEmail();
     });
 
-    cron.schedule('1 0 * * *', () => {
+    cron.schedule('2 0 * * *', () => {
         autoLogout();
     });
 
@@ -83,8 +80,8 @@ module.exports = (app) => {
     const isProduction = process.env.NODE_ENV === 'production';
 
     if (isProduction) {
-        // scheduleJobs();
+        scheduleJobs();
     } else {
-        // scheduleTestJobs();
+        scheduleTestJobs();
     }
 };

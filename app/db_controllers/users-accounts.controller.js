@@ -1,6 +1,7 @@
 const db = require('../db_models');
 const ecdc = require('../shared/ecdc.js');
 const sequelizeConfig = require('../config/sequelize.config.js');
+const { getPhDateTimeString } = require('../utils/date.utils');
 
 const Users_accounts = db.users_accounts;
 const Users_businesses = db.users_businesses;
@@ -113,6 +114,7 @@ async function recordTradersVisitors(visitorUuid, traderUuid) {
     const parameters = {
         visitor_id: visitorUuid,
         trader_id: traderUuid,
+        date_created: getPhDateTimeString(new Date()),
     };
 
     console.log('recordTradersVisitors parameters:::', parameters);
