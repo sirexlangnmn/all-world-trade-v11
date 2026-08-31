@@ -450,22 +450,14 @@ const signageCardData = [
 //   signageCardContainer.insertAdjacentHTML('beforeend', signageCardHtml);
 // });
 
-const tradersVideoData = [
+const tradersVideoData = [    
     {
-        title: 'Waters Independent Distributors',
-        text: 'Waters Independent Distributors',
-        imageSrc: 'uploads/users_upload_files/companyBanner-1785990348309.jpg',
-        imageAlt: 'Waters Independent Distributors | All World Trade',
-        youtubeLink: 'https://www.youtube.com/watch?v=OHxNn9Q68Dg',
-        duration: '15:37',
-    },
-    {
-        title: 'Joan Lao Events Management',
-        text: 'Joan Lao Events Management',
-        imageSrc: 'uploads/users_upload_files/companyBanner-1783989906657.jpg',
-        imageAlt: 'Joan Lao Events Management | All World Trade',
-        youtubeLink: 'https://vimeo.com/1075036115?share=copy&fl=sv&fe=ci',
-        duration: '00:57',
+        title: 'Matrix Creation Events Venue',
+        text: 'Multiple Virtual Reality Scenery on 3 Story High Video Wall at Matrix Creation Events Venue',
+        imageSrc: 'uploads/traders-videos-thumbnail/matrix-creation-events-venue-300.webp',
+        imageAlt: 'Matrix Creation Events Venue Traders Video | All World Trade',
+        youtubeLink: 'https://www.youtube.com/watch?v=hwy7K7FJnZ4',
+        duration: '12:21',
     },
     {
         title: 'The Kakanin Buffet of the Stars',
@@ -476,12 +468,12 @@ const tradersVideoData = [
         duration: '00:18',
     },
     {
-        title: 'Symphony Rhythm Strings - Wedding & Events Musicians',
-        text: 'Symphony Rhythm Strings - Wedding & Events Musicians',
-        imageSrc: 'uploads/users_upload_files/companyLogo-1786524828134.jpeg',
-        imageAlt: 'Symphony Rhythm Strings - Wedding & Events Musicians | All World Trade',
-        youtubeLink: 'https://www.youtube.com/watch?v=13TPKT4hbNw',
-        duration: '03:16',
+        title: 'Joan Lao Events Management',
+        text: 'Joan Lao Events Management',
+        imageSrc: 'uploads/users_upload_files/companyBanner-1783989906657.jpg',
+        imageAlt: 'Joan Lao Events Management | All World Trade',
+        youtubeLink: 'https://vimeo.com/1075036115?share=copy&fl=sv&fe=ci',
+        duration: '00:57',
     },
     {
         title: 'Infinity and Co',
@@ -490,6 +482,22 @@ const tradersVideoData = [
         imageAlt: 'Infinity and Co | All World Trade',
         youtubeLink: 'https://www.facebook.com/reel/2084840985447798',
         duration: '01:11',
+    },
+    {
+        title: 'Waters Independent Distributors',
+        text: 'Waters Independent Distributors',
+        imageSrc: 'uploads/users_upload_files/companyBanner-1785990348309.jpg',
+        imageAlt: 'Waters Independent Distributors | All World Trade',
+        youtubeLink: 'https://www.youtube.com/watch?v=OHxNn9Q68Dg',
+        duration: '15:37',
+    },
+    {
+        title: 'Symphony Rhythm Strings - Wedding & Events Musicians',
+        text: 'Symphony Rhythm Strings - Wedding & Events Musicians',
+        imageSrc: 'uploads/users_upload_files/companyLogo-1786524828134.jpeg',
+        imageAlt: 'Symphony Rhythm Strings - Wedding & Events Musicians | All World Trade',
+        youtubeLink: 'https://www.youtube.com/watch?v=13TPKT4hbNw',
+        duration: '03:16',
     },
 
 
