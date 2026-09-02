@@ -284,31 +284,31 @@ Model.getAllBySearchParameter = (param, result) => {
         queryParams.push(`%${value}%`);
     };
 
-    if (param.trade_categories) {
-        addEqual('users_business_characteristics.business_major_category', param.trade_categories);
-    }
-    if (param.regionOfOperationCode) {
-        addEqual('users_businesses.region_of_operation', param.regionOfOperationCode);
-    }
-    if (param.countryCode) {
-        addLike('users_businesses.country_of_operation', param.countryCode);
-    }
-    if (param.selectionState) {
-        addEqual('users_businesses.states_of_operation', param.selectionState);
-    }
-    if (param.selectionCity) {
-        addEqual('users_businesses.business_city', param.selectionCity);
-        addEqual('users_businesses.city_of_operation', param.selectionCity);
-    }
-    if (param.language) {
-        addLike('users_businesses.business_language_of_communication', param.language);
-    }
-    if (param.business_scale) {
-        addEqual('users_business_characteristics.business_scale', param.business_scale);
-    }
-    if (param.sub_categories) {
-        addEqual('users_business_characteristics.business_sub_category', param.sub_categories);
-    }
+    // if (param.trade_categories) {
+    //     addEqual('users_business_characteristics.business_major_category', param.trade_categories);
+    // }
+    // if (param.regionOfOperationCode) {
+    //     addEqual('users_businesses.region_of_operation', param.regionOfOperationCode);
+    // }
+    // if (param.countryCode) {
+    //     addLike('users_businesses.country_of_operation', param.countryCode);
+    // }
+    // if (param.selectionState) {
+    //     addEqual('users_businesses.states_of_operation', param.selectionState);
+    // }
+    // if (param.selectionCity) {
+    //     addEqual('users_businesses.business_city', param.selectionCity);
+    //     addEqual('users_businesses.city_of_operation', param.selectionCity);
+    // }
+    // if (param.language) {
+    //     addLike('users_businesses.business_language_of_communication', param.language);
+    // }
+    // if (param.business_scale) {
+    //     addEqual('users_business_characteristics.business_scale', param.business_scale);
+    // }
+    // if (param.sub_categories) {
+    //     addEqual('users_business_characteristics.business_sub_category', param.sub_categories);
+    // }
     if (param.minor_sub_categories) {
         addEqual('users_business_characteristics.business_minor_sub_category', param.minor_sub_categories);
     }

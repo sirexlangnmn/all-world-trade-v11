@@ -18,6 +18,6 @@ package-lock.json
 .env
 
 # email recipients (editable directly on production, not committed)
-# app/config/email-recipients.config.js
+ app/config/email-recipients.config.js
 
  public/uploads/users_upload_files

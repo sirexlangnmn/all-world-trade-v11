@@ -1,0 +1,70 @@
+
+
+can you review my file 
+app/config/email.config.js
+
+I have code like this
+"
+const CLIENT_EMAIL_RECIPIENTS = ['matrixcreationmarketing@gmail.com', 'allworldtrade.com@gmail.com', 'potolin.federex@gmail.com'];
+
+const MIDNIGHT_REPORT_SUBJECT = 'All World Trade - Daily Activity Report';
+
+const EMAIL_CONFIG = {
+    host: process.env.EMAIL_SERVERHOST,
+    port: process.env.EMAIL_PORT,
+    secure: false,
+    auth: {
+        user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
+        pass: process.env.SUPPORT_RECEIVER_PASSWORD,
+    },
+    tls: {
+        rejectUnauthorized: false,
+    },
+};
+
+module.exports = {
+    CLIENT_EMAIL_RECIPIENTS,
+    MIDNIGHT_REPORT_SUBJECT,
+    EMAIL_CONFIG,
+};
+
+"
+
+The objective of this code is to send a daily activity report email to a list of recipients.
+
+Can you review the entire codebase and code related to this functionality.
+
+1. I want in production to start this functionality to send the email every start of the Philippine date time.
+For example, all of the data of September 1, 2026, to be sent on September 2, 2026 00:01.
+2. And why looks like I dont get any data query, because I always received 0 data. Looks like I do something wrong in query.
+Like this email that I received
+"
+Hello Traders,
+End of day email to participating suppliers and AWT
+
+Number of Clicks on Company Image for today: 0
+Number of Downloads on Company Details for today: 0
+Number of Logins for today: 0
+List of who Logged in for today:
+
+Best Regards,
+
+All World Trade
+"
+
+dont code change, lets discuss it first so we can check if we are on the same page
+
+
+can you revise this code
+"
+const CLIENT_EMAIL_RECIPIENTS = [
+    'matrixcreationmarketing@gmail.com', 
+    'allworldtrade.com@gmail.com', 
+    'potolin.federex@gmail.com',
+];
+"
+to separate this on file and be called only.
+
+My goal is, if I am pushing in github, I gitignore this file to not be included in the github repo.
+And I will edit this directly on the production server.
+Similar how the .env works, but this one is js file
