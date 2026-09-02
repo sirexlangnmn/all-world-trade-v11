@@ -9606,8 +9606,11 @@ body.story-active header .header_widgets .is_link {
 
 .breadcrumb-area {
     position: relative;
-    padding: 10px 0;
-    margin-bottom: 10px;
+    padding: 7px 0;
+    margin-bottom: 0px;
+    /* change made to remove the padding and margin from the breadcrumb area */
+    /* padding: 10px 0;
+    margin-bottom: 10px; */
 }
 
 .breadcrumb-area .breadcrumb ul li a {

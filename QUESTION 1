@@ -1,8 +1,19 @@
-1. create an account for AWT Online Assistance
-2. users_accounts.type = 5
-3. it must not show in the Selection page.
-4. in the profile page, which is customer-service page, the user able to create a link.
-   the created link save to 
-5. the created link serve as a room. Whoever click to specific company in Selection page, it will redirect to the created link of customer service.
-6. the created link able to enter the any users and the trader. Then the customer-service able to exit the room and allow the user and trader talk.
-6. then every time the customer-service create a new link it serves another room. Then same cycle.
+
+read my file
+public/view/selection/ejs
+I have code like this:
+"
+<div class="w-full mt-2 mb-4 lg:mb-6">
+              <div class="card">
+                <div class="breadcrumb-area">
+                  <div class="breadcrumb">
+                    <ul class="p-4" id="displaySearchParameter">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+"
+Then review all the css style related on that.
+I just want to review the css style and planning to adjust the padding or margin.
+Because it looks like it has too much padding or margin, and I want to make it more compact.
