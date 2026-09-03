@@ -1237,6 +1237,20 @@ function displayCompanyDetailsUsingImageName(filename) {
 
 function displaySearchParameter() {
     displaySearchParameterId.innerHTML = '';
+    const data = dataForDisplaySearchParameter[0];
+    console.log('displaySearchParameter data:', data);
+
+    if (isMobileOrTabletDevice()) {
+        if (data.business_minor_sub_category) {
+            displaySearchParameterId.innerHTML = `
+        <li class="">
+          <a href="" onclick="return false;">${getMinorSubCategoriesTitleById(data.business_minor_sub_category)}</a>
+        </li>
+      `;
+        }
+        return;
+    }
+
     let html = `
       <li>
         <a href="/">One Stop Event Planning</a>
@@ -1245,7 +1259,6 @@ function displaySearchParameter() {
         <a href="" onclick="return false;">Selection </a>
       </li>
     `;
-    const data = dataForDisplaySearchParameter[0];
 
     if (data.business_major_category) {
         html += `
@@ -1290,6 +1303,13 @@ function displaySearchParameter() {
         </li>
       `;
         getStatesNameToBeDisplayUsingCode(data.states_of_operation, 'displaySearchParameter_stateOperation');
+    }
+    if (data.business_name) {
+        html += `
+        <li class="">
+          <a href="" onclick="return false;">${data.business_name}</a>
+        </li>
+      `;
     }
 
     displaySearchParameterId.innerHTML = html;
