@@ -32,4 +32,29 @@ and
 "
 let selectionsNextSlide = getId('selections-next-slide');
 let selectionsPrevSlide = getId('selections-prev-slide');
+let topSelectionResultsId = getId('top-selection-results');
 "
+
+our code currently working properly in this behavior:
+#1. if we search using filter such as company_name_input or selectedMinorSubCategories,
+then after getting the fetched data, we are also able to swipe it to left ('selections-prev-slide') and right ('selections-next-slide').
+
+#2. also currently, we have scenarios where on initial load, we fetch five random data, let say the random number give me 8, then it will return the data moving forward like the 9, 10, 11, 12.
+If we swipe it to left ('selections-prev-slide'), if starting to 8, it goes to data 12, 11, and so on. And if starting to 8 and swipe to right ('selections-next-slide'), it goes to 9, 10, 11, 12 and so on.
+Its normal.
+
+But the client want changes on the number #2 and here is the details:
+On initial load or as long no value on company_name_input or selectedMinorSubCategories, we fetch five random data, let say the random number give me 8, then it will return the data moving forward like the 9, 10, 11, 12.
+And if starting to 8 and swipe to right ('selections-next-slide'), it goes to 9, 10, 11, 12 and so on. Same to current behavior. No changes here.
+But if click left ('selections-prev-slide'), we must get the data of 7, 6, 5, 4, 3 and so on.
+Every click of left, it keeps fetching the data on backward behavior, then if it hits the first data, it will fetch now again to the last available data.
+And of course the fetch data attach also on topSelectionResultsId in similar manner, if previous, attach the data to the first on the list, if its next, attach to the last of the list.
+Dont code change yet, lets discuss first if you understood the client wants and how will you do it.
+
+
+your code changes must effect only as long no value on company_name_input or selectedMinorSubCategories.
+But if company_name_input or selectedMinorSubCategories has value, take effect the original function or behavior of 'selections-prev-slide' which is no code changes here.
+The original code if I search by company_name_input or selectedMinorSubCategories, whatever I press 'selections-prev-slide' or 'selections-next-slide', it just go back and forth to the fetched data that attached to 'top-selection-results'
+Now, it change the behavior, if click 'selections-prev-slide' it go to the last item and then if I press the next it trigger to get another five, it must not happen.
+It must be go back and forth only on the the data that already fetched and attached on the result 'top-selection-results'
+Why the 'selections-prev-slide' is no longer working now ?

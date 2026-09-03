@@ -679,8 +679,6 @@ async function fetchPreviousFiveCompanies() {
     }
 }
 
-let forwardCount = 0;
-
 async function handleSlideNavigation(direction) {
     const companies = companyDetailsJsonObj2[0];
     const totalItems = Array.isArray(companies) ? companies.length : 0;
@@ -688,73 +686,70 @@ async function handleSlideNavigation(direction) {
     let newIndex = currentIndex;
     const noFilterActive = !company_name_input.value.trim() && !selectedMinorSubCategories.value.trim();
 
-    if (!noFilterActive) {
-        if (direction === 'next') {
-            newIndex = (currentIndex + 1) % totalItems;
-            forwardCount++;
+    if (direction === 'next') {
+        if (!noFilterActive) {
+            newIndex = Math.min(currentIndex + 1, totalItems - 1);
+            currentIndex = newIndex;
+            console.log('handleSlideChange next no-filter nextIndex:', newIndex);
+            handleSlideChange(currentIndex);
+            return;
+        }
 
-            // Only fetch more once the user has made enough net forward clicks
-            // to genuinely traverse the whole array end-to-end moving forward.
-            if (forwardCount >= totalItems && newIndex === 0 && currentIndex === totalItems - 1) {
-                const fetched = await fetchNextFiveCompanies();
-                if (fetched === true) {
-                    const updatedTotalItems = companyDetailsJsonObj2[0].length;
-                    if (updatedTotalItems > totalItems) {
-                        newIndex = currentIndex + 1; // Move to the newly added item
-                        currentIndex = newIndex;
-                        renderCompanyBanners();
-                        handleSlideChange(currentIndex);
-                        return;
-                    }
+        newIndex = (currentIndex + 1) % totalItems;
+
+        // Check if we're at the last item and need to fetch more
+        if (newIndex === 0 && currentIndex === totalItems - 1) {
+            const fetched = await fetchNextFiveCompanies();
+            console.log('handleSlideNavigation fetched:', fetched);
+            if (fetched === true) {
+                const updatedTotalItems = companyDetailsJsonObj2[0].length;
+                console.log('handleSlideNavigation totalItems:', totalItems);
+                console.log('handleSlideNavigation updatedTotalItems:', updatedTotalItems);
+                if (updatedTotalItems > totalItems) {
+                    newIndex = currentIndex + 1; // Move to the newly added item
+                    currentIndex = newIndex;
+                    console.log('handleSlideChange newIndex 1:', newIndex);
+                    console.log('handleSlideChange currentIndex 1:', currentIndex);
+                    renderCompanyBanners();
+                    handleSlideChange(currentIndex);
                 }
             }
-
+        } else {
             currentIndex = newIndex;
-            handleSlideChange(currentIndex);
-        } else if (direction === 'prev') {
-            newIndex = (currentIndex - 1 + totalItems) % totalItems;
-            forwardCount--;
-
-            currentIndex = newIndex;
+            console.log('handleSlideChange newIndex 2:', newIndex);
+            console.log('handleSlideChange currentIndex 2:', currentIndex);
             handleSlideChange(currentIndex);
         }
-    } else {
-        console.log('NO filter ', noFilterActive);
-        if (direction === 'next') {
-            newIndex = currentIndex + 1;
+    } else if (direction === 'prev') {
+        if (!noFilterActive) {
+            newIndex = Math.max(currentIndex - 1, 0);
+            currentIndex = newIndex;
+            console.log('handleSlideChange prev no-filter newIndex:', newIndex);
+            handleSlideChange(currentIndex);
+            return;
+        }
 
-            if (newIndex >= totalItems) {
-                const fetched = await fetchNextFiveCompanies();
-                console.log('handleSlideNavigation no-filter fetched next:', fetched);
-                if (fetched === true) {
-                    newIndex = currentIndex + 1;
-                    currentIndex = newIndex;
-                    console.log('handleSlideChange no-filter next newIndex:', newIndex);
-                    renderCompanyBanners();
-                    handleSlideChange(currentIndex);
-                }
-            } else {
-                currentIndex = newIndex;
-                console.log('handleSlideChange no-filter next 2:', newIndex);
+        if (currentIndex === 0) {
+            const prependedCount = await fetchPreviousFiveCompanies();
+            if (prependedCount > 0) {
+                currentIndex = prependedCount - 1;
+                console.log('handleSlideNavigation prev fetched, currentIndex:', currentIndex);
+                renderCompanyBanners();
                 handleSlideChange(currentIndex);
             }
-        } else if (direction === 'prev') {
-            if (currentIndex === 0) {
-                const prependedCount = await fetchPreviousFiveCompanies();
-                if (prependedCount > 0) {
-                    currentIndex = prependedCount - 1;
-                    console.log('handleSlideNavigation no-filter prev fetched, currentIndex:', currentIndex);
-                    renderCompanyBanners();
-                    handleSlideChange(currentIndex);
-                }
-            } else {
-                newIndex = currentIndex - 1;
-                currentIndex = newIndex;
-                console.log('handleSlideChange no-filter prev newIndex:', newIndex);
-                handleSlideChange(currentIndex);
-            }
+        } else {
+            newIndex = currentIndex - 1;
+            currentIndex = newIndex;
+            console.log('handleSlideChange newIndex prev:', newIndex);
+            console.log('handleSlideChange currentIndex prev:', currentIndex);
+            handleSlideChange(currentIndex);
         }
     }
+
+    // currentIndex = newIndex;
+    // console.log('handleSlideChange newIndex:', newIndex);
+    // console.log('handleSlideChange currentIndex:', currentIndex);
+    // handleSlideChange(currentIndex);
 }
 
 // ==========================================
