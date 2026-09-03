@@ -684,8 +684,17 @@ async function handleSlideNavigation(direction) {
     const totalItems = Array.isArray(companies) ? companies.length : 0;
     if (!totalItems) return;
     let newIndex = currentIndex;
+    const noFilterActive = !company_name_input.value.trim() && !selectedMinorSubCategories.value.trim();
 
     if (direction === 'next') {
+        if (!noFilterActive) {
+            newIndex = Math.min(currentIndex + 1, totalItems - 1);
+            currentIndex = newIndex;
+            console.log('handleSlideChange next no-filter nextIndex:', newIndex);
+            handleSlideChange(currentIndex);
+            return;
+        }
+
         newIndex = (currentIndex + 1) % totalItems;
 
         // Check if we're at the last item and need to fetch more
@@ -712,9 +721,15 @@ async function handleSlideNavigation(direction) {
             handleSlideChange(currentIndex);
         }
     } else if (direction === 'prev') {
-        const noFilterActive = !company_name_input.value.trim() && !selectedMinorSubCategories.value.trim();
+        if (!noFilterActive) {
+            newIndex = Math.max(currentIndex - 1, 0);
+            currentIndex = newIndex;
+            console.log('handleSlideChange prev no-filter newIndex:', newIndex);
+            handleSlideChange(currentIndex);
+            return;
+        }
 
-        if (noFilterActive && currentIndex === 0) {
+        if (currentIndex === 0) {
             const prependedCount = await fetchPreviousFiveCompanies();
             if (prependedCount > 0) {
                 currentIndex = prependedCount - 1;
@@ -723,7 +738,7 @@ async function handleSlideNavigation(direction) {
                 handleSlideChange(currentIndex);
             }
         } else {
-            newIndex = (currentIndex - 1 + totalItems) % totalItems;
+            newIndex = currentIndex - 1;
             currentIndex = newIndex;
             console.log('handleSlideChange newIndex prev:', newIndex);
             console.log('handleSlideChange currentIndex prev:', currentIndex);
