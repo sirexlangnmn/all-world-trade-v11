@@ -137,6 +137,8 @@ module.exports = (app) => {
 
     app.post(['/api/get/get-next-five-companies'], selection.findNextFiveCompanies);
 
+    app.post(['/api/get/get-prev-five-companies'], selection.findPrevFiveCompanies);
+
     app.post(['/api/get/get-random-companies'], selection.findRandomCompanies);
 
     app.post(['/api/post/selection-search-parameter'], selection.findAllBySearchParameter);

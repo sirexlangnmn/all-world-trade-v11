@@ -26,6 +26,21 @@ exports.findCompaniesRelatedToCurrentUser = (req, res) => {
     });
 };
 
+exports.findPrevFiveCompanies = (req, res) => {
+    const parameters = {
+        firstId: req.body.firstId,
+        limit: req.body.limit || 5,
+    };
+
+    Model.getPrevFiveCompanies(parameters, (err, data) => {
+        if (err)
+            res.status(500).send({
+                message: err.message || 'Some error occurred while retrieving companies.',
+            });
+        else res.send(data);
+    });
+};
+
 exports.findNextFiveCompanies = (req, res) => {
     const parameters = {
         uuid: req.session.user.uuid,

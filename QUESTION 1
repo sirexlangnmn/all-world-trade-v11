@@ -17,3 +17,29 @@ I have code like this:
 Then review all the css style related on that.
 I just want to review the css style and planning to adjust the padding or margin.
 Because it looks like it has too much padding or margin, and I want to make it more compact.
+
+
+
+
+
+read my file
+public/view/selection/ejs
+I have code like this:
+"
+<div class="w-full mt-2 mb-4 lg:mb-6">
+              <div class="card">
+                <div class="breadcrumb-area">
+                  <div class="breadcrumb">
+                    <ul class="p-4" id="displaySearchParameter">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+"
+Then review all the css style related on that.
+I just want to review the css style and planning to adjust the padding or margin.
+Because it looks like it has too much padding or margin, and I want to make it more compact.
+
+Dont make code changes yet.
+Teach me where possible to make change and allow me to manually change it.

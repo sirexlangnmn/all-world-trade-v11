@@ -1,5 +1,5 @@
 read my files
-public/view/selection/index.js
+public/view/selection/index.ejs
 public/assets/js/selection.js
 app/routes/index.js
 app/controllers/selection.controller.js
@@ -7,116 +7,29 @@ app/models/selection.model.js
 
 
 in my
-public/assets/js/selection.js
+public/view/selection/index.ejs
+I have code like this
+
+"
+<input type="text" id="company_name_input" name="company_name_input" placeholder="Company Name" class="w-full h-12 px-3 mt-2 bg-gray-100 rounded-md">
+"
+and
+"
+<input type="text" id="selectedMinorSubCategories" name="selectedMinorSubCategories" placeholder="" class="" style="display: none;">
+"
+
+in my
+public/view/selection/index.ejs
 I have code like this
 "
-async function fetchNextFiveCompanies() {
-    console.log('[fetchNextFiveCompanies] companyDetailsJsonObj2[0] before:', companyDetailsJsonObj2[0]);
-    try {
-        const response = await fetch('/api/get/get-next-five-companies', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                offset: companyDetailsJsonObj2[0].length,
-                limit: 10,
-            }),
-        });
-
-        const data = await response.json();
+let company_name_input = getId('company_name_input');
 "
-In this variable companyDetailsJsonObj2[0] I have an array of objects like this
-[
-    {
-        "id": 37,
-        "business_name": "Matrix Creation Events Venue",
-        . . .
-    },
-    {
-        "id": 323,
-        "business_name": "Events by Edelbert Valenzuela",
-        . . .
-    },
-    {
-        "id": 2,
-        "business_name": "Little Twinkling Star Jewelry Store",
-        . . .
-    },
-    {
-        "id": 579,
-        "business_name": "Anytime Fitness Gym",
-        . . .
-    }
-]
-I want to get the "id" of the last item in this variable
-companyDetailsJsonObj2[0]
-for example this 579.
-Then pass to the api endpoint api/get/get-next-five-companies
-
-
-
-then in 
-app/models/selection.model.js
-I have query like this
+and
 "
-Model.getNextFiveCompanies = (param, result) => {
-    sql.query(
-        `SELECT 
-        users_businesses.id, 
-        users_businesses.business_name, 
-        users_businesses.business_tagline,
-        users_businesses.business_website,
-        users_businesses.business_email,
-        users_businesses.business_contact,
-        users_businesses.business_language_of_communication,
-        users_businesses.business_social_media_contact_type,
-        users_businesses.business_social_media_contact_number,
-        users_businesses.business_address,
-        users_businesses.business_country,
-        users_businesses.business_states,
-        users_businesses.business_city,
-        users_businesses.region_of_operation,
-        users_businesses.country_of_operation,
-        users_businesses.states_of_operation,
-        users_businesses.city_of_operation,
-        users_businesses.start_operating_hour,
-        users_businesses.end_operating_hour,
-        users_businesses.communicator,
-        users_businesses.uuid,
-        users_business_characteristics.business_industry_belong_to,
-        users_business_characteristics.business_major_category,
-        users_business_characteristics.business_sub_category,
-        users_business_characteristics.business_minor_sub_category,
-        users_business_characteristics.business_scale,
-        users_business_medias.banner
-        FROM users_businesses 
-        JOIN users_business_characteristics 
-        ON users_businesses.uuid = users_business_characteristics.uuid 
-        JOIN users_business_medias 
-        ON users_businesses.uuid = users_business_medias.uuid 
-        AND users_businesses.isPaid = 1
-        AND users_business_medias.banner != ''
-        OR users_business_medias.banner != null
-        LIMIT 5`,
-        (err, res) => {
-            if (err) {
-                result(null, err);
-                return;
-            } else {
-                result(null, res);
-            }
-        },
-    );
-};
+let selectedMinorSubCategories = getId('selectedMinorSubCategories');
 "
-
-I want to get the 5 data starting from the last id I got from the front end. For example if the last id is 579, I want to get the next 5 data starting from id 580.
-But I also imagine the the scenario that I might encounter an error if for example I have only up to id 581 in the database then I wan to get the next 5 data starting from id 580, but since there is only 581, I want to get that data from the very last.
-Then continue to the beginning to get the next on the the id 1, 2, 3 and so on.
-
-Dont code yet. Just explain to me your thoughts and how will you do it ?
-
-
-addional concern.
-What if the last id is 579 and the next id like the 580 and/or 581 are not included in the query condition, like this AND users_businesses.isPaid = 1
+and
+"
+let selectionsNextSlide = getId('selections-next-slide');
+let selectionsPrevSlide = getId('selections-prev-slide');
+"

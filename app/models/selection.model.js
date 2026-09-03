@@ -155,6 +155,82 @@ Model.getCompaniesRelatedToCurrentUser = (param, result) => {
     });
 };
 
+Model.getPrevFiveCompanies = (param, result) => {
+    const firstId = param.firstId;
+    const limit = param.limit || 5;
+
+    const selectColumns = `SELECT 
+        users_businesses.id, 
+        users_businesses.business_name, 
+        users_businesses.business_tagline,
+        users_businesses.business_website,
+        users_businesses.business_email,
+        users_businesses.business_contact,
+        users_businesses.business_language_of_communication,
+        users_businesses.business_social_media_contact_type,
+        users_businesses.business_social_media_contact_number,
+        users_businesses.business_address,
+        users_businesses.business_country,
+        users_businesses.business_states,
+        users_businesses.business_city,
+        users_businesses.region_of_operation,
+        users_businesses.country_of_operation,
+        users_businesses.states_of_operation,
+        users_businesses.city_of_operation,
+        users_businesses.start_operating_hour,
+        users_businesses.end_operating_hour,
+        users_businesses.communicator,
+        users_businesses.uuid,
+        users_business_characteristics.business_industry_belong_to,
+        users_business_characteristics.business_major_category,
+        users_business_characteristics.business_sub_category,
+        users_business_characteristics.business_minor_sub_category,
+        users_business_characteristics.business_scale,
+        users_business_medias.banner,
+        users_business_medias.logo`;
+
+    const fromClause = `FROM users_businesses 
+        JOIN users_business_characteristics 
+        ON users_businesses.uuid = users_business_characteristics.uuid 
+        JOIN users_business_medias 
+        ON users_businesses.uuid = users_business_medias.uuid 
+        AND users_businesses.isPaid = 1
+        AND users_business_medias.banner != ''
+        AND users_business_medias.banner IS NOT NULL
+        AND users_business_medias.logo != ''
+        AND users_business_medias.logo IS NOT NULL`;
+
+    sql.query(
+        `${selectColumns} ${fromClause} WHERE users_businesses.id < ? ORDER BY users_businesses.id DESC LIMIT ?`,
+        [firstId, limit],
+        (err, tail) => {
+            if (err) {
+                result(null, err);
+                return;
+            }
+
+            if (tail.length >= limit) {
+                result(null, tail);
+                return;
+            }
+
+            const remaining = limit - tail.length;
+
+            sql.query(
+                `${selectColumns} ${fromClause} WHERE users_businesses.id >= ? ORDER BY users_businesses.id DESC LIMIT ${remaining}`,
+                [firstId],
+                (err, head) => {
+                    if (err) {
+                        result(null, err);
+                        return;
+                    }
+                    result(null, [...tail, ...head]);
+                },
+            );
+        },
+    );
+};
+
 Model.getNextFiveCompanies = (param, result) => {
     const lastId = param.lastId;
 

@@ -646,6 +646,39 @@ async function fetchNextFiveCompanies() {
     }
 }
 
+async function fetchPreviousFiveCompanies() {
+    const firstCompany = companyDetailsJsonObj2[0][0];
+    const firstId = firstCompany ? firstCompany.id : 0;
+    console.log('[fetchPreviousFiveCompanies] firstId:', firstId);
+
+    try {
+        const response = await fetch('/api/get/get-prev-five-companies', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                firstId: firstId,
+                limit: 5,
+            }),
+        });
+
+        const data = await response.json();
+        console.log('[fetchPreviousFiveCompanies] data:', data);
+
+        if (data.length > 0) {
+            data.reverse();
+            companyDetailsJsonObj2[0] = [...data, ...companyDetailsJsonObj2[0]];
+            console.log('[fetchPreviousFiveCompanies] companyDetailsJsonObj2[0]:', companyDetailsJsonObj2[0]);
+            return data.length;
+        }
+        return 0;
+    } catch (error) {
+        console.error('Error fetching previous companies:', error);
+        return 0;
+    }
+}
+
 async function handleSlideNavigation(direction) {
     const companies = companyDetailsJsonObj2[0];
     const totalItems = Array.isArray(companies) ? companies.length : 0;
@@ -679,34 +712,23 @@ async function handleSlideNavigation(direction) {
             handleSlideChange(currentIndex);
         }
     } else if (direction === 'prev') {
-        newIndex = (currentIndex - 1 + totalItems) % totalItems;
+        const noFilterActive = !company_name_input.value.trim() && !selectedMinorSubCategories.value.trim();
 
-        currentIndex = newIndex;
-        console.log('handleSlideChange newIndex 2:', newIndex);
-        console.log('handleSlideChange currentIndex 2:', currentIndex);
-        handleSlideChange(currentIndex);
-
-        // Check if we're at the first item and need to fetch more
-        // if (newIndex === totalItems - 1 && currentIndex === 0) {
-        //     companiesProfilePicture.innerHTML = '';
-        //     const fetched = await fetchNextFiveCompanies();
-        //     if (fetched === true) {
-        //         // newIndex = totalItems; // Move to the newly added item
-        //         const updatedTotalItems = companyDetailsJsonObj2[0].length;
-        //         if (updatedTotalItems > totalItems) {
-        //             newIndex = totalItems; // Move to the newly added item
-        //             currentIndex = newIndex;
-        //             console.log('handleSlideChange newIndex 1:', newIndex);
-        //             console.log('handleSlideChange currentIndex 1:', currentIndex);
-        //             handleSlideChange(currentIndex);
-        //         }
-        //     }
-        // } else {
-        //     currentIndex = newIndex;
-        //     console.log('handleSlideChange newIndex 2:', newIndex);
-        //     console.log('handleSlideChange currentIndex 2:', currentIndex);
-        //     handleSlideChange(currentIndex);
-        // }
+        if (noFilterActive && currentIndex === 0) {
+            const prependedCount = await fetchPreviousFiveCompanies();
+            if (prependedCount > 0) {
+                currentIndex = prependedCount - 1;
+                console.log('handleSlideNavigation prev fetched, currentIndex:', currentIndex);
+                renderCompanyBanners();
+                handleSlideChange(currentIndex);
+            }
+        } else {
+            newIndex = (currentIndex - 1 + totalItems) % totalItems;
+            currentIndex = newIndex;
+            console.log('handleSlideChange newIndex prev:', newIndex);
+            console.log('handleSlideChange currentIndex prev:', currentIndex);
+            handleSlideChange(currentIndex);
+        }
     }
 
     // currentIndex = newIndex;
