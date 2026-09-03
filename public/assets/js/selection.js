@@ -696,7 +696,8 @@ async function handleSlideNavigation(direction) {
             // Only fetch more once the user has made enough net forward clicks
             // to genuinely traverse the whole array end-to-end moving forward.
             if (forwardCount >= totalItems && newIndex === 0 && currentIndex === totalItems - 1) {
-                const fetched = await fetchNextFiveCompanies();
+                // const fetched = await fetchNextFiveCompanies();
+                const fetched = true;
                 if (fetched === true) {
                     const updatedTotalItems = companyDetailsJsonObj2[0].length;
                     if (updatedTotalItems > totalItems) {
