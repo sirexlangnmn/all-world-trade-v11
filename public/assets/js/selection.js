@@ -143,7 +143,7 @@ function applyCompanyImageStyles(img, adjustedScreenHeight) {
     if (isMobileOrTabletDevice()) {
         img.style.width = '100%';
         img.style.height = `${adjustedScreenHeight}px`;
-        img.style.objectFit = 'cover';
+        img.style.objectFit = 'contain';
         img.style.objectPosition = 'center';
     } else {
         img.style.height = `${adjustedScreenHeight}px`;
