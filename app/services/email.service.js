@@ -7,7 +7,7 @@ class EmailService {
     constructor() {
         this.transporter = this.createTransporter();
         this.configureHandlebars();
-        this.verifyTransporter();
+        this.ready = this.verifyTransporter();
     }
 
     createTransporter() {

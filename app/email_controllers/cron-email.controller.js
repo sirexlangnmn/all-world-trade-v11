@@ -80,7 +80,7 @@ module.exports = (app) => {
     const isProduction = process.env.NODE_ENV === 'production';
 
     if (isProduction) {
-        // scheduleJobs();
+        scheduleJobs();
     } else {
         scheduleTestJobs();
     }

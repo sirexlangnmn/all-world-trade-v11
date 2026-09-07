@@ -4,7 +4,7 @@ const MIDNIGHT_REPORT_SUBJECT = 'All World Trade - Daily Activity Report';
 
 const EMAIL_CONFIG = {
     host: process.env.EMAIL_SERVERHOST,
-    port: process.env.EMAIL_PORT,
+    port: parseInt(process.env.EMAIL_PORT, 10) || 587,
     secure: false,
     auth: {
         user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
