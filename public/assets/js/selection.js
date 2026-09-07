@@ -151,7 +151,7 @@ function applyCompanyImageStyles(img, adjustedScreenHeight) {
 }
 
 function getCompaniesRelatedToCurrentUser() {
-    const randomNumber = Math.floor(Math.random() * 934) + 1;
+    const randomNumber = Math.floor(Math.random() * 944) + 1;
 
     $.ajax({
         url: '/api/get/get-companies-related-to-current-user',
