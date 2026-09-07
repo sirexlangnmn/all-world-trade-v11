@@ -150,8 +150,26 @@ function applyCompanyImageStyles(img, adjustedScreenHeight) {
     }
 }
 
+const arrayNumber = [ 37, 126, 602, 620, 629, 631, 635, 900, 916, 917, 918, 919, 920, 922, 924, 926, 927, 930, 931, 933, 935, 936, 938, 940, 942, 943, 944 ];
+let shuffledNumbers = [];
+
+function getNextCompanyNumber() {
+    if (shuffledNumbers.length === 0) {
+        shuffledNumbers = [...arrayNumber];
+        for (let i = shuffledNumbers.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledNumbers[i], shuffledNumbers[j]] = [
+                shuffledNumbers[j],
+                shuffledNumbers[i],
+            ];
+        }
+    }
+    return shuffledNumbers.pop();
+}
+
 function getCompaniesRelatedToCurrentUser() {
-    const randomNumber = Math.floor(Math.random() * 944) + 1;
+    const randomNumber = getNextCompanyNumber();
+    console.log('getCompaniesRelatedToCurrentUser randomNumber:', randomNumber);
 
     $.ajax({
         url: '/api/get/get-companies-related-to-current-user',

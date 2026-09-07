@@ -58,3 +58,152 @@ The original code if I search by company_name_input or selectedMinorSubCategorie
 Now, it change the behavior, if click 'selections-prev-slide' it go to the last item and then if I press the next it trigger to get another five, it must not happen.
 It must be go back and forth only on the the data that already fetched and attached on the result 'top-selection-results'
 Why the 'selections-prev-slide' is no longer working now ?
+
+
+
+
+
+
+
+read my file
+public/assets/js/selection.js
+
+I have code like this
+"
+function getCompaniesRelatedToCurrentUser() {
+    const randomNumber = Math.floor(Math.random() * 944) + 1;
+
+    $.ajax({
+        url: '/api/get/get-companies-related-to-current-user',
+        type: 'POST',
+        async: false,
+        data: {
+            randomNumber: randomNumber,
+        },
+        success: function (data) {
+            if (data.length > 0) {
+                console.log('getCompaniesRelatedToCurrentUser data:', data);
+                companyDetailsJsonObj2.push(data);
+                dataForDisplaySearchParameter.push(data[0]);
+
+                let adjustedScreenHeight2 = (window.innerHeight - 125) / 2;
+                selectionsPrevSlide.style.top = `${adjustedScreenHeight2}px`;
+                selectionsNextSlide.style.top = `${adjustedScreenHeight2}px`;
+
+                renderCompanyBanners();
+
+                displaySearchParameter();
+            } else {
+                const data = {
+                    message: 'empty',
+                };
+                companyDetailsJsonObj2.push(data);
+            }
+        },
+    });
+}
+"
+
+
+Is there a way to give a random number that even its random, less chance to repeat the same number.
+So even random, there a chance to show all the data in the database.
+
+
+I add an arrayNumber like this
+"
+const arrayNumber = [
+        37,
+        620,
+        920,
+    ]
+"
+where here in this array we get the random number
+
+
+
+
+
+
+
+QUESTION
+read my file
+app/models/selection.model.js
+I have code like this
+
+"
+Model.getCompaniesRelatedToCurrentUser = (param, result) => {
+    const startId = Number(param.randomNumber) || 1;
+    const limit = Number(param.limit) || 5;
+    console.log('getCompaniesRelatedToCurrentUser param :', param);
+
+    const selectColumns = `SELECT 
+        users_businesses.id, 
+        users_businesses.business_name, 
+        users_businesses.business_tagline,
+        users_businesses.business_website,
+        users_businesses.business_email,
+        users_businesses.business_contact,
+        users_businesses.business_language_of_communication,
+        users_businesses.business_social_media_contact_type,
+        users_businesses.business_social_media_contact_number,
+        users_businesses.business_address,
+        users_businesses.business_country,
+        users_businesses.business_states,
+        users_businesses.business_city,
+        users_businesses.region_of_operation,
+        users_businesses.country_of_operation,
+        users_businesses.states_of_operation,
+        users_businesses.city_of_operation,
+        users_businesses.start_operating_hour,
+        users_businesses.end_operating_hour,
+        users_businesses.communicator,
+        users_businesses.uuid,
+        users_business_characteristics.business_industry_belong_to,
+        users_business_characteristics.business_major_category,
+        users_business_characteristics.business_sub_category,
+        users_business_characteristics.business_minor_sub_category,
+        users_business_characteristics.business_scale,
+        users_business_medias.banner,
+        users_business_medias.logo`;
+
+    const fromClause = `FROM users_businesses
+        JOIN users_business_characteristics
+        ON users_businesses.uuid = users_business_characteristics.uuid
+        JOIN users_business_medias
+        ON users_businesses.uuid = users_business_medias.uuid
+        WHERE users_businesses.isPaid = 1
+        AND users_business_medias.banner != ''
+        AND users_business_medias.banner IS NOT NULL
+        AND users_business_medias.logo != ''
+        AND users_business_medias.logo IS NOT NULL`;
+
+    const firstQuery = `${selectColumns} ${fromClause} AND users_businesses.id > ? ORDER BY users_businesses.id ASC LIMIT ?`;
+    const secondQuery = `${selectColumns} ${fromClause} AND users_businesses.id <= ? ORDER BY users_businesses.id ASC LIMIT ?`;
+
+    sql.query(firstQuery, [startId, limit], (err, tail) => {
+        if (err) {
+            result(null, err);
+            return;
+        }
+
+        if (tail.length >= limit) {
+            result(null, tail);
+            return;
+        }
+
+        const remaining = limit - tail.length;
+
+        sql.query(secondQuery, [startId, remaining], (err, head) => {
+            if (err) {
+                result(null, err);
+                return;
+            }
+
+            result(null, [...tail, ...head]);
+        });
+    });
+};
+"
+
+if startId is 920,
+I am expecting to get the row id 920 and another 4 row of data according to the query.

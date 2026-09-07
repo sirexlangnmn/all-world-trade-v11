@@ -86,6 +86,7 @@ const Model = function (model) {};
 Model.getCompaniesRelatedToCurrentUser = (param, result) => {
     const startId = Number(param.randomNumber) || 1;
     const limit = Number(param.limit) || 5;
+    console.log('getCompaniesRelatedToCurrentUser param :', param);
 
     const selectColumns = `SELECT 
         users_businesses.id, 
@@ -128,8 +129,8 @@ Model.getCompaniesRelatedToCurrentUser = (param, result) => {
         AND users_business_medias.logo != ''
         AND users_business_medias.logo IS NOT NULL`;
 
-    const firstQuery = `${selectColumns} ${fromClause} AND users_businesses.id > ? ORDER BY users_businesses.id ASC LIMIT ?`;
-    const secondQuery = `${selectColumns} ${fromClause} AND users_businesses.id <= ? ORDER BY users_businesses.id ASC LIMIT ?`;
+    const firstQuery = `${selectColumns} ${fromClause} AND users_businesses.id >= ? ORDER BY users_businesses.id ASC LIMIT ?`;
+    const secondQuery = `${selectColumns} ${fromClause} AND users_businesses.id < ? ORDER BY users_businesses.id ASC LIMIT ?`;
 
     sql.query(firstQuery, [startId, limit], (err, tail) => {
         if (err) {
