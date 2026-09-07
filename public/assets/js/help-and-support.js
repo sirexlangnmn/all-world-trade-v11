@@ -1,14 +1,36 @@
 // document.getElementById("btnCreateHelpAndSupportCommunicatorLink").addEventListener("click", createHelpAndSupportCommunicatorLink);
 
+// OLD - related to table "support_accounts" and "support_links" - not used anymore
+// function goToHelpSuggestionPage() {
+//     $.ajax({
+//         url: '/api/v2/post/go-to-help-and-suggestion-page',
+//         type: 'POST',
+//         success: function (data) {
+//             if (data.length > 0) {
+//                 const URL = 'https://meet.allworldtrade.com/join/' + data[0].communicator_link;
+//                 window.open(URL, '_blank');
+//                 occupied(data[0].communicator_link, data[0].support_accounts_uuid);
+//             } else {
+//                 let emailifHelpAndSuggestLinkNotAvailableModal = UIkit.modal(
+//                     '#email-if-help-and-suggest-link-not-available-modal',
+//                 );
+//                 emailifHelpAndSuggestLinkNotAvailableModal.show();
+//             }
+//         },
+//     });
+// }
+
+// NEW - related to table "waiting_rooms"- used now
 function goToHelpSuggestionPage() {
+    console.log('goToHelpSuggestionPage triggered');
     $.ajax({
-        url: '/api/v2/post/go-to-help-and-suggestion-page',
+        url: '/api/v3/post/go-to-help-and-suggestion-page',
         type: 'POST',
         success: function (data) {
-            if (data.length > 0) {
-                const URL = 'https://meet.allworldtrade.com/join/' + data[0].communicator_link;
+            if (data) {
+                const URL = 'https://meet.allworldtrade.com/join/' + data.communicator_link;
+                console.log('goToHelpSuggestionPage URL: ', URL);
                 window.open(URL, '_blank');
-                occupied(data[0].communicator_link, data[0].support_accounts_uuid);
             } else {
                 let emailifHelpAndSuggestLinkNotAvailableModal = UIkit.modal(
                     '#email-if-help-and-suggest-link-not-available-modal',

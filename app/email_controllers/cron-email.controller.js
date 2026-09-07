@@ -82,6 +82,6 @@ module.exports = (app) => {
     if (isProduction) {
         scheduleJobs();
     } else {
-        scheduleTestJobs();
+        // scheduleTestJobs();
     }
 };

@@ -70,6 +70,8 @@ module.exports = (app) => {
 
     app.post(['/api/v2/post/go-to-help-and-suggestion-page'], supportLinksController.getSupportLinks);
 
+    app.post(['/api/v3/post/go-to-help-and-suggestion-page'], waitingRoomsController.getWaitingRoom);
+
     app.post(['/api/v2/post/update-as-occupied'], supportLinksController.updateAsOccupied);
 
     app.get('/api/get/communicator-link/:link', communicatorController.findCommunicator);
