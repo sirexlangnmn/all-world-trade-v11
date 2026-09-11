@@ -207,3 +207,21 @@ Model.getCompaniesRelatedToCurrentUser = (param, result) => {
 
 if startId is 920,
 I am expecting to get the row id 920 and another 4 row of data according to the query.
+
+
+
+
+QUESTION
+
+read my files
+public/view/selection/index.ejs
+public/assets/js/selection.js
+
+in public/assets/js/selection.js
+I have code like this
+function displaySearchParameter() {
+    . . .
+    displaySearchParameterId.innerHTML = html;
+}
+this is responsible to get the search keyword.
+
