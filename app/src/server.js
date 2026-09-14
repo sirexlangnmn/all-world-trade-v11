@@ -321,37 +321,27 @@ const isUserLoggedIn = async (sessionUser) => {
 
 
 // home
-app.get(['/'], (req, res) => {
-    if (req.session.user === undefined) {
-        const sessionData = {
-            uuid: '',
-            type: '',
-            first_name: '',
-            last_name: '',
-            email: '',
-            country: '',
-            state_or_province: '',
-            ourGenerateNonce: lodashNonce,
-        };
+app.get(['/'], async (req, res) => {
+    try {
+        const sessionUser = req.session.user;
 
-        res.render(path.join(__dirname, '../../', 'public/view/home/index'), {
-            data: sessionData,
-        });
-    } else {
-        const sessionData = {
-            uuid: req.session.user.uuid,
-            type: req.session.user.type,
-            first_name: req.session.user.first_name,
-            last_name: req.session.user.last_name,
-            email: req.session.user.email_or_social_media,
-            country: req.session.user.country,
-            state_or_province: req.session.user.state_or_province,
-            ourGenerateNonce: lodashNonce,
-        };
+        console.log('home req.session.user:', sessionUser);
 
-        res.render(path.join(__dirname, '../../', 'public/view/home/index'), {
-            data: sessionData,
-        });
+        if (!sessionUser) {
+            return renderLogin(res);
+        }
+
+        const loggedIn = await isUserLoggedIn(sessionUser);
+
+        if (!loggedIn) {
+            return renderLogin(res);
+        }
+
+        return renderPage(res, 'home', buildViewData(sessionUser));
+
+    } catch (error) {
+        console.error('Error in home route:', error);
+        return renderLogin(res);
     }
 });
 

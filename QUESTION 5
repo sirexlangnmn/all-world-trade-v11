@@ -225,3 +225,82 @@ function displaySearchParameter() {
 }
 this is responsible to get the search keyword.
 
+
+
+QUESTION 
+read my app/src/server.js
+
+I have code like this
+"
+app.get('/selection', async (req, res) => {
+    try {
+        const sessionUser = req.session.user;
+
+        console.log('selection req.session.user:', sessionUser);
+
+        // 1️⃣ No session → go to login
+        if (!sessionUser) {
+            return renderLogin(res);
+        }
+
+        // 2️⃣ Check login status from DB
+        const loggedIn = await isUserLoggedIn(sessionUser);
+
+        // 3️⃣ Render based on status
+        if (!loggedIn) {
+            return renderLogin(res);
+        }
+
+        return renderPage(res, 'selection', buildViewData(sessionUser));
+
+    } catch (error) {
+        console.error('Error in selection route:', error);
+
+        // fallback (fail-safe)
+        return renderLogin(res);
+    }
+});
+"
+As you can see, I have part of the code to check if there is no session go to login page.
+if no login status go to login page.
+User able to access only the selection page if they are login.
+
+Now, revise my homepage.
+"
+app.get(['/'], (req, res) => {
+    if (req.session.user === undefined) {
+        const sessionData = {
+            uuid: '',
+            type: '',
+            first_name: '',
+            last_name: '',
+            email: '',
+            country: '',
+            state_or_province: '',
+            ourGenerateNonce: lodashNonce,
+        };
+
+        res.render(path.join(__dirname, '../../', 'public/view/home/index'), {
+            data: sessionData,
+        });
+    } else {
+        const sessionData = {
+            uuid: req.session.user.uuid,
+            type: req.session.user.type,
+            first_name: req.session.user.first_name,
+            last_name: req.session.user.last_name,
+            email: req.session.user.email_or_social_media,
+            country: req.session.user.country,
+            state_or_province: req.session.user.state_or_province,
+            ourGenerateNonce: lodashNonce,
+        };
+
+        res.render(path.join(__dirname, '../../', 'public/view/home/index'), {
+            data: sessionData,
+        });
+    }
+});
+"
+
+Dont allow anyone to go to home page without session or login similar to /selection
+No code change yet, lets discuss first so I can check if we are on the same page
