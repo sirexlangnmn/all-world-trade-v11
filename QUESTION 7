@@ -1,5 +1,6 @@
 read my files
 public/assets/js/selection.js
+public/view/selection/index.ejs
 
 in my
 public/assets/js/selection.js
@@ -128,3 +129,22 @@ here is the sample object data
     }
 ]
 "
+
+
+
+QUESTION
+
+read my files
+public/assets/js/selection.js
+public/view/selection/index.ejs
+
+I have html tags
+<ul class="uk-slideshow-items" id="companiesProfilePicture">
+who hold the company banner images
+
+Then create something,
+For first-time users, display a “Click Me” guide on the business image to encourage them to click the image and interact with the business.
+
+This should work like a simple tutorial or onboarding guide, helping users understand that the business image is clickable and interactive.
+
+Dont code yet, lets discuss the implementation details first.

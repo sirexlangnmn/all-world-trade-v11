@@ -92,6 +92,7 @@ $(function () {
     handleSlideChange(currentIndex);
     handleSelectionPageResize();
     getMinorCategory('selectedSubCategories', 'minor-sub-categories');
+    maybeShowClickMeGuide();
 });
 
 let deviceType = 'desktop';
@@ -2060,6 +2061,55 @@ function emptyCompanyDetailsDiv() {
 }
 
 companiesProfilePicture.addEventListener('click', getActiveImageToDownloadOrContact);
+
+const CLICK_ME_STORAGE_KEY = 'awt_selection_click_me_v1';
+let clickMeGuideTimers = [];
+
+function maybeShowClickMeGuide() {
+    if (localStorage.getItem(CLICK_ME_STORAGE_KEY)) return;
+    if (!Array.isArray(companyDetailsJsonObj2[0]) || companyDetailsJsonObj2[0].length === 0) return;
+
+    const container = getSlideshowContainer();
+    if (!container || container.querySelector('.click-me-guide')) return;
+
+    clickMeGuideTimers.push(
+        setTimeout(() => {
+            if (localStorage.getItem(CLICK_ME_STORAGE_KEY)) return;
+            if (!Array.isArray(companyDetailsJsonObj2[0]) || companyDetailsJsonObj2[0].length === 0) return;
+
+            const slideshowContainer = getSlideshowContainer();
+            if (!slideshowContainer || slideshowContainer.querySelector('.click-me-guide')) return;
+
+            const guide = document.createElement('div');
+            guide.className = 'click-me-guide';
+            guide.innerHTML = `
+                <div class="click-me-badge">
+                    <span class="click-me-hand">&#128070;</span>
+                    <span class="click-me-label">Click Me</span>
+                </div>
+                <div class="click-me-hint">Click the image to engage with this business</div>
+            `;
+            slideshowContainer.appendChild(guide);
+
+            guide.addEventListener('click', dismissClickMeGuide);
+            companiesProfilePicture.addEventListener('click', dismissClickMeGuide, true);
+        }, 1200),
+    );
+}
+
+function dismissClickMeGuide() {
+    const container = getSlideshowContainer();
+    if (container) {
+        const guide = container.querySelector('.click-me-guide');
+        if (guide) guide.remove();
+    }
+
+    clickMeGuideTimers.forEach((timer) => clearTimeout(timer));
+    clickMeGuideTimers = [];
+
+    localStorage.setItem(CLICK_ME_STORAGE_KEY, '1');
+    companiesProfilePicture.removeEventListener('click', dismissClickMeGuide, true);
+}
 
 const slideshowContainer = getSlideshowContainer();
 if (slideshowContainer) {
