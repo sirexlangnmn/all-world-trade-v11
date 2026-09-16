@@ -2063,10 +2063,19 @@ function emptyCompanyDetailsDiv() {
 companiesProfilePicture.addEventListener('click', getActiveImageToDownloadOrContact);
 
 const CLICK_ME_STORAGE_KEY = 'awt_selection_click_me_v1';
+const CLICK_ME_REPEAT_INTERVAL = 24 * 60 * 60 * 1000;
 let clickMeGuideTimers = [];
 
+function hasSeenClickMeGuideRecently() {
+    const saved = localStorage.getItem(CLICK_ME_STORAGE_KEY);
+    if (!saved) return false;
+    const savedTime = parseInt(saved, 10);
+    if (isNaN(savedTime)) return false;
+    return Date.now() - savedTime < CLICK_ME_REPEAT_INTERVAL;
+}
+
 function maybeShowClickMeGuide() {
-    if (localStorage.getItem(CLICK_ME_STORAGE_KEY)) return;
+    if (hasSeenClickMeGuideRecently()) return;
     if (!Array.isArray(companyDetailsJsonObj2[0]) || companyDetailsJsonObj2[0].length === 0) return;
 
     const container = getSlideshowContainer();
@@ -2074,7 +2083,7 @@ function maybeShowClickMeGuide() {
 
     clickMeGuideTimers.push(
         setTimeout(() => {
-            if (localStorage.getItem(CLICK_ME_STORAGE_KEY)) return;
+            if (hasSeenClickMeGuideRecently()) return;
             if (!Array.isArray(companyDetailsJsonObj2[0]) || companyDetailsJsonObj2[0].length === 0) return;
 
             const slideshowContainer = getSlideshowContainer();
@@ -2107,7 +2116,7 @@ function dismissClickMeGuide() {
     clickMeGuideTimers.forEach((timer) => clearTimeout(timer));
     clickMeGuideTimers = [];
 
-    localStorage.setItem(CLICK_ME_STORAGE_KEY, '1');
+    localStorage.setItem(CLICK_ME_STORAGE_KEY, String(Date.now()));
     companiesProfilePicture.removeEventListener('click', dismissClickMeGuide, true);
 }
 
