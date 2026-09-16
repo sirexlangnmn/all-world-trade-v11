@@ -11,6 +11,7 @@ controller.users_businesses = require('./users-businesses.controller.js');
 controller.users_accounts = require('./users-accounts.controller.js');
 controller.registration_v2 = require('./registration_v2.controller.js');
 controller.update_trader = require('./update-trader.controller.js');
+controller.export_users_businesses = require('./export-users-businesses.controller.js');
 controller.region_of_operation = require('./region_of_operation.controller.js');
 controller.join = require('./join.controller.js');
 controller.waiting_rooms = require('./waiting_rooms.controller.js');
