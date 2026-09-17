@@ -460,6 +460,14 @@ const tradersVideoData = [
         duration: '12:21',
     },
     {
+        title: 'Hizons Restaurant and Catering Services Inc',
+        text: 'Hizons Restaurant and Catering Services Inc',
+        imageSrc: 'uploads/users_upload_files/companyBanner-1785319210278.jpeg',
+        imageAlt: 'Hizons Restaurant and Catering Services Inc | All World Trade',
+        youtubeLink: 'https://vt.tiktok.com/ZSV7nhExq/',
+        duration: '00:30',
+    },
+    {
         title: 'The Kakanin Buffet of the Stars',
         text: 'The Kakanin Buffet of the Stars',
         imageSrc: 'uploads/users_upload_files/companyBanner-1769529492527.jpg',
