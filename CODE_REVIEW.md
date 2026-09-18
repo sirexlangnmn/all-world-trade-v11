@@ -1,9 +1,10 @@
 # Code Review: All World Trade v11
 
-**Date:** July 25, 2026
-**Reviewer:** Senior Software Engineer
-**Scope:** Full codebase review of the All World Trade B2B marketplace platform
-**Status:** Production system — recommendations are non-breaking, incremental improvements
+**Date:** July 25, 2026  
+**Revised:** September 18, 2026 (refactoring playbook: DRY, SOLID, KISS, smaller functions, modern Node patterns)  
+**Reviewer:** Senior Software Engineer  
+**Scope:** Full codebase review of the All World Trade B2B marketplace platform  
+**Status:** Production system is **complete and working**. This document is not a rewrite plan. It is a set of incremental recommendations to optimize, refactor, and modernize the code while keeping behavior stable.
 
 ---
 
@@ -11,15 +12,25 @@
 
 All World Trade v11 is a server-side rendered B2B trade networking platform built on Express.js, EJS, MySQL, and a mix of raw SQL (mysql2) and Sequelize ORM. The application connects businesses across four tiers (Trader, Large-Scale, Medium-Scale, Small-Scale Company) with features including registration, company profiles, file uploads, video meetings via WebRTC, email marketing, and PDF downloads.
 
-**Overall Quality:** The system works and has been deployed to production. However, it contains **critical security vulnerabilities** that must be addressed immediately, significant code duplication that hinders maintainability, and an inconsistent architectural approach that mixes two data access patterns without a clear migration strategy.
+**Overall Quality:** The system works and has been deployed to production. The recommendations below assume current features stay intact. Changes should be small, testable, and shipped incrementally.
+
+The main gaps are: **critical security issues** that should be fixed first, **duplication across four business tiers** that makes every change four times as expensive, **large mixed-responsibility functions** that are hard to test, and **two data-access stacks** (raw mysql2 + Sequelize) without a migration rule.
+
+**Goals of this review (in addition to security):**
+- Optimize and refactor toward current Node/Express practices (async/await, parameterized queries, thin routes, a services layer).
+- Break large handlers into smaller functions, each doing one job (validate, map input, persist, render, respond).
+- Align the code with **DRY**, **SOLID**, and **KISS**.
+- Improve **security, readability, performance, reusability, testability, and maintainability**.
 
 **Key Findings:**
 - **5 critical security vulnerabilities** including SQL injection, plaintext password storage on reset, and a public bcrypt oracle endpoint
 - **No authentication middleware** on the vast majority of API routes
-- **Massive code duplication** across file uploads (30+ near-identical route handlers), email transporters (4x repeated configuration), page routes (20+ copy-pasted session data blocks), and media queries (35+ INSERT variants)
-- **No test suite** whatsoever
-- **1,587-line server.js** monolith containing all page routes, business logic, helpers, and middleware configuration
+- **Massive code duplication** across file uploads (30+ near-identical route handlers), email transporters (4x repeated configuration), page routes (20+ copy-pasted session data blocks), media queries (35+ INSERT variants), and **four nearly identical registration/upgrade stacks**
+- **No test suite** whatsoever (`package.json` `test` script is a stub)
+- **~1,587-line `server.js`** monolith containing page routes, business logic, helpers, and middleware configuration
 - Helmet/CSP security headers are commented out in production
+- Controllers mix HTTP, validation, transactions, and session writes; models mix SQL with session side effects — this blocks unit testing
+- Client JS repeats country/dropdown/validation/upload logic per business tier, and Webpack only bundles `home.js`
 
 ---
 
@@ -830,6 +841,351 @@ db.sequelize.sync().then(() => { console.log('Synced db.'); });
 
 ---
 
+## Refactoring Principles (How to Change a Working System)
+
+Do not big-bang rewrite. The app is live. Treat every change as:
+
+1. **Extract** a function or module without changing behavior.
+2. **Reuse** it in one call site, then in the copies.
+3. **Delete** the old copy only after the new path is verified.
+4. **Add a test** around the extracted unit before the next extraction.
+
+### DRY (Don't Repeat Yourself)
+
+Duplication in this codebase is mostly **copy-paste across business tiers** (trader / large / medium / small) and **copy-paste of the same HTTP/SQL shape**. Prefer one parameterized implementation plus a small config object per tier (`type`, field map, validation schema) over four parallel files.
+
+### SOLID
+
+| Principle | What it means here |
+|-----------|-------------------|
+| **S**ingle Responsibility | A route handler should not also hash passwords, build SQL, send email, and mutate `req.session`. Split into middleware, services, and repositories. |
+| **O**pen/Closed | Adding a fifth account type should not require cloning `*-registration.controller.js`, validation, and four client JS files. Extend via config/strategy, not file copies. |
+| **L**iskov Substitution | All registration services should share the same contract (`register(input) → { uuid, type }`) so callers do not special-case each tier. |
+| **I**nterface Segregation | Do not share one 80-field `req.body` blob. Map to small DTOs (`PersonalIdentity`, `AccountCredentials`, `BusinessProfile`, `MediaUpload`). |
+| **D**ependency Inversion | Controllers should depend on a `UserRepository` / `EmailService` interface, not on `db.query` and inline Nodemailer. `analytics.service.js` and `email.service.js` already point in the right direction. |
+
+### KISS (Keep It Simple, Stupid)
+
+Simplify before adding layers. Examples already in this review: drop unused JWT in password reset (Finding 4), delete public hash/compare endpoints (Finding 5), delete encrypt debug routes (Finding 24), stop maintaining 35 INSERT variants (Finding 17). A services layer is useful **after** duplication is collapsed, not as a new parallel architecture.
+
+### Function size
+
+Target: each function does one of **validate**, **map**, **query**, **mutate session**, **send email**, or **write HTTP response**. If a function needs “and” in its name (`createUserAndSendEmailAndSetSession`), split it.
+
+---
+
+### Finding 34: Two Parallel Architectures (Controllers vs db_controllers)
+
+**Location:** `app/controllers/` + `app/models/` + `app/query/` versus `app/db_controllers/` + `app/db_models/`
+
+**Current Approach:** Legacy mysql2 callback models sit beside newer Sequelize controllers. Routes mix both (`app/routes/index.js` vs `app/routes/sequelize.route.js`). Some features exist in both styles (users-accounts, registration, company updates).
+
+**Why This Is Suboptimal:** Violates Single Responsibility at the *system* level: every feature has two places to change. New developers cannot tell which stack is canonical. Bugs get fixed in one path and left in the other (login SQL injection vs registration_v2 Sequelize).
+
+**Recommended Approach:** Freeze the mysql2 layer. All new work goes through Sequelize services. Migrate one domain at a time (auth → registration → profile update → search → media). Keep `app/query/` as a SQL reference until that domain is gone.
+
+**Why Better:** One way to talk to the database. Easier testing (mock models), consistent transactions, fewer injection footguns.
+
+**Implementation:**
+1. Document the rule in this file and in an `ARCHITECTURE.md` (optional, short): “Sequelize is the target DAL.”
+2. Do not add new files under `app/models/` or `app/query/` except bugfixes.
+3. For each migrated endpoint, keep the URL and response shape identical so the frontend does not change.
+4. Delete the mysql2 controller only after the Sequelize path is live.
+
+---
+
+### Finding 35: Four-Tier Registration and Upgrade Duplication (DRY / OCP)
+
+**Location:**
+- `app/db_controllers/*-registration.controller.js` (trader, large, medium, small) plus `registration_v2.controller.js`
+- Matching files in `app/middleware/validations/`
+- Matching client scripts: `public/assets/js/*-registration*.js`, `*-validation.js`, `*-countries.js`, `*-upload-medias.js`, plus `upgrade-to-*` copies
+
+**Current Approach:** Each business scale is a near-clone. Controllers share the same skeleton: `validationResult` → email uniqueness `findAll` → UUID + verification code → `sequelize.transaction()` → insert into users / accounts / address / business / characteristics. Differences are mostly `type` (`1–4`) and `req.body` field names (`firstName` vs `traderGivenNameOfRepresentative`).
+
+**Why This Is Suboptimal:** A hashing, transaction, or uniqueness fix must be applied five times. Field-name drift already exists (`email already in use` vs `Email already in use`). Open/Closed is broken: a new tier means another file clone. Client-side the same country/state/city and media-upload flows are copied per page.
+
+**Recommended Approach:** One `RegistrationService` with a per-tier **profile**:
+```js
+const TIERS = {
+  trader: { type: 1, mapBody: mapTraderFields },
+  large:  { type: 2, mapBody: mapLargeFields },
+  medium: { type: 3, mapBody: mapMediumFields },
+  small:  { type: 4, mapBody: mapSmallFields },
+};
+```
+Shared steps: `assertValid(req)`, `assertEmailFree(email)`, `hashPassword(plain)`, `createAccountGraph(dto, transaction)`, `commit`, `setSession`. HTTP controllers become ~15 lines: pick tier, call service, send JSON.
+
+On the client, extract shared modules: `countries-select.js`, `media-upload.js`, `form-validation.js`, parameterized by form field IDs.
+
+**Why Better:** One transaction implementation, one uniqueness check, one password policy. New tiers are data, not new files.
+
+**Implementation:**
+1. Extract `assertValidation(req)` and `findAccountByEmail(email)` from `registration_v2.controller.js` first (smallest surface).
+2. Extract `runInTransaction(work)` wrapping `sequelize.transaction()`.
+3. Introduce `mapRegistrationDto(tier, body)` and switch **one** route (`small-scale`) onto the shared service.
+4. Repeat for medium, large, trader, then upgrades (`update-*-company.controller.js`).
+5. Collapse client country scripts the same way: one module, four thin page entry files.
+
+---
+
+### Finding 36: Fat Controllers — Split Into Focused Functions (SRP / Testability)
+
+**Location:** Typical `exports.create` in `app/db_controllers/*-registration.controller.js` (~150 lines); `app/src/server.js` page handlers; `app/models/login.model.js`; `app/routes/forgot-password.js`; `app/routes/upload-file.js`
+
+**Current Approach:** A single function often: reads `req.body`, checks express-validator, queries uniqueness, builds 5–7 insert objects, opens a transaction, writes session, and sends the HTTP response. Login models also encrypt UUIDs and mutate `req.session`.
+
+**Why This Is Suboptimal:** Cannot unit-test “email already used” without spinning Express. Cannot reuse “create user graph” from an admin import or upgrade flow. Errors are handled inconsistently (`res.status(200)` vs `res.send`). Readability suffers because persistence is buried in HTTP.
+
+**Recommended Approach:** Layering that matches existing `app/services/`:
+
+```
+route → middleware (auth, validate) → controller (HTTP only)
+     → service (use-case: register, login, resetPassword)
+     → repository (Sequelize / mysql2)
+```
+
+Example decomposition of registration `create`:
+- `getValidationErrors(req)` — return errors or `null`
+- `isEmailTaken(email)` — boolean
+- `buildRegistrationRecords(dto, uuid)` — pure mapping, easy to test
+- `persistRegistration(records, transaction)` — DB only
+- `toRegistrationResponse(result)` — HTTP DTO
+
+Controllers stay async and small:
+```js
+exports.create = async (req, res, next) => {
+    const errors = getValidationErrors(req);
+    if (errors) return res.status(400).json({ status: 'error', errors });
+    try {
+        const result = await registrationService.register('small', req.body);
+        return res.json({ status: 'success', data: result });
+    } catch (err) {
+        next(err);
+    }
+};
+```
+
+**Why Better:** Pure mappers are unit-testable. Services are reusable from cron, admin, and HTTP. Controllers become boring (good).
+
+**Implementation:**
+1. Start with functions **in the same file** (no new folders yet) — KISS.
+2. Move proven helpers to `app/services/` and `app/utils/` once two call sites exist.
+3. Never put `res.send` inside a service.
+
+---
+
+### Finding 37: Callback-Style Models vs Modern async/await
+
+**Location:** `app/models/*.js` (mysql2 callbacks); `app/controllers/*.js` wrapping `Model.create(input, (err, data) => ...)`; newer `app/db_controllers/` already using `async/await`
+
+**Current Approach:** Legacy controllers construct a “Model” from `req.body` and pass a Node error-first callback. Newer code uses `async` functions but often still chains `.then/.catch` on already-awaited promises (see Finding 45).
+
+**Why This Is Suboptimal:** Two async styles in one app. Callbacks make `try/catch` and `Promise.all` awkward (this is why `setTimeout(1500)` exists in Finding 18). Harder to compose and test.
+
+**Recommended Approach:** Wrap remaining `db.query` calls once:
+```js
+function query(sql, params) {
+    return new Promise((resolve, reject) => {
+        db.query(sql, params, (err, rows) => (err ? reject(err) : resolve(rows)));
+    });
+}
+```
+Then migrate models to `async function findByEmail(email)` using `?` placeholders. Prefer Sequelize where a model already exists.
+
+**Why Better:** One control-flow model. Enables `Promise.all` instead of timeouts. Matches Express 5 async error handling.
+
+**Implementation:**
+1. Add `app/utils/mysql.js` promisify helper.
+2. Convert `login.model.js` first (security-critical, Finding 2).
+3. Leave other models until that domain is migrated (Finding 34).
+
+---
+
+### Finding 38: Repeated Validation / Error-Response Boilerplate
+
+**Location:** Almost every `app/db_controllers/*.js` and several `app/controllers/*.js`
+
+**Current Approach:** Copied block:
+```js
+const errors = validationResult(req);
+try {
+    if (!errors.isEmpty()) {
+        return res.status(200).send({ message: errors.array() });
+    }
+} catch (error) {
+    return res.status(400).json({ error: { message: error } });
+}
+```
+Empty stub `exports.create = (req, res) => {};` then a second real `exports.create` appears in many controllers (login, forgot-password, small/medium/upgrade, visitors, users, …).
+
+**Why This Is Suboptimal:** The `try/catch` around a synchronous `validationResult` never catches validator failures usefully. HTTP 200 on validation failure (Finding 22) is copy-pasted everywhere. Empty first exports are noise (Finding 28 is not unique to login).
+
+**Recommended Approach:** One middleware:
+```js
+// app/middleware/handle-validation.js
+module.exports = (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ status: 'error', errors: errors.array() });
+    }
+    next();
+};
+```
+Mount after field validators: `app.post('/api/...', schema, handleValidation, controller.create)`. Delete empty `exports.*` stubs.
+
+**Why Better:** One status code policy. Controllers lose 15 repeated lines. Matches KISS.
+
+---
+
+### Finding 39: Client JavaScript Duplication and Weak Bundling
+
+**Location:** `public/assets/js/` (~100 files); `webpack.config.js` (single entry `home.js` → `public/assets/js-min/home.js`)
+
+**Current Approach:** Per-page scripts for registration, edit profile, upgrade, countries, media, and validation. Copies exist (`selection copy.js`, `landing-signage copy.js`, `region-of-operation-toogle copy.js`). jQuery 3.3.1 is vendored alongside 3.6.x from templates. Webpack does not bundle the rest of the app.
+
+**Why This Is Suboptimal:** DRY violation on the frontend matches the backend tier clones. Duplicate libraries increase payload. Unbundled scripts mean no shared modules, no tree-shaking, and harder CSP (inline/nonce already strained — Finding 10).
+
+**Recommended Approach:**
+- Extract shared ES modules: `geo-select`, `media-fields`, `password-rules`, `api-client`.
+- Webpack (or a later Vite step) with multiple entries: `home`, `registration`, `profile`, `selection`.
+- Delete `* copy.js` and unused `test.js`.
+- Keep jQuery only where UIkit still requires it; do not add a second jQuery file.
+
+**Why Better:** Smaller pages, one geo-dropdown bugfix, clearer CSP surface.
+
+**Implementation:**
+1. Do not rewrite all client JS at once. Start by concatenating country-select helpers used by four registration pages.
+2. Add a second Webpack entry only when a module is imported from two pages.
+3. Leave UIkit/jQuery in `includes/scripts` until a dedicated UI modernization (see `UI_UX_MOBILE_RECOMMENDATIONS.md`).
+
+---
+
+### Finding 40: Session and HTTP Coupled to Domain Models (Testability / DIP)
+
+**Location:** `app/models/login.model.js` (receives `session` on the model instance); page routes in `server.js`; visitor models writing `session.items`
+
+**Current Approach:** Domain objects accept `req.session` and write to it during SQL callbacks. Controllers named `Controller` wrap `models/*.model.js`.
+
+**Why This Is Suboptimal:** Unit tests would need a fake Express session to test password compare. Violates Dependency Inversion: the model depends on the web layer. Naming (`const Controller = require('../models/login.model.js')`) hides the real dependency.
+
+**Recommended Approach:** Models/repositories return plain data `{ uuid, type, passwordHash }`. `auth.service.js` compares passwords and returns a user. Controller or `session.service.js` assigns `req.session.user`. Rename imports to match layer (`LoginModel`, `UsersAccountsRepo`).
+
+**Why Better:** Auth can be tested with a stub repository. Session policy (lifetime, rotation) lives in one place (Findings 29–30).
+
+---
+
+### Finding 41: Unused or Overlapping Dependencies
+
+**Location:** `package.json`; `app/src/server.js`
+
+**Current Approach:** `cookie-session` is required in `server.js` but Express `express-session` is what is used. `passport` and `passport-local` are listed but unused. `method-override` is documented in the server banner but not wired. `body-parser` is redundant with Express 5 (`express.json()`, `express.urlencoded()`). `nodemon` and `npm-check-updates` sit in `dependencies` instead of `devDependencies`. `test` script does not run tests.
+
+**Why This Is Suboptimal:** Larger install surface, audit noise, confusion about which session library is active.
+
+**Recommended Approach:** Remove unused packages after confirming no dynamic `require`. Move dev tools to `devDependencies`. Replace `body-parser` with built-in Express parsers when touching `server.js`.
+
+**Why Better:** Smaller attack surface (`npm audit`), faster CI installs, honest architecture.
+
+---
+
+### Finding 42: Mixed Promise Anti-Patterns
+
+**Location:** Registration controllers (`emailExist = await Users_accounts.findAll(...).then(...).catch(...)`)
+
+**Current Approach:** `await` plus `.then/.catch` that **returns an error string** instead of throwing. Callers then check `emailExist.length`, which throws if `emailExist` is a string.
+
+**Why This Is Suboptimal:** Errors look like success data. Unreadable. Breaks SRP of error handling. Can crash on DB failure (similar class of bug as Finding 19).
+
+**Recommended Approach:**
+```js
+let accounts;
+try {
+    accounts = await Users_accounts.findAll({ where: { email_or_social_media: email } });
+} catch (err) {
+    throw err; // let global handler (Finding 32) respond 500
+}
+if (accounts.length > 0) return res.status(409).json({ status: 'error', message: 'Email already in use' });
+```
+Use `findOne` instead of `findAll` for uniqueness checks.
+
+**Why Better:** Correct control flow, cheaper query, consistent API errors.
+
+---
+
+### Finding 43: No Shared HTTP Client or Response Mapper on the Server
+
+**Location:** Controllers send `res.send(data)`, `res.send('success')`, `res.send({ message })`, `res.status(500).send({ message })` interchangeably (`small-scale-company.controller.js` returns the string `'success'`).
+
+**Current Approach:** Each controller invents a payload. Frontend must special-case strings vs objects.
+
+**Why This Is Suboptimal:** Reusability and testability suffer; contract tests cannot assert one shape. Monitoring cannot count errors by `status`.
+
+**Recommended Approach:** Tiny helpers (KISS — not a framework):
+```js
+const ok = (res, data) => res.status(200).json({ status: 'success', data });
+const fail = (res, code, message) => res.status(code).json({ status: 'error', message });
+```
+Migrate one API family (login/registration) then the rest.
+
+**Why Better:** Matches General Recommendation 5. Frontend can rely on `status`.
+
+---
+
+### Finding 44: Performance — N+1 Title Lookups and Unindexed Random Sort
+
+**Location:** `app/models/visitors-of-traders.model.js` `fetchTitle` per category; `selection.model.js` `ORDER BY RAND()` (Finding 21); large JSON country/state files loaded in the browser per page
+
+**Current Approach:** Sequential lookups for major/sub/minor category titles; full table random sort for home/selection cards; geo JSON fetched or embedded repeatedly.
+
+**Why This Is Suboptimal:** Extra round-trips per profile view. `ORDER BY RAND()` scales with table size. Repeated geo JSON hurts TTFB on registration/edit pages.
+
+**Recommended Approach:** Join category titles in one query (or Sequelize `include`). Cache lookup tables in memory (they change rarely). For geo, load `countries.json` once as a static asset with long cache headers (HTML stays `no-cache` as today). Replace RAND as in Finding 21.
+
+**Why Better:** Faster pages without changing UX.
+
+---
+
+### Finding 45: Readability — Dead Copies, Typos, Misleading Names
+
+**Location:** `registration_v2.controller copy.js`; `selection.model copy.js`; `selection.model copy 2.js`; route `/rewirte-json`; `getRegionOfOpertaionByIso`; `Controller` imported from a model file; leftover “tutorials” error strings copied from a boilerplate (`Some error occurred while retrieving tutorials.`)
+
+**Current Approach:** Duplicate files and tutorial leftovers remain in the tree.
+
+**Why This Is Suboptimal:** Search and reviews waste time. Wrong file can be edited. Looks unmaintained.
+
+**Recommended Approach:** Delete copies. Fix typos when touching those routes. Replace boilerplate strings. Name layers accurately.
+
+**Why Better:** Maintainability with almost no runtime risk if files are truly unused (grep first).
+
+---
+
+## Suggested Target Layout (Incremental)
+
+Move toward this only as files are touched — do not create empty folders “for later”:
+
+```
+app/
+  src/server.js              # bootstrap only
+  routes/                    # HTTP wiring
+    pages/
+    api/
+  middleware/                # auth, validation, view-data, rate-limit
+  services/                  # use-cases (already started: email, analytics)
+  repositories/              # Sequelize + remaining mysql2
+  db_models/                 # Sequelize models
+  utils/                     # formatting, mysql promisify, crypto (ecdc)
+  config/
+public/
+  assets/js/
+    shared/                  # geo-select, media-upload, api-client
+    pages/                   # thin page entrypoints
+```
+
+Keep EJS views as they are unless a UI task requires a change (`UI_UX_MOBILE_RECOMMENDATIONS.md`).
+
+---
+
 ## Prioritized Improvement Roadmap
 
 ### High Priority (Immediate — Security Risks / Data Loss)
@@ -872,26 +1228,51 @@ db.sequelize.sync().then(() => { console.log('Synced db.'); });
 | 24 | **Extract server.js modules** (Finding 14, 15) | High | Code organization |
 | 25 | **Centralize UUID encryption** (Finding 25) | Low | Consistency |
 | 26 | **Replace ORDER BY RAND** (Finding 21) | Low | Performance |
-| 27 | **Remove dead code** (Finding 24) | Medium | Code hygiene |
+| 27 | **Remove dead code** (Finding 24, 45) | Medium | Code hygiene |
 | 28 | **Remove global variable** (Finding 26) | Low | Code quality |
 | 29 | **Remove session-checker** (Finding 31) | Low | Security hygiene |
-| 30 | **Remove duplicate exports** (Finding 28) | Low | Code quality |
+| 30 | **Remove duplicate empty exports** (Finding 28, 38) | Low | Code quality |
+| 31 | **Shared validation middleware** (Finding 38) | Low | DRY, correct HTTP codes |
+| 32 | **Fix await+.then uniqueness checks** (Finding 42) | Low | Correctness, readability |
+| 33 | **Trim unused npm packages** (Finding 41) | Low | Supply-chain / clarity |
+
+### Refactor Track (Parallel After High-Priority Security — Do Not Block Production Fixes)
+
+| # | Finding | Effort | Impact |
+|---|---------|--------|--------|
+| 34 | **Freeze mysql2; migrate by domain** (Finding 34) | High | One architecture |
+| 35 | **Single RegistrationService + tier config** (Finding 35) | High | DRY, Open/Closed |
+| 36 | **Split fat controllers into functions/services** (Finding 36) | Medium | SRP, testability |
+| 37 | **Promisify leftover mysql2** (Finding 37) | Medium | Modern async |
+| 38 | **Decouple session from models** (Finding 40) | Medium | Testability |
+| 39 | **Shared client modules + Webpack entries** (Finding 39) | High | Frontend DRY, performance |
+| 40 | **Uniform JSON helpers** (Finding 43) | Low | API consistency |
+| 41 | **Join/cache category titles; cache geo JSON** (Finding 44) | Medium | Performance |
+
+**Rule:** Security High Priority items ship first. Refactor track may proceed **file-by-file** on any module you already touch for a security fix (e.g. while fixing login SQL injection, also extract `findAccountByEmail` and stop stuffing `session` into the model).
 
 ---
 
 ## General Recommendations
 
-### 1. Testing Strategy
+### 1. Testing Strategy (testability)
 
-The codebase has zero tests. This is the single largest quality risk going forward.
+The codebase has zero tests (`npm test` exits 1). That is the largest quality risk for refactoring a working production app: without tests, every extraction is a guess.
 
 **Immediate actions:**
-- Install Jest and Supertest
-- Write integration tests for critical paths: login, registration, password reset, search
-- Add tests for the new auth middleware before deploying it
-- Target: at minimum, test every API endpoint in `app/routes/index.js` and `app/routes/sequelize.route.js`
+- Install Jest and Supertest (or Node’s built-in test runner + Supertest).
+- Write integration tests for critical paths: login, registration, password reset, search.
+- Add tests for auth middleware before deploying it.
+- Unit-test **pure** helpers first (field mappers, `buildInsertQuery`, session view-data). Those need no database.
+- Target: at minimum, cover every API endpoint in `app/routes/index.js` and `app/routes/sequelize.route.js`.
 
-**Long-term:** Aim for a test pyramid: many unit tests for services/models, fewer integration tests for routes, minimal E2E tests.
+**How to make code testable (do this while extracting functions):**
+- Do not pass `req`/`res` into services — pass DTOs.
+- Do not write `req.session` inside models — return data, let the controller set session.
+- Inject `Users_accounts` (or a repository) so tests can stub `findOne`.
+- Prefer `throw` + global error middleware over returning error strings.
+
+**Long-term:** Test pyramid — many unit tests for services/mappers, fewer integration tests for routes, a small set of E2E flows (register → login → edit profile).
 
 ### 2. Architectural Migration Strategy
 
@@ -900,6 +1281,29 @@ The codebase has two data access layers (raw mysql2 + Sequelize ORM). The recomm
 2. **Migrate controllers one at a time** to Sequelize, starting with the highest-risk ones (login, search, forgot-password).
 3. **Keep the `app/query/` files** as a reference for the SQL semantics during migration.
 4. **Do not attempt a big-bang rewrite.** Migrate one controller at a time, verify, deploy.
+
+### 2b. Function Decomposition Playbook (KISS then SRP)
+
+When a file is already open for a bugfix:
+
+1. Identify the mixed concerns (HTTP, validation, DB, email, session).
+2. Extract the **pure** part first (object mapping). No I/O — easiest tests.
+3. Extract I/O next (`findAccountByEmail`, `insertUserGraph`).
+4. Leave `res.json` in the controller.
+5. If the same helper appears twice, move it to `app/utils/` or `app/services/`. If it appears once, keep it local.
+
+Avoid creating a deep class hierarchy. Functions plus a thin service object are enough for this Express app.
+
+### 2c. First week of refactor (safe, visible wins)
+
+These do not change product behavior if done carefully:
+
+1. Delete unused copies (`* copy.js`, empty `exports.create` stubs) after `rg` confirms no requires.
+2. Add `handleValidation` middleware and switch login + registration_v2 to HTTP 400.
+3. Extract `buildViewData` from `server.js` (Finding 15).
+4. Point forgot-password and one marketing email at `EmailService`.
+5. Promisify login queries and use `?` placeholders (Findings 2 + 37).
+6. Add Jest + 5 tests: validation 400, login unknown user, email taken, reset missing token, search parameterized.
 
 ### 3. Environment and Secrets Management
 
@@ -948,14 +1352,38 @@ Verify the following indexes exist for frequently queried columns:
 - Review `package.json` for unused dependencies (e.g., `mysql` is listed but `mysql2` is actually used)
 - Run `npm audit` regularly to identify known vulnerabilities
 - Pin dependency versions to avoid unexpected breaking changes
-- Consider adding `helmet`, `express-rate-limit`, and `hpp` as explicit dependencies
+- `helmet` is already a dependency — enable it (Finding 10). Add `express-rate-limit` and consider `hpp`.
+- Move `nodemon` and `npm-check-updates` to `devDependencies`.
+- Remove unused `passport`, `passport-local`, and `cookie-session` after confirming they are not required dynamically (Finding 41).
+- Express 5 already parses JSON/urlencoded; `body-parser` can be dropped when `server.js` is next edited.
 
 ### 9. Git Hygiene
 
-- Remove the `registration_v2.controller copy.js` file
+- Remove `registration_v2.controller copy.js`, `selection.model copy.js`, `selection.model copy 2.js`, and client `* copy.js` files
 - Clean `.env` from git history using `git filter-branch` or BFG Repo-Cleaner
 - Remove commented-out code blocks (the codebase has extensive commented-out code in `selection.model.js`, `visitors-of-traders.model.js`, `server.js`, and many other files)
 - Use meaningful commit messages following conventional commits
+
+### 10. Reusability Checklist
+
+Before adding a new `*-registration*.js` or `upgrade-to-*` file, ask:
+- Can this be a **parameter** on an existing service (account `type`, field map, multer field list)?
+- Can the EJS page reuse an include instead of a new script?
+- Can validation share `express-validator` chains (email, password, UUID, country code)?
+
+If the answer is yes, extend the shared module. Cloning a tier is how the current duplication grew.
+
+### 11. Performance (beyond RAND)
+
+- Replace per-request category title lookups with joins or a process-level Map cache.
+- Cache-Control is globally `no-store` in `server.js` — keep that for HTML/session pages, but serve `/assets/` and `/assets/json-original/` with hashed filenames or long `max-age`.
+- Bundle repeated page JS (Finding 39) so registration pages do not download four copies of country logic.
+- Prefer `findOne` over `findAll` for uniqueness and login.
+- Use transactions already present in registration; apply the same pattern to upgrades and media inserts.
+
+### 12. Related document
+
+Mobile/UI work is out of scope here; see `UI_UX_MOBILE_RECOMMENDATIONS.md`. Do not mix large CSS/nav changes into security or registration-service PRs.
 
 ---
 
@@ -980,6 +1408,12 @@ Verify the following indexes exist for frequently queried columns:
 | `app/shared/ecdc.js` | Only decrypt, no encrypt — incomplete utility |
 | `app/query/users_business_medias.query.js` | 35+ INSERT variants — combinatorial explosion |
 | `app/db_models/index.js` | `sync()` on every startup |
-| `app/services/email.service.js` | Well-structured but underutilized |
-| `app/services/analytics.service.js` | Well-structured, good use of Sequelize |
+| `app/services/email.service.js` | Well-structured but underutilized — **extend this pattern** |
+| `app/services/analytics.service.js` | Well-structured, good use of Sequelize — **reference implementation** |
+| `app/db_controllers/*-registration.controller.js` | Four cloned create-flows; extract `RegistrationService` (Finding 35) |
+| `app/controllers/*.js` (legacy) | Empty export stubs; callback models; HTTP mixed with persistence |
+| `app/src/Logger.js` | Timestamp wrapper only — replace with pino/winston |
+| `webpack.config.js` | Single entry (`home.js`); expand when shared client modules exist |
+| `public/assets/js/*-registration*.js` | Per-tier clones of validation, countries, uploads (Finding 39) |
+| `package.json` | Unused passport/cookie-session; no real test script |
 | `.env` | Default secrets, exposed credentials |
