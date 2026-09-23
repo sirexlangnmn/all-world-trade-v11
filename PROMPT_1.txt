@@ -1,0 +1,691 @@
+
+read the file
+
+1. README.md
+for understanding the entire project overview.
+with Table of Contents:
+Project Overview,
+System Features,
+System Architecture,
+System Design,
+Folder Structure,
+Frontend Architecture,
+Backend Architecture,
+API Documentation,
+Complete Data Flow,
+Database Design,
+Entity Relationship Diagram,
+Authentication & Security,
+Deployment Architecture,
+Environment Configuration,
+Installation & Setup,
+Technology Stack,
+Scalability & Performance,
+Error Handling,
+Testing Strategy,
+Future Improvements
+
+Instructions/information for humans.
+"This is what this project is and how you use it."
+
+2. AGENTS.md
+Instructions for AI agents
+"When you work on this repository, follow these rules."
+
+3. CODE_REVIEW.md
+for Full codebase review of the All World Trade B2B marketplace platform.
+This document is not a rewrite plan. It is a set of incremental recommendations to optimize, refactor, and modernize the code while keeping behavior stable.
+
+
+
+
+Now. After you understand that all 3 .md file.
+Creat a new .md file to list down how to fix the
+"Detailed Findings"
+that you can found in CODE_REVIEW.md.
+Lets start to:
+Finding 1: SQL Injection in Search Function
+
+I want you to create an 001-fix-sql-injection-search.md file that serve as documentation or AI guidance how to do that kind of task.
+Something like this :
+# AI Prompt: Generate a Detailed Implementation Task `.md`
+
+You are a senior software architect, security engineer, and AI coding-agent planner.
+
+I will provide you with a software development task, bug report, security finding, refactoring requirement, or feature request.
+
+Your job is to analyze the task and create a **complete `.md` implementation guide** that another AI coding agent can follow to safely implement the task in an existing codebase.
+
+The generated Markdown file must be **specific, actionable, and implementation-oriented**.
+
+Do not simply restate the task. Analyze what the coding agent needs to investigate, change, test, and verify.
+
+---
+
+# Primary Objective
+
+Create a Markdown document that serves as a:
+
+* Software implementation specification
+* AI coding-agent instruction
+* Investigation checklist
+* File-change plan
+* Before/after implementation guide
+* Testing and validation plan
+* Acceptance criteria
+
+The goal is to make the coding agent understand:
+
+> **What is wrong → Where it is → Why it is wrong → What needs to change → How it should change → How to test it → How to prove it is fixed.**
+
+---
+
+# Important Agent Behavior
+
+The coding agent that will eventually execute this task must NOT blindly modify the codebase.
+
+The generated task document must instruct the coding agent to:
+
+1. Investigate first.
+2. Identify all affected files.
+3. Understand the existing implementation.
+4. Find existing project patterns that should be followed.
+5. Distinguish files that should be modified from files that are reference-only.
+6. Explain the intended changes.
+7. Implement the smallest appropriate change.
+8. Preserve existing functionality unless the task explicitly requires changing it.
+9. Test the implementation.
+10. Review the final diff.
+11. Verify that the original problem has actually been resolved.
+12. Report any remaining risks or uncertainties.
+
+---
+
+# Required Markdown Structure
+
+Generate the task document using the following structure.
+
+# 1. Task Title
+
+Create a clear title describing the task.
+
+Example:
+
+```text
+# Fix SQL Injection in Business Search Function
+```
+
+---
+
+# 2. Objective
+
+Clearly explain:
+
+* What needs to be accomplished.
+* Why the task is necessary.
+* What the expected end result is.
+
+Keep this focused on the actual task.
+
+---
+
+# 3. Problem / Finding
+
+Describe the problem in detail.
+
+If the task involves a security vulnerability, include:
+
+* Vulnerability type
+* Severity if provided
+* Attack surface
+* Affected functionality
+* Why the current implementation is unsafe
+
+If code was provided, include the relevant code as an example.
+
+Do not invent code that was not provided.
+
+---
+
+# 4. Affected Functionality
+
+Identify the feature, module, API, page, service, or workflow affected by the task.
+
+Explain the current flow where possible.
+
+For example:
+
+```text
+Request
+   ↓
+Route
+   ↓
+Controller
+   ↓
+Model
+   ↓
+Database
+```
+
+If the actual architecture is unknown, explicitly tell the coding agent to investigate it rather than assuming.
+
+---
+
+# 5. Investigation Phase
+
+This section is mandatory.
+
+Tell the coding agent what it must investigate BEFORE making changes.
+
+Include:
+
+* Relevant files
+* Functions/classes
+* Routes
+* Controllers
+* Services
+* Models
+* Database queries
+* Related components
+* Existing implementations
+* Tests
+* Configuration
+* Dependencies
+
+The coding agent must search the repository for related implementations rather than assuming the supplied file is the only affected location.
+
+Use instructions such as:
+
+> Search for all usages of the affected function, parameters, route, model, or API before modifying code.
+
+---
+
+# 6. File Impact Analysis
+
+Create a table like this:
+
+| File               | Role                   | Action         | Reason                              |
+| ------------------ | ---------------------- | -------------- | ----------------------------------- |
+| `path/to/file.js`  | Current implementation | MODIFY         | Contains vulnerable logic           |
+| `path/to/other.js` | Existing pattern       | REFERENCE ONLY | Provides established implementation |
+| `path/to/test.js`  | Tests                  | MODIFY/ADD     | Validate the fix                    |
+
+Use these action categories:
+
+* `MODIFY`
+* `ADD`
+* `DELETE` — only when explicitly necessary
+* `REFERENCE ONLY`
+* `INVESTIGATE`
+
+Do not claim a file needs modification unless the evidence supports it.
+
+---
+
+# 7. Current Implementation
+
+Document the existing behavior.
+
+Include:
+
+* Relevant code
+* Existing logic
+* Data flow
+* Current architecture
+* Current problems
+
+Use actual code from the task when available.
+
+Do not invent missing implementation details.
+
+If additional code needs to be inspected, explicitly state:
+
+> The coding agent must inspect this implementation before proceeding.
+
+---
+
+# 8. Current → Target
+
+This section is extremely important.
+
+Show the conceptual transformation.
+
+Use this format:
+
+## Current
+
+```text
+Explain how the system currently works.
+```
+
+## Target
+
+```text
+Explain how the system should work after the change.
+```
+
+Then provide a before/after code example when appropriate.
+
+For example:
+
+```js
+// CURRENT
+query += ` ... '${userInput}'`;
+```
+
+versus:
+
+```js
+// TARGET
+conditions.field = {
+    [Op.eq]: userInput
+};
+```
+
+Important:
+
+Do NOT force an example implementation if the exact implementation depends on the existing codebase.
+
+Instead say:
+
+> Use this as the intended pattern. Inspect the existing architecture and adapt the implementation accordingly.
+
+---
+
+# 9. Detailed Implementation Plan
+
+Break the implementation into explicit steps.
+
+For example:
+
+## Step 1 — Inspect Existing Implementation
+
+Tell the agent exactly what to inspect.
+
+## Step 2 — Identify All Affected Inputs
+
+Tell the agent how to identify user-controlled or affected data.
+
+## Step 3 — Inspect Existing Project Pattern
+
+Identify existing files that demonstrate the preferred architecture.
+
+## Step 4 — Implement the Change
+
+Describe what should be changed.
+
+## Step 5 — Update Related Components
+
+Routes, controllers, services, models, UI, APIs, etc.
+
+## Step 6 — Add or Update Tests
+
+Describe the tests required.
+
+## Step 7 — Review the Implementation
+
+Tell the agent what it must verify before declaring completion.
+
+---
+
+# 10. Architecture and Existing Patterns
+
+The coding agent must prefer existing project patterns over introducing a new architecture.
+
+Tell it to search for:
+
+* Similar implementations
+* Existing helper functions
+* Existing services
+* Existing controllers
+* Existing models
+* Existing utilities
+* Existing validation
+* Existing error handling
+* Existing testing patterns
+
+Explicitly state:
+
+> Do not introduce a new dependency, framework, architecture, or design pattern when an appropriate existing project pattern already exists.
+
+---
+
+# 11. Security Requirements
+
+If the task involves security, create a dedicated section.
+
+Include:
+
+* What must never happen
+* What must be validated
+* What must be parameterized
+* What must not be exposed
+* What attack cases must be tested
+
+For SQL injection tasks, for example:
+
+```text
+- Never concatenate user input into SQL.
+- Never interpolate user input into SQL strings.
+- Prefer the project's existing ORM parameterization.
+- If raw SQL is unavoidable, use parameterized placeholders.
+- Test malicious input.
+```
+
+Do not limit security testing to the exact example provided.
+
+Tell the agent to inspect for similar vulnerabilities in the affected code path.
+
+---
+
+# 12. Backward Compatibility
+
+Tell the coding agent to preserve existing behavior unless the task explicitly requires a behavior change.
+
+Verify:
+
+* Existing API response format
+* Existing parameters
+* Existing validation
+* Existing filtering
+* Existing pagination
+* Existing sorting
+* Existing permissions
+* Existing error handling
+* Existing UI behavior
+
+The fix should not unnecessarily break unrelated functionality.
+
+---
+
+# 13. Testing Strategy
+
+Create a detailed testing plan.
+
+Include, where applicable:
+
+### Normal Case
+
+Test the expected valid input.
+
+### Empty / Missing Input
+
+Test missing or optional values.
+
+### Boundary Cases
+
+Test:
+
+* Empty strings
+* Very long values
+* Special characters
+* Null values
+* Unexpected types
+
+### Invalid Input
+
+Test malformed or unsupported values.
+
+### Security Cases
+
+If applicable, test:
+
+* SQL injection
+* XSS
+* CSRF
+* Path traversal
+* Authentication bypass
+* Authorization bypass
+* File upload abuse
+* Other relevant attack vectors
+
+### Regression Testing
+
+Verify that existing functionality still works.
+
+---
+
+# 14. Verification / Evidence
+
+The coding agent must provide evidence that the task is actually fixed.
+
+Do not allow the agent to simply say:
+
+> "Fixed."
+
+Require it to verify:
+
+* Relevant code paths
+* Relevant files
+* Tests
+* Security conditions
+* Runtime behavior where possible
+* Final diff
+
+For security fixes, explicitly require a search for similar vulnerable patterns in the affected functionality.
+
+---
+
+# 15. Do NOT Do
+
+Create explicit boundaries.
+
+Examples:
+
+```text
+- Do not modify unrelated functionality.
+- Do not rewrite the entire application.
+- Do not introduce unnecessary dependencies.
+- Do not change the database schema unless required.
+- Do not change API contracts unnecessarily.
+- Do not modify environment secrets.
+- Do not modify `.env`.
+- Do not disable security checks.
+- Do not remove tests simply because they fail.
+- Do not hide or suppress errors.
+```
+
+Adapt this list to the task.
+
+---
+
+# 16. Acceptance Criteria
+
+Create a checklist.
+
+Example:
+
+```markdown
+## Acceptance Criteria
+
+- [ ] Original vulnerability/problem is resolved.
+- [ ] All affected code paths were investigated.
+- [ ] Existing project architecture is followed.
+- [ ] Existing functionality is preserved.
+- [ ] Relevant tests pass.
+- [ ] Security tests pass.
+- [ ] No unrelated files were modified.
+- [ ] Final diff was reviewed.
+- [ ] Remaining risks are documented.
+```
+
+The criteria must be specific to the task.
+
+---
+
+# 17. Expected Final Report
+
+Tell the coding agent to finish with this structure:
+
+```markdown
+# Implementation Report
+
+## Summary
+
+Brief explanation of what was implemented.
+
+## Files Modified
+
+| File | Changes |
+|---|---|
+| `...` | ... |
+
+## Files Added
+
+| File | Purpose |
+|---|---|
+| `...` | ... |
+
+## Files Deleted
+
+| File | Reason |
+|---|---|
+| `...` | ... |
+
+## Files Referenced Only
+
+| File | Why |
+|---|---|
+| `...` | ... |
+
+## Implementation Details
+
+Explain the important changes.
+
+## Testing
+
+| Test | Result |
+|---|---|
+| Normal case | PASS/FAIL |
+| Edge case | PASS/FAIL |
+| Security case | PASS/FAIL |
+| Regression test | PASS/FAIL |
+
+## Verification
+
+Explain how the original issue was verified as fixed.
+
+## Remaining Risks
+
+List anything that could not be verified.
+
+## Final Status
+
+PASS / NEEDS REVIEW
+```
+
+---
+
+# 18. Important Rules for Generating the Task Document
+
+Follow these rules:
+
+### Rule 1 — Do not hallucinate
+
+Do not invent:
+
+* File paths
+* Functions
+* Classes
+* APIs
+* Database tables
+* Dependencies
+* Tests
+* Architecture
+
+If information is missing, mark it as:
+
+```text
+TO INVESTIGATE
+```
+
+---
+
+### Rule 2 — Separate facts from recommendations
+
+Clearly distinguish:
+
+```text
+CURRENT IMPLEMENTATION
+```
+
+from:
+
+```text
+RECOMMENDED IMPLEMENTATION
+```
+
+Do not present an assumption as an existing fact.
+
+---
+
+### Rule 3 — Prefer project consistency
+
+If an existing project pattern exists, instruct the coding agent to follow it.
+
+---
+
+### Rule 4 — Preserve behavior
+
+Security fixes and refactoring should not unnecessarily change business behavior.
+
+---
+
+### Rule 5 — Think about the entire code path
+
+Do not focus only on the line where the vulnerability or bug was discovered.
+
+Investigate:
+
+```text
+Input
+ ↓
+Route
+ ↓
+Controller
+ ↓
+Service
+ ↓
+Model
+ ↓
+Database
+ ↓
+Response
+```
+
+when applicable.
+
+---
+
+### Rule 6 — Make the task executable
+
+Another AI coding agent should be able to read the generated `.md` file and understand:
+
+```text
+WHAT to change
+WHERE to change it
+WHY to change it
+HOW it should be changed
+WHAT NOT to change
+HOW to test it
+HOW to verify completion
+```
+
+---
+
+# 19. Output Requirements
+
+Your response must contain ONLY the completed Markdown task document.
+
+Do not provide a general explanation outside the Markdown document.
+
+The result should be ready to save as:
+
+```text
+docs/tasks/<descriptive-task-name>.md
+```
+
+Use clear Markdown headings, tables, code blocks, checklists, and step-by-step instructions.
+
+Make the document detailed enough for an AI coding agent to execute, but do not include unnecessary instructions that are unrelated to the task.
+
