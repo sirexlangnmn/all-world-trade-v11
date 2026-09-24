@@ -39,7 +39,7 @@ This document is not a rewrite plan. It is a set of incremental recommendations 
 
 
 
-Now. After you understand that all 3 .md file.
+Now. After you understand all 3 .md file.
 Creat a new .md file to list down how to fix the
 "Detailed Findings"
 that you can found in CODE_REVIEW.md.

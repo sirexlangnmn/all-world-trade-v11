@@ -1,0 +1,20 @@
+
+
+review my
+search-businesses.controller.js
+use OR in query.
+If I search the company name, show all like and similar to company name.
+If I search the minor_sub_categories, show it too together with the company name.
+If I search the selectionCity, show it too together with the companies and minor sub categories
+
+
+it pass now on my test.
+Now since we have sequelize version of /api/post/selection-search-parameter.
+Remove all the code related to old /api/post/selection-search-parameter
+
+
+review all code associated to search-businesses.controller.js
+Please optimize and refactor the following code according to best practices, updated, modern approach.
+Break down the code into smaller, more focused functions, each handling a specific task.
+Ensure the code is aligned with the 'Don't Repeat Yourself' (DRY), SOLID, and 'Keep It Simple, Stupid' (KISS) principles.
+The goal is to enhance security, readability, performance, reusability, testability, and maintainability.
