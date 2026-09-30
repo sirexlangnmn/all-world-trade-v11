@@ -17,7 +17,7 @@ require('dotenv').config();
 
 const db = require('../app/db_models');
 const ecdc = require('../app/shared/ecdc.js');
-const { AuthService, toScalar, verifyPassword } = require('../app/services/auth.service.js');
+const { AuthService, toScalar, verifyPassword, ABSENT_ACCOUNT_HASH } = require('../app/services/auth.service.js');
 const controller = require('../app/db_controllers/login.controller.js');
 const { mapLoginCredentials, buildSessionUser } = controller;
 const { getPhDateTimeString } = require('../app/utils/date.utils.js');
@@ -61,19 +61,35 @@ function stubDb(overrides = {}) {
             calls.push({ name, args, options: args[0] });
             return Promise.resolve(overrides[name] !== undefined ? overrides[name] : null);
         };
+    const transaction = {
+        committed: false,
+        rolledBack: false,
+        commit: () => {
+            transaction.committed = true;
+            return Promise.resolve();
+        },
+        rollback: () => {
+            transaction.rolledBack = true;
+            return Promise.resolve();
+        },
+    };
     return {
         calls,
+        transaction,
         Sequelize: db.Sequelize,
         sequelize: {
+            transaction: () => {
+                calls.push({ name: 'transaction' });
+                return Promise.resolve(transaction);
+            },
             query: (sql, options) => {
                 calls.push({ name: 'query', sql, options });
-                return Promise.resolve(null);
+                return overrides.query ? overrides.query(sql, options) : Promise.resolve(null);
             },
         },
         users: { name: 'users' },
         users_address: { name: 'users_addresses' },
         users_accounts: { findOne: record('findOne'), update: record('update') },
-        user_sessions: { create: record('create') },
     };
 }
 
@@ -176,12 +192,124 @@ test('recordLogin binds both audit values and never routes login_at through a DA
     // re-interpret at the server's +08:00 offset).
     assert.match(loginAt, /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/);
     assert.ok(!(loginAt instanceof Date), 'a string, never a Date');
-    assert.strictEqual(loginAt, getPhDateTimeString(new Date()));
+    // Compared with a tolerance: a fresh getPhDateTimeString() would race the
+    // clock tick and flake at a second boundary.
+    const drift = Math.abs(
+        Date.parse(loginAt.replace(' ', 'T') + 'Z') -
+            Date.parse(getPhDateTimeString(new Date()).replace(' ', 'T') + 'Z'),
+    );
+    assert.ok(drift < 5000, `login_at is the current Manila wall clock (drift ${drift}ms)`);
 
     const statusUpdate = stub.calls.find((c) => c.name === 'update');
     assert.ok(statusUpdate, 'login_status update was issued');
     assert.deepStrictEqual(statusUpdate.args[0], { login_status: 1 }, 'only login_status is written');
-    assert.deepStrictEqual(statusUpdate.args[1], { where: { uuid: FIXTURE.uuid } });
+    assert.deepStrictEqual(statusUpdate.args[1].where, { uuid: FIXTURE.uuid });
+
+    // Both writes must be inside one transaction, and it must be committed --
+    // otherwise a session row could survive while login_status stayed stale.
+    assert.ok(
+        stub.calls.some((c) => c.name === 'transaction'),
+        'a transaction was opened',
+    );
+    assert.strictEqual(insert.options.transaction, stub.transaction, 'the insert joins the transaction');
+    assert.strictEqual(statusUpdate.args[1].transaction, stub.transaction, 'the update joins the transaction');
+    assert.strictEqual(stub.transaction.committed, true);
+    assert.strictEqual(stub.transaction.rolledBack, false);
+});
+
+test('recordLogin rolls back rather than leaving a half-written login', async () => {
+    const stub = stubDb();
+    stub.sequelize.query = (sql, options) => {
+        stub.calls.push({ name: 'query', sql, options });
+        return Promise.reject(new Error('ER_DUP_ENTRY'));
+    };
+
+    await assert.rejects(() => new AuthService(stub).recordLogin(FIXTURE.uuid), /ER_DUP_ENTRY/);
+    assert.strictEqual(stub.transaction.rolledBack, true, 'the failed insert is rolled back');
+    assert.strictEqual(stub.transaction.committed, false, 'nothing is committed');
+});
+
+test('a failed audit write is swallowed: the user stays logged in', async () => {
+    const stub = stubDb({ findOne: { password: 'hash' } });
+    const svc = new AuthService(stub);
+    // Authenticate for real, but make the audit write fail.
+    svc.recordLogin = async () => {
+        throw new Error('ER_LOCK_DEADLOCK');
+    };
+    svc.findPasswordHashByEmail = async () => bcrypt.hashSync('pw', 4);
+    svc.findAccountProfileByEmail = async () => ({ ...PROFILE_ROW, user: PROFILE_ROW, address: PROFILE_ROW });
+
+    const realError = console.error;
+    console.error = () => {};
+    let result;
+    try {
+        result = await svc.authenticate({ email: FIXTURE.email, password: 'pw' });
+    } finally {
+        console.error = realError;
+    }
+
+    assert.strictEqual(result.ok, true, 'a deadlocked audit must not log the user out');
+    assert.strictEqual(result.account.uuid, PROFILE_ROW.uuid);
+});
+
+// --- Security: the unknown-account path is not timing-distinguishable ------
+
+test('an unknown account still runs a bcrypt comparison (no enumeration oracle)', async () => {
+    // Without this, an unknown email returned in ~0.003 ms and a wrong password
+    // in ~55 ms, which was a ~19000x oracle for enumerating accounts.
+    const stub = stubDb({ findOne: null });
+    const svc = new AuthService(stub);
+    const comparisons = [];
+    const realCompare = bcrypt.compare;
+    bcrypt.compare = async (plain, hash) => {
+        comparisons.push(hash);
+        return realCompare(plain, hash);
+    };
+
+    let result;
+    try {
+        result = await svc.authenticate({ email: 'nobody@example.com', password: 'whatever' });
+    } finally {
+        bcrypt.compare = realCompare;
+    }
+
+    assert.strictEqual(result.ok, false);
+    assert.strictEqual(comparisons.length, 1, 'exactly one comparison was performed');
+    assert.strictEqual(comparisons[0], ABSENT_ACCOUNT_HASH, 'compared against the decoy hash, not skipped');
+    assert.ok(!comparisons[0].includes('nobody@example.com'), 'the submitted identifier is not embedded in the decoy');
+});
+
+test('the decoy hash is a real cost-10 bcrypt hash that nothing can match', async () => {
+    assert.ok(/^\$2[aby]\$10\$/.test(ABSENT_ACCOUNT_HASH), 'same cost as the stored hashes');
+    assert.strictEqual(await bcrypt.compare(FIXTURE.password, ABSENT_ACCOUNT_HASH), false);
+    assert.strictEqual(await bcrypt.compare('', ABSENT_ACCOUNT_HASH), false);
+});
+
+test('unknown-account and wrong-password paths cost comparable time', async () => {
+    const realHash = await bcrypt.hash(FIXTURE.password, 10);
+    const measure = async (stub) => {
+        const svc = new AuthService(stub);
+        const start = process.hrtime.bigint();
+        await svc.authenticate({ email: FIXTURE.email, password: 'wrong-password' });
+        return Number(process.hrtime.bigint() - start) / 1e6;
+    };
+
+    await measure(stubDb({ findOne: { password: realHash } })); // warm up
+
+    const samples = 3;
+    const unknown = [];
+    const wrong = [];
+    for (let i = 0; i < samples; i++) {
+        unknown.push(await measure(stubDb({ findOne: null })));
+        wrong.push(await measure(stubDb({ findOne: { password: realHash } })));
+    }
+    const median = (xs) => xs.slice().sort((a, b) => a - b)[Math.floor(xs.length / 2)];
+
+    const ratio = median(wrong) / median(unknown);
+    assert.ok(
+        ratio > 0.5 && ratio < 2,
+        `paths should be within 2x of each other (measured ${median(unknown).toFixed(1)}ms vs ${median(wrong).toFixed(1)}ms, ${ratio.toFixed(2)}x)`,
+    );
 });
 
 // --- Controller: the frozen HTTP contract ---------------------------------
@@ -496,201 +624,238 @@ test('no password, email, hash or session object is written to the console', asy
     assert.ok(!logged.includes(FIXTURE.uuid), 'plaintext uuid never logged');
 });
 
-// --- Integration: live DB (skips gracefully without connection) ---------
+// --- Integration: live DB ---------------------------------------------------
+//
+// Self-contained: each case creates the account it needs and removes it again,
+// so a run never depends on leftover state and never leaves any behind. A case
+// is reported as *skipped* (t.skip), not as a pass, when the database is
+// genuinely unreachable.
 
-async function ensureFixture(t) {
-    const exists = await db.users_accounts.findOne({
-        where: { email_or_social_media: FIXTURE.email },
-        attributes: ['uuid'],
-        raw: true,
-    });
-    if (exists) return true;
-    t.diagnostic('Fixture account absent, skipping integration case: ' + FIXTURE.email);
-    return false;
+const SECOND_FIXTURE = Object.freeze({
+    uuid: 'aaaa1111-bbbb-cccc-dddd-eeee3333ffff',
+    email: 'awt.task002.noaddress@example.com',
+});
+
+const TABLES_BY_UUID = Object.freeze([
+    'user_sessions',
+    'users_businesses',
+    'users_addresses',
+    'users',
+    'users_accounts',
+]);
+
+async function deleteByUuid(table, uuid) {
+    const column = table === 'user_sessions' ? 'user_id' : 'uuid';
+    await db.sequelize.query(`DELETE FROM ${table} WHERE ${column} = :uuid`, { replacements: { uuid } });
 }
 
+// `table` is a module constant, never user input, so this interpolation is not
+// a query-building sink; the uuid is still bound.
+async function purgeFixtures() {
+    for (const table of TABLES_BY_UUID) {
+        await deleteByUuid(table, FIXTURE.uuid);
+        await deleteByUuid(table, SECOND_FIXTURE.uuid);
+    }
+}
+
+async function createAccount({ uuid, email, type = 1, withAddress = true }) {
+    await db.users_accounts.create({
+        email_or_social_media: email,
+        password: bcrypt.hashSync(FIXTURE.password, 4), // low cost: these are throwaway rows
+        type,
+        status: 1,
+        login_status: 0,
+        uuid,
+    });
+    await db.users.create({ first_name: 'Task', last_name: 'Fixture', status: 1, type, uuid });
+    if (withAddress) {
+        await db.users_address.create({ country: 'PH', state_or_province: 'Metro Manila', uuid });
+    }
+}
+
+// Runs `body` against a freshly created account, then always cleans up.
+// Returns without running `body` (and marks the test skipped) if the database
+// cannot be reached.
+async function withAccount(t, spec, body) {
+    let reachable = true;
+    try {
+        await db.sequelize.query('SELECT 1', { type: db.Sequelize.QueryTypes.SELECT });
+    } catch {
+        reachable = false;
+    }
+    if (!reachable) {
+        t.diagnostic('DB unavailable, skipping integration case');
+        t.skip('database unreachable');
+        return;
+    }
+
+    await purgeFixtures();
+    try {
+        await createAccount(spec);
+        await body();
+    } finally {
+        await purgeFixtures();
+    }
+}
+
+const FIXTURE_SPEC = Object.freeze({ uuid: FIXTURE.uuid, email: FIXTURE.email });
+
 test('integration: correct credentials authenticate and record the login audit', async (t) => {
-    const ready = await ensureFixture(t).catch(() => {
-        t.diagnostic('DB unavailable, skipping: cannot reach the database');
-        return false;
+    await withAccount(t, FIXTURE_SPEC, async () => {
+        const result = await service.authenticate({ email: FIXTURE.email, password: FIXTURE.password });
+
+        assert.strictEqual(result.ok, true);
+        assert.strictEqual(result.account.email_or_social_media, FIXTURE.email);
+        assert.strictEqual(result.account.uuid, FIXTURE.uuid, 'the profile carries the account uuid');
+
+        // What logout and the nightly report read back.
+        const rows = await db.sequelize.query(
+            'SELECT user_id, login_at, logout_at FROM user_sessions WHERE user_id = :u',
+            {
+                type: db.Sequelize.QueryTypes.SELECT,
+                replacements: { u: FIXTURE.uuid },
+            },
+        );
+        assert.strictEqual(rows.length, 1, 'exactly one session row');
+        assert.strictEqual(rows[0].user_id, FIXTURE.uuid, 'user_id is the PLAINTEXT uuid');
+        assert.strictEqual(rows[0].logout_at, null, 'logout_at starts null');
+
+        // login_at is read back as a Date pinned to +00:00, so its UTC wall
+        // clock must equal the current Asia/Manila wall clock.
+        const storedManila = rows[0].login_at.toISOString().slice(0, 19).replace('T', ' ');
+        const manilaNow = getPhDateTimeString(new Date());
+        const drift = Math.abs(Date.parse(storedManila + 'Z') - Date.parse(manilaNow + 'Z'));
+        assert.ok(
+            drift < 120000,
+            `login_at "${storedManila}" is the current Manila wall clock ("${manilaNow}", drift ${drift}ms)`,
+        );
+
+        const status = await db.users_accounts.findOne({
+            where: { uuid: FIXTURE.uuid },
+            attributes: ['login_status'],
+            raw: true,
+        });
+        assert.strictEqual(status.login_status, 1, 'login_status set to 1');
     });
-    if (!ready) return;
+});
 
-    await db.sequelize.query('DELETE FROM user_sessions WHERE user_id = :u', {
-        replacements: { u: FIXTURE.uuid },
+test('integration: the two audit writes are committed together', async (t) => {
+    await withAccount(t, FIXTURE_SPEC, async () => {
+        const result = await service.authenticate({ email: FIXTURE.email, password: FIXTURE.password });
+        assert.strictEqual(result.ok, true);
+
+        // A committed transaction means the session row and the login_status
+        // flip are both durable; a rolled-back one would leave neither.
+        const [account, sessions] = await Promise.all([
+            db.users_accounts.findOne({ where: { uuid: FIXTURE.uuid }, attributes: ['login_status'], raw: true }),
+            db.sequelize.query('SELECT user_id FROM user_sessions WHERE user_id = :u', {
+                type: db.Sequelize.QueryTypes.SELECT,
+                replacements: { u: FIXTURE.uuid },
+            }),
+        ]);
+        assert.strictEqual(account.login_status, 1, 'the status flip survived the commit');
+        assert.strictEqual(sessions.length, 1, 'the session row survived the commit');
     });
-    await db.users_accounts.update({ login_status: 0 }, { where: { uuid: FIXTURE.uuid } });
-
-    const result = await service.authenticate({ email: FIXTURE.email, password: FIXTURE.password });
-    assert.strictEqual(result.ok, true);
-    assert.strictEqual(result.account.email_or_social_media, FIXTURE.email);
-    assert.ok(result.account.uuid, 'account uuid present');
-
-    // The audit row login writes is what logout and the nightly report read.
-    const rows = await db.sequelize.query('SELECT user_id, login_at, logout_at FROM user_sessions WHERE user_id = :u', {
-        type: db.Sequelize.QueryTypes.SELECT,
-        replacements: { u: FIXTURE.uuid },
-    });
-    assert.strictEqual(rows.length, 1, 'exactly one session row');
-    assert.strictEqual(rows[0].user_id, FIXTURE.uuid, 'user_id is the PLAINTEXT uuid');
-
-    // login_at must be the Manila-local 'YYYY-MM-DD HH:mm:ss' wall clock, which
-    // is what analytics.service.js compares against. Sequelize reads the DATETIME
-    // back as a Date pinned to +00:00, so its UTC wall clock must equal the
-    // current Asia/Manila wall clock.
-    const storedManila = rows[0].login_at.toISOString().slice(0, 19).replace('T', ' ');
-    const manilaNow = getPhDateTimeString(new Date());
-    assert.ok(
-        Math.abs(Date.parse(storedManila + 'Z') - Date.parse(manilaNow + 'Z')) < 120000,
-        `login_at "${storedManila}" is the current Manila wall clock ("${manilaNow}")`,
-    );
-
-    const status = await db.users_accounts.findOne({
-        where: { uuid: FIXTURE.uuid },
-        attributes: ['login_status'],
-        raw: true,
-    });
-    assert.strictEqual(status.login_status, 1, 'login_status set to 1');
 });
 
 test('integration: wrong password and unknown email are indistinguishable', async (t) => {
-    const ready = await ensureFixture(t).catch(() => {
-        t.diagnostic('DB unavailable, skipping');
-        return false;
-    });
-    if (!ready) return;
+    await withAccount(t, FIXTURE_SPEC, async () => {
+        const wrongPassword = await service.authenticate({
+            email: FIXTURE.email,
+            password: 'definitely-not-it',
+        });
+        const unknownEmail = await service.authenticate({
+            email: 'no.such.account@example.com',
+            password: 'definitely-not-it',
+        });
 
-    await db.sequelize.query('DELETE FROM user_sessions WHERE user_id = :u', {
-        replacements: { u: FIXTURE.uuid },
-    });
+        assert.deepStrictEqual(wrongPassword, { ok: false });
+        assert.deepStrictEqual(unknownEmail, { ok: false });
+        assert.deepStrictEqual(wrongPassword, unknownEmail, 'byte-identical failure shape');
 
-    const wrongPassword = await service.authenticate({
-        email: FIXTURE.email,
-        password: 'definitely-not-it',
-    });
-    const unknownEmail = await service.authenticate({
-        email: 'no.such.account@example.com',
-        password: 'definitely-not-it',
-    });
+        const rows = await db.sequelize.query('SELECT user_id FROM user_sessions WHERE user_id = :u', {
+            type: db.Sequelize.QueryTypes.SELECT,
+            replacements: { u: FIXTURE.uuid },
+        });
+        assert.strictEqual(rows.length, 0, 'a failed login writes no session row');
 
-    assert.deepStrictEqual(wrongPassword, { ok: false });
-    assert.deepStrictEqual(unknownEmail, { ok: false });
-    assert.deepStrictEqual(wrongPassword, unknownEmail, 'byte-identical failure shape');
-
-    const rows = await db.sequelize.query('SELECT user_id FROM user_sessions WHERE user_id = :u', {
-        type: db.Sequelize.QueryTypes.SELECT,
-        replacements: { u: FIXTURE.uuid },
+        const status = await db.users_accounts.findOne({
+            where: { uuid: FIXTURE.uuid },
+            attributes: ['login_status'],
+            raw: true,
+        });
+        assert.strictEqual(status.login_status, 0, 'a failed login does not flip login_status');
     });
-    assert.strictEqual(rows.length, 0, 'a failed login writes no session row');
 });
 
 test('integration: case variants and surrounding whitespace behave as before (no normalization added)', async (t) => {
-    const ready = await ensureFixture(t).catch(() => {
-        t.diagnostic('DB unavailable, skipping');
-        return false;
-    });
-    if (!ready) return;
+    await withAccount(t, FIXTURE_SPEC, async () => {
+        // MySQL's default collation is case-insensitive, so the upper-cased
+        // identifier still resolves -- the service must not have lowercased it.
+        const upper = await service.authenticate({
+            email: FIXTURE.email.toUpperCase(),
+            password: FIXTURE.password,
+        });
+        assert.strictEqual(upper.ok, true, 'case-insensitive match preserved');
 
-    // MySQL's default collation is case-insensitive, so the upper-cased
-    // identifier still resolves -- the service must not have lowercased it.
-    const upper = await service.authenticate({
-        email: FIXTURE.email.toUpperCase(),
-        password: FIXTURE.password,
+        // Surrounding spaces are NOT trimmed, so this must not match.
+        const padded = await service.authenticate({
+            email: `  ${FIXTURE.email}  `,
+            password: FIXTURE.password,
+        });
+        assert.strictEqual(padded.ok, false, 'whitespace is not trimmed (unchanged behaviour)');
     });
-    assert.strictEqual(upper.ok, true, 'case-insensitive match preserved');
-
-    // Surrounding spaces are NOT trimmed, so this must not match.
-    const padded = await service.authenticate({
-        email: `  ${FIXTURE.email}  `,
-        password: FIXTURE.password,
-    });
-    assert.strictEqual(padded.ok, false, 'whitespace is not trimmed (unchanged behaviour)');
 });
 
 test('integration: an account with no address row is rejected, not a crash', async (t) => {
-    let created = false;
-    try {
-        const orphanUuid = 'aaaa1111-bbbb-cccc-dddd-eeee3333ffff';
-        const email = 'awt.task002.noaddress@example.com';
-        await db.sequelize.query('DELETE FROM users_accountes WHERE uuid = :u', { replacements: { u: orphanUuid } });
-        await db.sequelize.query('DELETE FROM users_accounts WHERE uuid = :u', { replacements: { u: orphanUuid } });
-        await db.sequelize.query('DELETE FROM users WHERE uuid = :u', { replacements: { u: orphanUuid } });
-
-        await db.users_accounts.create({
-            email_or_social_media: email,
-            password: bcrypt.hashSync(FIXTURE.password, 12),
-            type: 1,
-            status: 1,
-            login_status: 0,
-            uuid: orphanUuid,
-        });
-        await db.users.create({
-            first_name: 'No',
-            last_name: 'Address',
-            gender: 0,
-            status: 1,
-            type: 1,
-            uuid: orphanUuid,
-        });
-        created = true;
-
-        // The legacy code dereferenced res[0].uuid before checking res.length,
-        // so this case threw a TypeError inside a mysql2 callback.
-        const result = await service.authenticate({ email, password: FIXTURE.password });
+    // The legacy code dereferenced res[0].uuid before checking res.length, so
+    // this case threw a TypeError inside a mysql2 callback.
+    await withAccount(t, { ...SECOND_FIXTURE, withAddress: false }, async () => {
+        const result = await service.authenticate({ email: SECOND_FIXTURE.email, password: FIXTURE.password });
         assert.deepStrictEqual(result, { ok: false }, 'clean uniform failure instead of a crash');
-    } catch (e) {
-        if (!created) t.diagnostic('DB unavailable, skipping: ' + e.message);
-        else throw e;
-    } finally {
-        if (created) {
-            await db.sequelize.query('DELETE FROM users_accounts WHERE uuid = :u', {
-                replacements: { u: 'aaaa1111-bbbb-cccc-dddd-eeee3333ffff' },
-            });
-            await db.sequelize.query('DELETE FROM users WHERE uuid = :u', {
-                replacements: { u: 'aaaa1111-bbbb-cccc-dddd-eeee3333ffff' },
-            });
-        }
-    }
+    });
 });
 
-test('integration: every injection payload is data, the table survives, and the response is a contract message', async (t) => {
-    const payloads = [
-        'a" OR "1"="1',
-        'x" UNION SELECT password, uuid, type, 1, 1, 1, 1 FROM users_accounts -- ',
-        '" OR 1=1 #',
-        'x"; DROP TABLE users_accounts; -- ',
-        '`x` OR 1=1/*',
-        '${7*7}',
-        '%',
-        '_',
-        '\\',
-        "x' OR '1'='1",
-        '‮evil@example.com',
-        'a@b.com ',
-        'a'.repeat(10000),
-    ];
-    const contractMessages = new Set([
-        'found',
-        'not found',
-        'Please check your email address and password',
-        'Please enter Username and Password!',
-    ]);
-
-    for (const payload of payloads) {
-        const result = await service.authenticate({ email: payload, password: 'anything' });
-        assert.deepStrictEqual(
-            result,
-            { ok: false },
-            `payload treated as data: ${JSON.stringify(payload.slice(0, 40))}`,
-        );
-
-        // The contract message the controller derives from { ok: false }.
-        assert.ok(contractMessages.has('Please check your email address and password'));
-    }
-
-    // The table is still there after a DROP TABLE attempt.
-    const rows = await db.sequelize.query('SELECT COUNT(*) AS c FROM users_accounts', {
-        type: db.Sequelize.QueryTypes.SELECT,
+test('integration: an account with no user row is rejected, not a crash', async (t) => {
+    await withAccount(t, { ...SECOND_FIXTURE, withAddress: true }, async () => {
+        await db.users.destroy({ where: { uuid: SECOND_FIXTURE.uuid } });
+        const result = await service.authenticate({ email: SECOND_FIXTURE.email, password: FIXTURE.password });
+        assert.deepStrictEqual(result, { ok: false }, 'clean uniform failure instead of a crash');
     });
-    assert.ok(Number(rows[0].c) > 0, 'users_accounts table still exists and is queryable');
+});
+
+test('integration: every injection payload is data, the table survives, and the failure is uniform', async (t) => {
+    await withAccount(t, FIXTURE_SPEC, async () => {
+        const payloads = [
+            'a" OR "1"="1',
+            'x" UNION SELECT password, uuid, type, 1, 1, 1, 1 FROM users_accounts -- ',
+            '" OR 1=1 #',
+            'x"; DROP TABLE users_accounts; -- ',
+            '`x` OR 1=1/*',
+            '${7*7}',
+            '%',
+            '_',
+            '\\',
+            "x' OR '1'='1",
+            '‮evil@example.com', // RTL override
+            'a@b.com\0',
+            'a'.repeat(10000),
+            ' ',
+            '',
+        ];
+
+        for (const payload of payloads) {
+            const result = await service.authenticate({ email: payload, password: 'anything' });
+            assert.deepStrictEqual(
+                result,
+                { ok: false },
+                `payload treated as data: ${JSON.stringify(payload.slice(0, 40))}`,
+            );
+        }
+
+        const rows = await db.sequelize.query('SELECT COUNT(*) AS c FROM users_accounts', {
+            type: db.Sequelize.QueryTypes.SELECT,
+        });
+        assert.ok(Number(rows[0].c) > 0, 'users_accounts table still exists and is queryable');
+    });
 });

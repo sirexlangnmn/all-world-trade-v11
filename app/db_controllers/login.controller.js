@@ -3,23 +3,36 @@ const { validationResult } = require('express-validator');
 const ecdc = require('../shared/ecdc');
 const { AuthService } = require('../services/auth.service');
 
-// Default service backed by the app's Sequelize models. The class accepts a db
-// reference for dependency injection in tests.
-const service = new AuthService();
-
 // POST /api/post/login-process (public/assets/js/login.js serializes the form).
-// Whitelist of the two fields the form actually sends; every other key in the
-// body is dropped so it can never reach the query. The values are forwarded
-// untouched -- the value the validation chain left in req.body is what the
-// lookup key already was, and no trim/lowercase/normalizeEmail is introduced.
-function mapLoginCredentials(body = {}) {
+//
+// The response contract is frozen by docs/tasks/002-fix-sql-injection-login.md
+// and must not drift: `login.js` has no `error:` handler, so the two failure
+// paths have to stay on HTTP 200 or the SweetAlert never fires. Keeping the
+// messages here makes that contract a single named thing rather than string
+// literals scattered through the handler.
+const MESSAGES = Object.freeze({
+    // HTTP 200 -- validation middleware rejected the input.
+    invalid: 'Please enter Username and Password!',
+    // HTTP 200 -- every authentication failure, indistinguishable by design.
+    rejected: 'Please check your email address and password',
+    // HTTP 200 -- client redirects to /selection.
+    found: 'found',
+    // HTTP 500 -- deliberately generic; never leak error.message.
+    serverError: 'Login failed.',
+});
+
+// Whitelist of the two fields the form actually sends. Every other key in the
+// body is dropped so it can never reach the query. Values are forwarded
+// untouched -- the lookup key depends on the exact bytes submitted, so no
+// trim / toLowerCase / normalizeEmail is introduced.
+function mapLoginCredentials(body) {
+    const source = body && typeof body === 'object' ? body : {};
+
     return {
-        email: body.loginEmailAddress,
-        password: body.loginPassword,
+        email: source.loginEmailAddress,
+        password: source.loginPassword,
     };
 }
-
-exports.mapLoginCredentials = mapLoginCredentials;
 
 // The seven session keys the rest of the app reads off req.session.user
 // (app/src/server.js page routes, GET /logout, selection.controller, ...).
@@ -37,44 +50,39 @@ function buildSessionUser(account) {
     };
 }
 
-exports.buildSessionUser = buildSessionUser;
-
 // Builds the route handler around a service, so the response branches can be
 // exercised against a stub in tests without a database.
 function createLoginHandler(authService) {
     return async function loginHandler(req, res) {
         const errors = validationResult(req);
+        if (!errors.isEmpty()) return res.status(200).send({ message: errors.array() });
 
-        if (!errors.isEmpty()) {
-            return res.status(200).send({ message: errors.array() });
-        }
-
-        // body-parser always installs an object, but the handler must not throw
-        // a TypeError on a request that reached it with no body at all.
-        const body = req.body || {};
-
-        if (!body.loginEmailAddress || !body.loginPassword) {
-            return res.send({ message: 'Please enter Username and Password!' });
+        const credentials = mapLoginCredentials(req.body);
+        if (!credentials.email || !credentials.password) {
+            return res.status(200).send({ message: MESSAGES.invalid });
         }
 
         try {
-            const { ok, account } = await authService.authenticate(mapLoginCredentials(body));
+            const { ok, account } = await authService.authenticate(credentials);
 
-            if (!ok) {
-                return res.send({ message: 'Please check your email address and password' });
-            }
+            if (!ok) return res.status(200).send({ message: MESSAGES.rejected });
 
             req.session.user = buildSessionUser(account);
-            return res.send({ message: 'found' });
+            return res.status(200).send({ message: MESSAGES.found });
         } catch (error) {
-            // Log server-side only. The database error message is never returned
-            // to the client.
+            // Server-side only. The database error message never reaches the
+            // client.
             console.error('Login failed:', error.message);
-            return res.status(500).send({ message: 'Login failed.' });
+            return res.status(500).send({ message: MESSAGES.serverError });
         }
     };
 }
 
-exports.createLoginHandler = createLoginHandler;
-
-exports.create = createLoginHandler(service);
+module.exports = {
+    MESSAGES,
+    mapLoginCredentials,
+    buildSessionUser,
+    createLoginHandler,
+    // Default service, backed by the app's Sequelize models.
+    create: createLoginHandler(new AuthService()),
+};
