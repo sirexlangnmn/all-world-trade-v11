@@ -43,8 +43,8 @@ Now. After you understand all 3 .md file.
 Creat a new .md file to list down how to fix the
 "Detailed Findings"
 that you can found in CODE_REVIEW.md.
-Lets start to:
-Finding 1: SQL Injection in Search Function
+Lets go to:
+Finding 2: SQL Injection in Login
 
 I want you to create an 001-fix-sql-injection-search.md file that serve as documentation or AI guidance how to do that kind of task.
 Something like this :
@@ -682,7 +682,7 @@ Do not provide a general explanation outside the Markdown document.
 The result should be ready to save as:
 
 ```text
-docs/tasks/<descriptive-task-name>.md
+docs/tasks/002-SQL-Injection-in-Login.md
 ```
 
 Use clear Markdown headings, tables, code blocks, checklists, and step-by-step instructions.
