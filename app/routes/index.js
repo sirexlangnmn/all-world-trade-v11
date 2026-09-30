@@ -24,6 +24,7 @@ module.exports = (app) => {
     const usersBusinessVideos = require('../controllers/users-business-videos.controller.js');
     const usersBusinessMedias = require('../controllers/users-business-medias.controller.js');
     const selection = require('../controllers/selection.controller.js');
+    const searchBusinesses = require('../db_controllers/search-businesses.controller.js');
     const usersBusinessImages = require('../controllers/users-business-images.controller.js');
     const categories = require('../controllers/categories.controller.js');
     const subCategories = require('../controllers/sub-categories.controller.js');
@@ -141,7 +142,7 @@ module.exports = (app) => {
 
     app.post(['/api/get/get-random-companies'], selection.findRandomCompanies);
 
-    app.post(['/api/post/selection-search-parameter'], selection.findAllBySearchParameter);
+    app.post(['/api/post/selection-search-parameter'], searchBusinesses.findAllBySearchParameter);
 
     // no longer used
     //app.post(['/api/post/trader-registration'], traderRegistrationValidation, traderRegistration.create);

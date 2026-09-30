@@ -29,4 +29,21 @@ db.prospects = require('./prospects.models.js')(sequelize, Sequelize);
 db.contact_requests = require('./contact_requests.model.js')(sequelize, Sequelize);
 db.waiting_rooms = require('./waiting_rooms.model.js')(sequelize, Sequelize);
 
+// Logical (non-FK) associations required for `include`-based joins in the Sequelize search
+// path. `foreignKey`/`sourceKey` map onto the existing `uuid` columns used throughout the
+// codebase; `constraints: false` ensures sync() does not add FK constraints or columns.
+db.users_businesses.hasOne(db.users_business_characteristics, {
+    foreignKey: 'uuid',
+    sourceKey: 'uuid',
+    constraints: false,
+    as: 'business_characteristics',
+});
+
+db.users_businesses.hasOne(db.users_business_medias, {
+    foreignKey: 'uuid',
+    sourceKey: 'uuid',
+    constraints: false,
+    as: 'business_medias',
+});
+
 module.exports = db;

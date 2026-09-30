@@ -1,0 +1,41 @@
+
+
+
+read the file
+
+1. README.md
+for understanding the entire project overview.
+with Table of Contents:
+Project Overview,
+System Features,
+System Architecture,
+System Design,
+Folder Structure,
+Frontend Architecture,
+Backend Architecture,
+API Documentation,
+Complete Data Flow,
+Database Design,
+Entity Relationship Diagram,
+Authentication & Security,
+Deployment Architecture,
+Environment Configuration,
+Installation & Setup,
+Technology Stack,
+Scalability & Performance,
+Error Handling,
+Testing Strategy,
+Future Improvements
+
+Instructions/information for humans.
+"This is what this project is and how you use it."
+
+2. AGENTS.md
+Instructions for AI agents
+"When you work on this repository, follow these rules."
+
+3. CODE_REVIEW.md
+for Full codebase review of the All World Trade B2B marketplace platform.
+This document is not a rewrite plan. It is a set of incremental recommendations to optimize, refactor, and modernize the code while keeping behavior stable.
+
+Now, lets do the task in docs/tasks/001-fix-sql-injection-search.md

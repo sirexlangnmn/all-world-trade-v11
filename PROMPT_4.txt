@@ -1,0 +1,348 @@
+Act as a Senior Software Engineer and Software Architect mentoring me.
+
+read my code in public/assets/js/selection.js
+I have code like this:
+$.ajax({
+    url: '/api/post/selection-search-parameter',
+    type: 'POST',
+    data: {
+        ...
+    },
+    success: function (data) {
+        ...
+    },
+});
+
+read my code in app/routes/index.js
+I have code like this:
+app.post(['/api/post/selection-search-parameter'], searchBusinesses.findAllBySearchParameter);
+
+
+read my code in app/db_controllers/search-businesses.controller.js
+I have code like this:
+exports.findAllBySearchParameter = async (req, res) => {
+    try {
+        const rows = await service.searchBusinesses(mapSearchParams(req.body));
+        res.send(service.flattenSearchRows(rows));
+    } catch (err) {
+        res.status(500).send({ message: err.message || 'Some error occurred while retrieving companies.' });
+    }
+};
+
+
+and so on
+
+
+
+
+
+I want to understand how a professional software engineer designs the DATA FLOW of a real-world web application.
+
+Do not just give me a simple:
+
+Frontend → Controller → Model → Database
+
+explanation.
+
+Teach me how data should properly flow through a production-quality system and explain WHY each layer exists.
+
+Use this scenario as the main example:
+
+A user wants to search something in my system.
+
+Example:
+
+1. The user opens the frontend.
+2. The user types a search keyword into a textbox.
+3. JavaScript captures the input.
+4. JavaScript sends the value to an API.
+5. The API receives the request.
+6. The system searches the database.
+7. The results are returned to the frontend.
+8. The frontend displays the results.
+
+I want you to explain the complete professional data flow step-by-step.
+
+Use an architecture similar to:
+
+User
+↓
+Frontend UI
+↓
+JavaScript
+↓
+HTTP Request
+↓
+API Route
+↓
+Middleware
+↓
+Controller
+↓
+Service / Business Logic
+↓
+Repository / Model / Data Access
+↓
+Database
+↓
+Repository
+↓
+Service
+↓
+Controller
+↓
+API Response
+↓
+Frontend
+
+For EVERY layer, explain:
+
+* What is its responsibility?
+* What data enters the layer?
+* What data leaves the layer?
+* What validation should happen there?
+* What security checks should happen there?
+* What should NOT happen there?
+* Why does this layer exist?
+* Give me a realistic code example.
+* Give me a beginner-friendly explanation.
+
+Specifically explain the difference between:
+
+1. Client-side validation
+2. Server-side validation
+3. Input sanitization
+4. Data normalization
+5. Authentication
+6. Authorization
+7. SQL injection protection
+8. Parameterized queries / prepared statements
+9. Business-rule validation
+10. Output encoding
+11. Rate limiting
+12. Error handling
+13. Logging
+14. Database constraints
+
+I especially want you to answer this question:
+
+"If the user enters a search keyword in the frontend, should I sanitize it in JavaScript before sending it to the API? Should I sanitize it in middleware? Should the controller sanitize it? Should the model sanitize it before using it in SQL?"
+
+Explain what professional engineers normally do and why.
+
+Use this important distinction:
+
+VALIDATION ≠ SANITIZATION ≠ SQL INJECTION PROTECTION
+
+For example, demonstrate what happens when the user enters:
+
+' OR 1=1 --
+
+Show both:
+
+BAD implementation:
+
+User
+→ Frontend
+→ API
+→ Controller
+→ Model
+→ SQL string concatenation
+→ Database
+
+and explain why it is vulnerable.
+
+Then show:
+
+GOOD implementation:
+
+User
+→ Frontend
+→ API
+→ Request validation middleware
+→ Controller
+→ Service
+→ Repository
+→ Parameterized SQL
+→ Database
+
+Explain exactly where the protection happens.
+
+Also explain whether this is good practice:
+
+```javascript
+const query = `
+    SELECT *
+    FROM users
+    WHERE name LIKE '%${search}%'
+`;
+```
+
+and compare it with:
+
+```javascript
+const query = `
+    SELECT *
+    FROM users
+    WHERE name LIKE ?
+`;
+
+db.query(query, [`%${search}%`]);
+```
+
+Explain WHY the second approach is safer.
+
+Use a realistic Node.js/Express example.
+
+Show me an example architecture such as:
+
+```text
+routes/
+controllers/
+services/
+repositories/
+models/
+middlewares/
+validators/
+utils/
+```
+
+Explain the responsibility of each folder.
+
+Then show an example implementation of:
+
+GET /api/users?search=john
+
+including:
+
+Frontend JavaScript
+→ HTTP request
+→ Express route
+→ validation middleware
+→ controller
+→ service
+→ repository
+→ database
+→ response
+
+For example, demonstrate something conceptually similar to:
+
+```javascript
+GET /api/users?search=john
+```
+
+and explain what happens to:
+
+```text
+"john"
+```
+
+as it travels through the system.
+
+Also demonstrate what should happen if the user sends:
+
+```text
+search=
+```
+
+or:
+
+```text
+search=<script>alert(1)</script>
+```
+
+or:
+
+```text
+search=' OR 1=1 --
+```
+
+or an extremely long search string.
+
+Explain whether each should be:
+
+* rejected,
+* normalized,
+* escaped,
+* parameterized,
+* encoded,
+* or simply treated as normal data.
+
+Do NOT teach me to blindly "sanitize everything."
+
+Instead, teach me how professional engineers determine:
+
+"What type of data is this, where is it going, and what security/control is appropriate for that destination?"
+
+Also explain TRUST BOUNDARIES.
+
+I want to understand that:
+
+Frontend input = UNTRUSTED
+
+API request = UNTRUSTED
+
+Controller input = UNTRUSTED until validated
+
+Service input = should be validated/structured
+
+Repository parameters = should be safely parameterized
+
+Database = final enforcement through constraints where appropriate
+
+Explain why the backend must NEVER trust frontend validation.
+
+Then explain whether validation should happen:
+
+A. Only in frontend
+B. Only in backend
+C. Both frontend and backend
+
+Explain the professional approach and why.
+
+Also explain the difference between:
+
+```text
+DTO
+Request Object
+Validation Schema
+Domain Object
+Database Model
+Entity
+Repository
+Service
+Controller
+```
+
+I am still learning software architecture, so don't assume I already understand these concepts.
+
+Use simple analogies where helpful, but don't oversimplify the actual engineering principles.
+
+At the end, give me a "Software Engineer Data Flow Checklist" that I can use whenever I build a new feature.
+
+The checklist should include:
+
+[ ] Where does the data originate?
+[ ] Is the source trusted or untrusted?
+[ ] Where is authentication performed?
+[ ] Where is authorization performed?
+[ ] Where is request validation performed?
+[ ] Where is normalization performed?
+[ ] Where are business rules enforced?
+[ ] Is SQL parameterized?
+[ ] Are database constraints present?
+[ ] Is output safely encoded?
+[ ] Are errors handled safely?
+[ ] Is sensitive information excluded from logs?
+[ ] Is rate limiting needed?
+[ ] Can the user manipulate the request directly?
+[ ] What happens if the input is malformed?
+[ ] What happens if the input is extremely large?
+[ ] What happens if the database fails?
+
+Finally, give me a simple "golden rule" for each layer so I can remember what belongs where.
+
+Teach this as if you are mentoring me toward becoming a professional Software Engineer, not just teaching me how to make the feature work.
+
+
+update the docs/tasks/001-fix-sql-injection-search.md
