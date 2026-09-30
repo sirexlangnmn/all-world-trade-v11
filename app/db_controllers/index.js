@@ -15,6 +15,7 @@ controller.export_users_businesses = require('./export-users-businesses.controll
 controller.region_of_operation = require('./region_of_operation.controller.js');
 controller.join = require('./join.controller.js');
 controller.waiting_rooms = require('./waiting_rooms.controller.js');
+controller.login = require('./login.controller.js');
 
 controller.update_traders = require('./update-traders.controller.js'); // delete in future
 controller.update_large_scale_company = require('./update-large-scale-company.controller.js'); // delete in future

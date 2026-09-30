@@ -10,8 +10,8 @@ const Model = function (model) {
 };
 
 Model.create = (newModel, result) => {
-    const usersAccountsQuery = `SELECT password FROM support_accounts WHERE email_address = "${newModel.email_address}" && status = 1`;
-    sql.query(usersAccountsQuery, (err, res) => {
+    const usersAccountsQuery = 'SELECT password FROM support_accounts WHERE email_address = ? AND status = 1';
+    sql.query(usersAccountsQuery, [newModel.email_address], (err, res) => {
         if (err) {
             result(err, null);
             return;
@@ -23,9 +23,10 @@ Model.create = (newModel, result) => {
             const verified = bcrypt.compareSync(plainPasswordInput, hashedPassword);
 
             if (verified) {
-                const usersAccountsQuery = `SELECT first_name, last_name, email_address, status, uuid FROM support_accounts WHERE email_address = "${newModel.email_address}" && status = 1`;
+                const usersAccountsQuery =
+                    'SELECT first_name, last_name, email_address, status, uuid FROM support_accounts WHERE email_address = ? AND status = 1';
 
-                sql.query(usersAccountsQuery, (err, res) => {
+                sql.query(usersAccountsQuery, [newModel.email_address], (err, res) => {
                     if (err) {
                         result(err, null);
                         return;

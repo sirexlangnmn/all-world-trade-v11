@@ -46,4 +46,21 @@ db.users_businesses.hasOne(db.users_business_medias, {
     as: 'business_medias',
 });
 
+// Logical (non-FK) associations required for the login path's profile lookup
+// (app/services/auth.service.js). Same rules as above: join on the pre-existing
+// `uuid` columns, never add columns or FK constraints via sync().
+db.users_accounts.hasOne(db.users, {
+    foreignKey: 'uuid',
+    sourceKey: 'uuid',
+    constraints: false,
+    as: 'user',
+});
+
+db.users_accounts.hasOne(db.users_address, {
+    foreignKey: 'uuid',
+    sourceKey: 'uuid',
+    constraints: false,
+    as: 'address',
+});
+
 module.exports = db;

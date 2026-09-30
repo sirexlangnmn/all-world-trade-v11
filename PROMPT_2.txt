@@ -38,4 +38,12 @@ Instructions for AI agents
 for Full codebase review of the All World Trade B2B marketplace platform.
 This document is not a rewrite plan. It is a set of incremental recommendations to optimize, refactor, and modernize the code while keeping behavior stable.
 
-Now, lets do the task in docs/tasks/001-fix-sql-injection-search.md
+Now, lets do the task in docs/tasks/002-fix-sql-injection-login.md
+
+
+
+review all code associated to 002-fix-sql-injection-login.md
+Please optimize and refactor the following code according to best practices, updated, modern approach.
+Break down the code into smaller, more focused functions, each handling a specific task.
+Ensure the code is aligned with the 'Don't Repeat Yourself' (DRY), and 'Keep It Simple, Stupid' (KISS) principles.
+The goal is to enhance security, readability, performance, reusability, testability, and maintainability.
