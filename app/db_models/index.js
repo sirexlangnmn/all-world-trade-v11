@@ -28,6 +28,7 @@ db.user_download_histories = require('./user_download_histories.model.js')(seque
 db.prospects = require('./prospects.models.js')(sequelize, Sequelize);
 db.contact_requests = require('./contact_requests.model.js')(sequelize, Sequelize);
 db.waiting_rooms = require('./waiting_rooms.model.js')(sequelize, Sequelize);
+db.call_requests = require('./call_requests.model.js')(sequelize, Sequelize);
 
 // Logical (non-FK) associations required for `include`-based joins in the Sequelize search
 // path. `foreignKey`/`sourceKey` map onto the existing `uuid` columns used throughout the

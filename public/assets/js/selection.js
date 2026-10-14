@@ -151,7 +151,10 @@ function applyCompanyImageStyles(img, adjustedScreenHeight) {
     }
 }
 
-const arrayNumber = [ 37, 126, 602, 620, 629, 631, 635, 900, 916, 917, 918, 919, 920, 922, 924, 926, 927, 930, 931, 933, 935, 936, 938, 940, 942, 943, 944 ];
+const arrayNumber = [
+    37, 126, 602, 620, 629, 631, 635, 900, 916, 917, 918, 919, 920, 922, 924, 926, 927, 930, 931, 933, 935, 936, 938,
+    940, 942, 943, 944,
+];
 let shuffledNumbers = [];
 
 function getNextCompanyNumber() {
@@ -159,10 +162,7 @@ function getNextCompanyNumber() {
         shuffledNumbers = [...arrayNumber];
         for (let i = shuffledNumbers.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [shuffledNumbers[i], shuffledNumbers[j]] = [
-                shuffledNumbers[j],
-                shuffledNumbers[i],
-            ];
+            [shuffledNumbers[i], shuffledNumbers[j]] = [shuffledNumbers[j], shuffledNumbers[i]];
         }
     }
     return shuffledNumbers.pop();
@@ -633,7 +633,6 @@ async function fetchAdditionalCompanies() {
     }
 }
 
-
 async function fetchNextFiveCompanies() {
     console.log('[fetchNextFiveCompanies] companyDetailsJsonObj2[0] before:', companyDetailsJsonObj2[0]);
     const lastCompany = companyDetailsJsonObj2[0][companyDetailsJsonObj2[0].length - 1];
@@ -803,8 +802,7 @@ function moveSimilarCompanyToFirst(data, searchValue) {
     if (!searchTerm) return;
 
     let matchIndex = data.findIndex(
-        (company) =>
-            company.business_name && String(company.business_name).trim().toLowerCase() === searchTerm,
+        (company) => company.business_name && String(company.business_name).trim().toLowerCase() === searchTerm,
     );
 
     if (matchIndex < 0) {
@@ -1196,9 +1194,7 @@ function getImageName() {
 }
 
 function displayCompanyDetailsUsingImageName(filename) {
-    const companyDetails = companyDetailsJsonObj2[0].find(
-        (details) => getCompanyImageFilename(details) === filename,
-    );
+    const companyDetails = companyDetailsJsonObj2[0].find((details) => getCompanyImageFilename(details) === filename);
     if (!companyDetails) return;
 
     const {
@@ -1514,7 +1510,7 @@ getTradeCategories()
           data-el="${category.id}">${category.title}</div>`,
             )
             .join('');
-        
+
         // OLD
         // tradeCategories.insertAdjacentHTML(
         //     'beforeend',
@@ -1522,17 +1518,14 @@ getTradeCategories()
         // );
 
         // NEW
-        tradeCategories.insertAdjacentHTML(
-            'beforeend',
-            `${categories}`,
-        );
+        tradeCategories.insertAdjacentHTML('beforeend', `${categories}`);
     })
     .catch((error) => {
         console.error('Error rendering trade categories:', error);
     });
 
 function getSubCategory(tradeCategoriesElementId, subCategoriesElementId) {
-    displaySelectedSubCategories.innerHTML = 'Wedding, Bridal & Events' //'Any';
+    displaySelectedSubCategories.innerHTML = 'Wedding, Bridal & Events'; //'Any';
     displaySelectedMinorSubCategories.innerHTML = 'Any';
 
     const subCategoriesElement = document.getElementById(subCategoriesElementId);
@@ -1546,24 +1539,25 @@ function getSubCategory(tradeCategoriesElementId, subCategoriesElementId) {
     if (tradeCategoryId) {
         fetch(`${host}/api/get/sub-categories-by-trade-category-id/${tradeCategoryId}`)
             .then((response) => response.json())
-            .then((data) => {
-                subCategoriesElement.innerHTML = `
+            .then(
+                (data) => {
+                    subCategoriesElement.innerHTML = `
                 <div class="filterBySubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="">Wedding, Bridal & Events</div>`;
-            }
-            // OLD
-            //     {
-            //         subCategoriesElement.innerHTML = `
-            //     <div class="filterBySubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="">Wedding, Bridal & Events</div>
-            //     ${data
-            //         .map(
-            //             (subCategory) => `
-            //       <div class="filterBySubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="${subCategory.id}">
-            //         ${subCategory.title}
-            //       </div>
-            //     `,
-            //         )
-            //         .join('')}
-            //   `;}
+                },
+                // OLD
+                //     {
+                //         subCategoriesElement.innerHTML = `
+                //     <div class="filterBySubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="">Wedding, Bridal & Events</div>
+                //     ${data
+                //         .map(
+                //             (subCategory) => `
+                //       <div class="filterBySubCategoryClass text-md font-md text-white-900 dark:text-white-300 p-2 hover:bg-gray-50" data-el="${subCategory.id}">
+                //         ${subCategory.title}
+                //       </div>
+                //     `,
+                //         )
+                //         .join('')}
+                //   `;}
             );
     } else {
         subCategoriesElement.innerHTML = '';
@@ -2245,7 +2239,7 @@ function downloadOrContact(filename) {
 
     function onClickHandler() {
         getId('contactTheTrader').removeEventListener('click', onClickHandler);
-        handleContactTrader(trader_uuid, communicator_link);
+        handleContactTrader(trader_uuid, communicator_link, companyName);
     }
 
     getId('downloadTraderDetails').addEventListener('click', function () {
@@ -2253,18 +2247,123 @@ function downloadOrContact(filename) {
     });
 }
 
-async function handleContactTrader(trader_uuid, communicator_link) {
+// ============================================================
+// Ring call (see RING_CALL_RECOMMENDATION.md) — caller side
+// ============================================================
+let activeRingCallResolve = null;
+
+if (typeof window.AWTCalls !== 'undefined') {
+    AWTCalls.on('accepted', function () {
+        // call-notification.js already opened https://meet.allworldtrade.com/join/<room>
+        closeRingingModal();
+        settleActiveRingCall(true);
+    });
+
+    AWTCalls.on('declined', function () {
+        closeRingingModal();
+        settleActiveRingCall('unavailable');
+    });
+
+    AWTCalls.on('missed', function () {
+        closeRingingModal();
+        settleActiveRingCall('unavailable');
+    });
+}
+
+function settleActiveRingCall(result) {
+    if (!activeRingCallResolve) return;
+    const resolve = activeRingCallResolve;
+    activeRingCallResolve = null;
+    resolve(result);
+}
+
+function closeRingingModal() {
+    if (typeof Swal !== 'undefined' && Swal.isVisible()) {
+        Swal.close();
+    }
+}
+
+function showRingingModal(companyName) {
+    if (typeof Swal === 'undefined') return;
+    Swal.fire({
+        title: 'Ringing...',
+        html: `Calling <strong>${companyName || 'the trader'}</strong>. Waiting for them to accept the call.`,
+        icon: 'info',
+        showCancelButton: true,
+        showConfirmButton: false,
+        cancelButtonText: 'Cancel Call',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+    }).then((result) => {
+        if (result.dismiss === Swal.DismissReason.cancel) {
+            if (typeof window.AWTCalls !== 'undefined') {
+                AWTCalls.cancelCall();
+            }
+            settleActiveRingCall('cancelled');
+        }
+    });
+}
+
+// Resolves with:
+//   true            -> trader accepted (meet room tab already opened by call-notification.js)
+//   'unavailable'   -> trader declined or the ring timed out
+//   'cancelled'     -> visitor cancelled the ring
+//   false           -> ring-call service unavailable; caller should use the legacy flow
+function attemptRingTraderCall(trader_uuid, companyName) {
+    return new Promise((resolve) => {
+        if (typeof window.AWTCalls === 'undefined' || !AWTCalls.isConnected()) {
+            return resolve(false);
+        }
+
+        activeRingCallResolve = resolve;
+
+        AWTCalls.startCall(trader_uuid)
+            .then(function () {
+                showRingingModal(companyName);
+                // Resolved later by the accepted / declined / missed handlers above,
+                // or by the visitor pressing "Cancel Call".
+            })
+            .catch(function (err) {
+                console.log('attemptRingTraderCall failed:', err);
+                activeRingCallResolve = null;
+                resolve(false);
+            });
+    });
+}
+// ============================================================
+
+async function handleContactTrader(trader_uuid, communicator_link, companyName) {
     try {
         const traderIsActive = await checkIfTraderIsActive(trader_uuid);
         console.log(`handleContactTrader traderIsActive::: `, traderIsActive);
         if (traderIsActive == 1) {
+            // 1) Try the real-time ring call first (see RING_CALL_RECOMMENDATION.md).
+            const ringResult = await attemptRingTraderCall(trader_uuid, companyName);
+
+            if (ringResult === true) {
+                // Trader accepted — call-notification.js opened the meet room tab.
+                return;
+            }
+
+            if (ringResult === 'unavailable') {
+                // Trader declined or did not answer within the ring timeout.
+                notifyTraderOnClientContact(trader_uuid);
+                showTraderOfflineMessage();
+                return;
+            }
+
+            if (ringResult === 'cancelled') {
+                // Visitor cancelled the ring themselves — do nothing further.
+                return;
+            }
+
+            // 2) Ring service unavailable (socket offline / rate-limited) -> legacy flow.
             recordTheMeetingOfVisitorAndTrader(trader_uuid, communicator_link);
             notifyTraderOnClientContact(trader_uuid);
         } else {
             transferTheCallToAWT(traderIsActive);
             showTraderOfflineMessage();
         }
-
     } catch (error) {
         console.error('Error checking if trader is active:', error);
         alert("There was an error checking the trader's status. Please try again later.");
@@ -2361,7 +2460,6 @@ function recordTheMeetingOfVisitorAndTrader(trader_uuid, communicator_link) {
         },
     });
 }
-
 
 function transferTheCallToAWT(awt_communicator_link) {
     const domainLink = 'https://meet.allworldtrade.com/join/'; //new
