@@ -1,0 +1,4 @@
+
+
+create test titled 003.2-plaintext-password-storage-on-reset.test.js
+if the code change related in 003.2-plaintext-password-storage-on-reset.md is working
