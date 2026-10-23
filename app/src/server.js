@@ -78,18 +78,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const session = require('express-session');
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: true,
-        cookie: {
-            maxAge: 365 * 24 * 60 * 60 * 1000,
-            httpOnly: true,
-            sameSite: 'strict', //👈 new code
-        },
-    }),
-);
+const sessionMiddleware = session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 365 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: 'strict', //👈 new code
+    },
+});
+app.use(sessionMiddleware);
 
 let { lodashNonce } = require('../middleware/nonces');
 
@@ -152,6 +151,11 @@ if (isHttps) {
     io = new Server().listen(server);
     host = 'http://' + 'localhost' + ':' + port;
 }
+
+// Share the express-session with Socket.IO so every socket handshake
+// carries the same req.session.user as HTTP routes (ring-call feature).
+io.engine.use(sessionMiddleware);
+require('../realtime/call.handler.js')(io);
 
 const api_key_secret = process.env.API_KEY_SECRET;
 
@@ -230,8 +234,6 @@ require('../routes/encrypt.route.js')(app);
 // db sequelize sync process [end]
 //======================================
 
-
-
 // ==============================
 // Helpers / Utilities
 // ==============================
@@ -259,17 +261,14 @@ function phTime() {
     return phTime;
 }
 
-
 const getUserUuidFromSession = (sessionUser) => {
     if (!sessionUser || !sessionUser.uuid) return null;
     return ecdc.decryptUuid(sessionUser.uuid);
 };
 
-
 const buildLoginViewData = () => ({
     ourGenerateNonce: lodashNonce,
 });
-
 
 const buildViewData = (sessionUser) => ({
     uuid: sessionUser.uuid,
@@ -280,17 +279,9 @@ const buildViewData = (sessionUser) => ({
     ourGenerateNonce: lodashNonce,
 });
 
-
 const renderLogin = (res) => {
-    return res.render(
-        path.join(__dirname, '../../', 'public/view/login/index'),
-        { data: buildLoginViewData() }
-    );
+    return res.render(path.join(__dirname, '../../', 'public/view/login/index'), { data: buildLoginViewData() });
 };
-
-
-
-
 
 const VIEW_BASE_PATH = path.join(__dirname, '../../', 'public/view');
 
@@ -299,7 +290,6 @@ const renderPage = (res, page, data = {}) => {
 
     return res.render(viewPath, { data });
 };
-
 
 // ==============================
 // Business Logic
@@ -317,8 +307,6 @@ const isUserLoggedIn = async (sessionUser) => {
 
     return !!loginStatus;
 };
-
-
 
 // home
 app.get(['/'], async (req, res) => {
@@ -338,7 +326,6 @@ app.get(['/'], async (req, res) => {
         }
 
         return renderPage(res, 'home', buildViewData(sessionUser));
-
     } catch (error) {
         console.error('Error in home route:', error);
         return renderLogin(res);
@@ -466,7 +453,6 @@ app.get(['/template'], (req, res) => {
 //     }
 // });
 
-
 const checkUserLoginStatus = (userUuid) => {
     const Users_accounts = db.users_accounts;
 
@@ -479,23 +465,22 @@ const checkUserLoginStatus = (userUuid) => {
 
     return Users_accounts.findOne({
         where: { uuid: userUuid },
-        attributes: ['login_status']
+        attributes: ['login_status'],
     })
-    .then(usersAccounts => {
-        if (!usersAccounts) {
-            console.log('No user found with that UUID');
+        .then((usersAccounts) => {
+            if (!usersAccounts) {
+                console.log('No user found with that UUID');
+                return null;
+            }
+
+            console.log('Successfully got user login status:', usersAccounts.login_status);
+            return usersAccounts.login_status;
+        })
+        .catch((error) => {
+            console.error('Error in getting user login status:', error);
             return null;
-        }
-
-        console.log('Successfully got user login status:', usersAccounts.login_status);
-        return usersAccounts.login_status;
-    })
-    .catch(error => {
-        console.error('Error in getting user login status:', error);
-        return null;
-    });
+        });
 };
-
 
 app.get('/selection', async (req, res) => {
     try {
@@ -517,7 +502,6 @@ app.get('/selection', async (req, res) => {
         }
 
         return renderPage(res, 'selection', buildViewData(sessionUser));
-
     } catch (error) {
         console.error('Error in selection route:', error);
 
@@ -525,12 +509,6 @@ app.get('/selection', async (req, res) => {
         return renderLogin(res);
     }
 });
-
-
-
-
-
-
 
 app.get(['/profile'], (req, res) => {
     // let location_hostname = req.hostname;
@@ -825,7 +803,6 @@ app.get(['/download-current-trader-data'], (req, res) => {
     );
 });
 
-
 // function userDownloadHistory(userId, businessName) {
 //     const userUuid = userId ? ecdc.decryptUuid(userId) : null;
 //     console.log('userDownloadHistory userUuid: ', userUuid);
@@ -838,7 +815,6 @@ app.get(['/download-current-trader-data'], (req, res) => {
 //     if (userUuid) {
 //         // 1. query to users_businesses table to get uuid  business_name === businessName
 
-
 //         // query to user_download_history table this data:
 //         // - user_id
 //         // - trader_id
@@ -846,7 +822,6 @@ app.get(['/download-current-trader-data'], (req, res) => {
 //     }
 
 // };
-
 
 // async function userDownloadHistory(userId, businessName) {
 //     const userUuid = userId ? ecdc.decryptUuid(userId) : null;
@@ -896,7 +871,6 @@ app.get(['/download-current-trader-data'], (req, res) => {
 //     }
 // }
 
-
 function userDownloadHistory(userId, businessName) {
     const userUuid = userId ? ecdc.decryptUuid(userId) : null;
     const phTimeValue = phTime();
@@ -910,41 +884,38 @@ function userDownloadHistory(userId, businessName) {
     const Users_businesses = db.users_businesses;
     const User_download_histories = db.user_download_histories;
 
-
     // 1️⃣ Get the business UUID for the given businessName
     Users_businesses.findOne({
         where: { business_name: businessName },
-        attributes: ['uuid'] // only need uuid
+        attributes: ['uuid'], // only need uuid
     })
-    .then(business => {
-        if (!business) {
-            console.log('No business found with that name');
-            return null; // stop here
-        }
+        .then((business) => {
+            if (!business) {
+                console.log('No business found with that name');
+                return null; // stop here
+            }
 
-        const businessUuid = business.uuid;
-        const newHistoryData = {
-            user_id: userUuid,
-            trader_id: businessUuid, // assuming trader_id refers to business.uuid
-            download_at: phTimeValue // or new Date() if you want current timestamp
-        };
+            const businessUuid = business.uuid;
+            const newHistoryData = {
+                user_id: userUuid,
+                trader_id: businessUuid, // assuming trader_id refers to business.uuid
+                download_at: phTimeValue, // or new Date() if you want current timestamp
+            };
 
-        console.log('userDownloadHistory newHistoryData: ', newHistoryData);
-        // 2️⃣ Insert a new download history record for this user and business
-        return User_download_histories.create(newHistoryData);
-    })
-    .then(newHistory => {
-        if (!newHistory) return;
+            console.log('userDownloadHistory newHistoryData: ', newHistoryData);
+            // 2️⃣ Insert a new download history record for this user and business
+            return User_download_histories.create(newHistoryData);
+        })
+        .then((newHistory) => {
+            if (!newHistory) return;
 
-        console.log('History created successfully');
-        console.log(newHistory);
-    })
-    .catch(error => {
-        console.error('Error in userDownloadHistory:', error);
-    });
+            console.log('History created successfully');
+            console.log(newHistory);
+        })
+        .catch((error) => {
+            console.error('Error in userDownloadHistory:', error);
+        });
 }
-
-
 
 function formattedCountryOfOperation(string, countriesData) {
     let countries = JSON.parse(countriesData);
@@ -1485,7 +1456,6 @@ app.get('/traders-page/:companyName', (req, res) => {
     }
 });
 
-
 // app.get('/logout', function (req, res, next) {
 //     const Users_accounts = db.users_accounts;
 //     const User_sessions = db.user_sessions;
@@ -1506,7 +1476,6 @@ app.get('/traders-page/:companyName', (req, res) => {
 //     res.redirect('/login');
 // });
 
-
 app.get('/logout', async function (req, res, next) {
     try {
         const Users_accounts = db.users_accounts;
@@ -1518,30 +1487,22 @@ app.get('/logout', async function (req, res, next) {
             console.log('Logging out user with UUID:', userUuid);
             console.log('Logging out phTimeValue:', phTimeValue);
             // Wait for updates to finish
-            await Users_accounts.update(
-                { login_status: null },
-                { where: { uuid: userUuid } }
-            );
+            await Users_accounts.update({ login_status: null }, { where: { uuid: userUuid } });
 
-            await User_sessions.update(
-                { logout_at: phTimeValue },
-                { where: { user_id: userUuid, logout_at: null } }
-            );
+            await User_sessions.update({ logout_at: phTimeValue }, { where: { user_id: userUuid, logout_at: null } });
         }
 
         // Destroy session
-        req.session.destroy(err => {
+        req.session.destroy((err) => {
             if (err) return next(err);
 
             req.session = null;
             res.redirect('/login');
         });
-
     } catch (err) {
         next(err);
     }
 });
-
 
 app.post('/session-checker/:random', function (req, res, next) {
     var asd = req.params.random;
