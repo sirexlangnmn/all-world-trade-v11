@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 19: Missing Null Check Causing Crash in Password Reset
-{file_name} = 019-Missing-Null-Check-Causing-Crash-in-Password-Reset.md
+{findings} = Finding 23: Reset Token Not Invalidated After Use
+{file_name} = 023-Reset-Token-Not-Invalidated-After-Use.md
 
 read the file
 
