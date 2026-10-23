@@ -1,7 +1,7 @@
 
 placeholders value:
-{file_name} = 051-Missing-Rate-Limiting-on-Reset-Endpoints.md
-{file_test_result} = 051-Missing-Rate-Limiting-on-Reset-Endpoints-Test-Result.md
+{file_name} = 041-Unused-or-Overlapping-Dependencies.md
+{file_test_result} = 041-Unused-or-Overlapping-Dependencies-Test-Result.md
 
 read the file
 

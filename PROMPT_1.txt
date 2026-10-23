@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 51: Missing Rate Limiting on Reset Endpoints
-{file_name} = 051-Missing-Rate-Limiting-on-Reset-Endpoints.md
+{findings} = Finding 41: Unused or Overlapping Dependencies
+{file_name} = 041-Unused-or-Overlapping-Dependencies.md
 
 read the file
 

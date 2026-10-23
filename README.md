@@ -1448,7 +1448,7 @@ erDiagram
 ```mermaid
 graph TD
     subgraph "Login Flow"
-        A[User submits credentials] --> B[Passport.js Local Strategy]
+        A[User submits credentials] --> B[Express login route and credential verification]
         B --> C{Valid?}
         C -->|Yes| D[Create session]
         C -->|No| E[Return error]
@@ -1742,6 +1742,7 @@ npm run dev
 | `npm run tailwindBuild` | `npx @tailwindcss/cli -i ... -o ...` | Build Tailwind CSS |
 | `npm run webpackBuild` | `npx webpack --mode=production` | Bundle JavaScript |
 | `npm run lint` | `npx prettier --check .` | Check code formatting |
+| `npm test` | `node --test` | Run the existing automated tests |
 
 ### 15.4 Database Migrations
 
@@ -1784,7 +1785,7 @@ npx sequelize-cli db:migrate:undo
 | **JS Bundler** | Webpack | 5.x | JavaScript bundling and minification |
 | **ORM** | Sequelize | 6.x | Database abstraction, migrations |
 | **Database Driver** | mysql2 | Latest | MySQL connection and queries |
-| **Auth** | Passport.js (Local) | Latest | Authentication strategy |
+| **Auth** | express-session | 1.x | Server-side session authentication for the SSR application |
 | **Real-time** | Socket.io | 4.x | WebRTC signaling, peer counting |
 | **Video** | MiroTalk P2P | Latest | WebRTC video meetings |
 | **Email** | Nodemailer | Latest | SMTP email sending |
@@ -1809,7 +1810,7 @@ npx sequelize-cli db:migrate:undo
 | **EJS** | Simple, familiar syntax; no client-side framework overhead; fast server-side rendering |
 | **Tailwind CSS** | Utility-first approach reduces CSS bloat; JIT engine generates only used styles |
 | **Sequelize** | Mature ORM with MySQL support; migrations, associations, and transaction support |
-| **Passport.js** | Modular, extensible auth middleware; simple local strategy integration |
+| **express-session** | Server-side sessions fit the server-rendered Express application |
 | **Socket.io** | Reliable real-time bidirectional communication with auto-reconnect and fallback |
 | **MiroTalk P2P** | Lightweight WebRTC library; no server-side media processing needed |
 | **Multer** | De facto standard for Express file uploads; flexible disk storage configuration |
@@ -1934,7 +1935,7 @@ graph TD
 
 ### 19.1 Current Testing Status
 
-The project currently has **no automated test suite**. Tests are performed manually during development. The following outlines the recommended testing strategy.
+The repository includes automated tests using Node.js's built-in `node:test` runner under `test/`. Run the suite with `npm test`. Some integration cases require the configured database and may skip when it is unavailable; report skipped tests separately from passing tests. Manual runtime checks remain important for production-sensitive changes.
 
 ### 19.2 Recommended Test Structure
 
@@ -1970,8 +1971,8 @@ tests/
 
 | Test Type | Framework | Scope |
 |-----------|-----------|-------|
-| **Unit** | Jest + Sinon | Service functions, utilities, helpers |
-| **Integration** | Jest + Supertest | API endpoints, controller logic |
+| **Unit** | Node.js `node:test` | Service functions, utilities, helpers |
+| **Integration** | Node.js `node:test` | API endpoints, controller logic |
 | **E2E** | Cypress | Full user workflows (login, register, search) |
 | **Database** | Jest + Sequelize Test | Model associations, query accuracy |
 

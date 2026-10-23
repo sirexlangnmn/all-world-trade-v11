@@ -19,14 +19,10 @@ dependencies: {
     yamljs          : https://www.npmjs.com/package/yamljs
     ejs             : https://www.npmjs.com/package/ejs
     mysql           : https://www.npmjs.com/package/mysql
-    body-parser     : https://www.npmjs.com/package/body-parser
     bcrypt          : https://www.npmjs.com/package/bcrypt
     express-flash   : https://www.npmjs.com/package/express-flash
     express-session : https://www.npmjs.com/package/express-session
-    method-override : https://www.npmjs.com/package/method-override
     nodemon         : https://www.npmjs.com/package/nodemon
-    passport        : https://www.npmjs.com/package/passport
-    passport-local  : https://www.npmjs.com/package/passport-local
     jsonwebtoken    : https://www.npmjs.com/package/jsonwebtoken
     pdfkit          : https://www.npmjs.com/package/pdfkit
 }
@@ -42,9 +38,7 @@ const http = require('http');
 const https = require('https');
 const compression = require('compression');
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
-const cookieSession = require('cookie-session');
 const path = require('path');
 const app = express();
 const cron = require('node-cron');
@@ -77,11 +71,8 @@ app.use(
 
 app.use(compression()); // Compress all HTTP responses using GZip
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// parse requests of content-type - application/json
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 const session = require('express-session');
 const sessionMiddleware = session({
@@ -180,12 +171,6 @@ const log = new Logger('server');
 
 // Use all static files from the public folder
 app.use(express.static(path.join(__dirname, '../../', 'public')));
-
-// Api parse body data as json
-app.use(express.json());
-
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true })); // dati naka comment ito
 
 // Remove trailing slashes in url handle bad requests
 app.use((err, req, res, next) => {
