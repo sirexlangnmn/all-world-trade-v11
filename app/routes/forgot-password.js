@@ -219,7 +219,7 @@ module.exports = (app) => {
 
     app.post(['/reset-password/:token'], resetPasswordSubmitLimiter, async function (req, res) {
         const token = req.params.token;
-        const { password, password2 } = req.body;
+        const { password, password2 } = req.body ?? {};
         const result = await findUserAccountByResetToken(token);
 
         if (!result) {

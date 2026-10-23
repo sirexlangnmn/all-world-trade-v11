@@ -137,7 +137,10 @@ after(() => {
     db.users_accounts.update = originals.usersAccountsUpdate;
 });
 
-function invoke(handler, { token = TOKEN, body = {} } = {}) {
+function invoke(handler, options = {}) {
+    const token = options.token ?? TOKEN;
+    const body = Object.hasOwn(options, 'body') ? options.body : {};
+
     return new Promise((resolve, reject) => {
         const req = { params: { token }, body };
         const res = {
@@ -216,6 +219,15 @@ test('an empty token is rejected before any database lookup', async () => {
     assert.strictEqual((await get('')).kind, 'send');
     assert.strictEqual((await post('')).body, FAILURE);
     assert.strictEqual(state.tokenLookups.length, 0, 'empty tokens never reach Sequelize');
+    assertNothingWritten();
+});
+
+test('POST with an undefined request body handles a valid token without writing', async () => {
+    const result = await invoke(postHandler, { token: TOKEN, body: undefined });
+
+    assert.deepStrictEqual(result, { kind: 'send', statusCode: 200, body: FAILURE });
+    assert.strictEqual(state.tokenLookups.length, 1, 'the token is checked normally');
+    assert.strictEqual(state.accountLookups.length, 1, 'the matching account is checked normally');
     assertNothingWritten();
 });
 
@@ -355,5 +367,29 @@ test('a token deletion failure does not report success', async () => {
     } finally {
         console.error = originalError;
         db.reset_tokens.destroy = resetTokensDestroyStub;
+    }
+});
+
+test('token and account lookup errors propagate instead of becoming invalid-token responses', async () => {
+    const lookupError = new Error('database lookup failed');
+    const originalFindToken = db.reset_tokens.findOne;
+    const originalFindAccount = db.users_accounts.findOne;
+
+    try {
+        db.reset_tokens.findOne = async () => {
+            throw lookupError;
+        };
+        await assert.rejects(get(), (error) => error === lookupError);
+
+        db.reset_tokens.findOne = async () => state.tokenRow;
+        db.users_accounts.findOne = async () => {
+            throw lookupError;
+        };
+        await assert.rejects(post(), (error) => error === lookupError);
+
+        assertNothingWritten();
+    } finally {
+        db.reset_tokens.findOne = originalFindToken;
+        db.users_accounts.findOne = originalFindAccount;
     }
 });

@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 41: Unused or Overlapping Dependencies
-{file_name} = 041-Unused-or-Overlapping-Dependencies.md
+{findings} = Finding 19: Missing Null Check Causing Crash in Password Reset
+{file_name} = 019-Missing-Null-Check-Causing-Crash-in-Password-Reset.md
 
 read the file
 
