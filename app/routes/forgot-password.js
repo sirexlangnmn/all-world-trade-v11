@@ -3,6 +3,9 @@ module.exports = (app) => {
     const db_models = require('../db_models');
     const USERS_ACCOUNTS = require('../query/users_accounts.query.js');
     const RESET_TOKENS = require('../query/reset_tokens.query.js');
+    const { PasswordResetService } = require('../services/password-reset.service.js');
+
+    const passwordResetService = new PasswordResetService();
 
     const express = require('express');
     const path = require('path');
@@ -185,38 +188,26 @@ module.exports = (app) => {
 
     app.post(['/reset-password/:token'], async function (req, res) {
         const token = req.params.token;
-        const { password3 } = req.body;
+        const { password, password2 } = req.body;
 
         const Users_accounts = db_models.users_accounts;
         const Reset_tokens = db_models.reset_tokens;
 
         const resetToken = await Reset_tokens.findOne({
-            where: { token: token }
+            where: { token: token },
         });
 
         const userAccount = await Users_accounts.findOne({
-            where: { uuid: resetToken.uuid }
+            where: { uuid: resetToken.uuid },
         });
 
         try {
-            // const PAYLOAD = jwt.verify(originalText, SECRET);
-            const UUID = userAccount.uuid;
+            await passwordResetService.setNewPassword(userAccount.uuid, { password, password2 });
 
-            const inputObject = {
-                password: password3,
-            };
-
-            db.query(USERS_ACCOUNTS.UPDATE_PASSWORD, [...Object.values(inputObject), UUID], function (err, result) {
-                if (err) {
-                    //throw err;
-                    console.log(err);
-                } else {
-                    res.send('reset password successfully');
-                }
-            });
-
+            return res.send('reset password successfully');
         } catch (error) {
-            res.send(error.message);
+            console.error('Password reset failed:', error.message);
+            return res.send('reset password failed');
         }
     });
 

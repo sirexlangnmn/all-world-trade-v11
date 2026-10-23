@@ -1160,6 +1160,122 @@ Migrate one API family (login/registration) then the rest.
 
 ---
 
+### Finding 46: Non-Bcrypt Legacy Passwords in Database
+
+**Location:** `users_accounts` table (database state)
+
+**Current Approach:** Local/dev audit found **4 non-bcrypt passwords** still stored in `users_accounts`. These were likely created through older registration/reset paths before the recent fix to the password reset flow.
+
+**Why This Is Suboptimal:** Accounts with non-bcrypt passwords cannot log in with the current bcrypt-based authentication flow. This creates locked-out accounts and indicates historical security gaps in password storage.
+
+**Recommended Approach:** Identify and remediate the 4 legacy accounts. Options: force password resets for those accounts, migrate them if the plaintext can be recovered (not possible if truly plaintext in some historical form), or disable accounts until users reset. No rows were rewritten during the Finding 3 fix.
+
+**Why Better:** Restores access for legitimate users while maintaining the security requirement that all passwords are bcrypt-hashed.
+
+**Implementation:**
+1. Query for accounts where `password` does not match bcrypt format (`$2b$`, `$2a$`, or `$2y$` prefix)
+2. Notify affected users or force password reset flow
+3. Consider a migration strategy to prevent similar issues
+
+---
+
+### Finding 47: Registration Still Trusts Client-Supplied Hashed Passwords
+
+**Location:** `app/db_controllers/registration_v2.controller.js` and sibling registration controllers (`*-registration.controller.js` for trader, large, medium, small)
+
+**Current Approach:** Registration controllers accept a client-supplied `hashedPassword` from the request body and store it directly without server-side hashing/validation. This is the same class of vulnerability as Finding 3.
+
+**Why This Is Suboptimal:** Trusting client-supplied hashes allows attackers to submit pre-computed hashes, bypass password policy enforcement, or store weak/invalid hashes. The public bcrypt oracle (`/api/post/password-hashing`, Finding 5) exists partly to support this broken pattern.
+
+**Recommended Approach:** Make the server authoritative for password hashing in registration, similar to the fix applied to password reset (Finding 3). Accept plaintext passwords from the client, validate them server-side, hash with bcrypt (cost 12), and ignore any client-supplied `hashedPassword`. Enforce password policy (length, complexity) on the server.
+
+**Why Better:** Consistent with security best practices - server must never trust client for security-critical operations like password hashing.
+
+**Implementation:**
+1. Update all registration controllers to read plaintext password from body
+2. Hash server-side with bcrypt cost 12
+3. Remove dependency on client-side hashing
+4. Consider deprecating or removing `/api/post/password-hashing` once registration is fixed
+
+---
+
+### Finding 48: Public Bcrypt Oracle Still Available
+
+**Location:** `app/routes/password.js` — `/api/post/password-hashing` and `/api/post/compare-password`
+
+**Current Approach:** Both endpoints remain publicly accessible without authentication or rate limiting. They were identified as a bcrypt oracle in Finding 5.
+
+**Why This Is Suboptimal:** An attacker can use these endpoints to (1) hash arbitrary passwords for resource exhaustion, (2) verify any plaintext against any bcrypt hash to accelerate offline brute-force attacks, (3) systematically crack password hashes stolen from the database. While registration still depends on them currently, they represent a critical attack vector.
+
+**Recommended Approach:** Remove both endpoints entirely once registration is migrated to server-side hashing (Finding 47). In the interim, add authentication and strict rate limiting if removal is not immediately possible.
+
+**Why Better:** Eliminates a critical brute-force acceleration vector.
+
+**Implementation:**
+1. After fixing registration to hash server-side (Finding 47), remove `app/routes/password.js`
+2. Remove `require('../routes/password.js')(app);` from `app/src/server.js`
+3. If immediate removal isn't possible, add auth middleware and aggressive rate limiting
+
+---
+
+### Finding 49: Reset Tokens Not Invalidated After Use and Missing Expiry Enforcement
+
+**Location:** `app/routes/forgot-password.js:196-212` (POST /reset-password/:token)
+
+**Current Approach:** After successful password reset, the token is never deleted from `reset_tokens` table. The GET handler also doesn't properly validate token expiration in all cases. Tokens remain valid for their full expiration window and can be reused.
+
+**Why This Is Suboptimal:** If a password reset link is intercepted (via email, logs, browser history), an attacker can reuse it multiple times within the expiration window to reset the password repeatedly. This extends the window of compromise.
+
+**Recommended Approach:** Delete the token immediately after successful password reset. Also validate expiration on both GET and POST handlers. Consider null checks for token lookups (Finding 19) though intentionally left unchanged per task scope.
+
+**Why Better:** Enforces single-use tokens and minimizes the window of opportunity for token reuse attacks.
+
+**Implementation:**
+1. After successful password update, add `Reset_tokens.destroy({ where: { token: token } })`
+2. In GET handler, check if token exists and hasn't expired: `if (!resetToken || resetToken.expiration < new Date()) { return error }`
+3. Apply same checks in POST handler
+
+---
+
+### Finding 50: Forgot Password Flow Exposes Password Hash in Response
+
+**Location:** `app/controllers/forgot-password.controller.js` and `app/models/forgot-password.model.js`
+
+**Current Approach:** The forgot-password flow (via `/api/post/forgot-password-process`) returns the user's password hash in the response: `password: res[0].password`. The controller passes this data back to the client.
+
+**Why This Is Suboptimal:** Exposing password hashes to the client/browser is unnecessary and leaks sensitive credential material. While bcrypt hashes are not plaintext, they should never be transmitted to the client. This increases the attack surface if the response is intercepted or logged.
+
+**Recommended Approach:** Remove the password hash from the response. Only return necessary information like `message`, `email_or_social_media`, and `uuid` for generating the reset token. The reset flow should work without exposing the hash.
+
+**Why Better:** Follows the principle of least disclosure - no sensitive credential material should leave the server unnecessarily.
+
+**Implementation:**
+1. In `app/models/forgot-password.model.js`, remove `password: res[0].password` from the result object
+2. In `app/controllers/forgot-password.controller.js`, ensure no password data is passed through
+3. Verify the reset token creation flow doesn't depend on receiving the hash
+
+---
+
+### Finding 51: Missing Rate Limiting on Reset Endpoints
+
+**Location:** `app/routes/forgot-password.js` — `/api/post/create-reset-token`, `GET /reset-password/:token`, `POST /reset-password/:token`; also related endpoints
+
+**Current Approach:** No rate limiting on password reset endpoints. Attackers can enumerate valid emails, flood reset requests, or brute-force reset tokens.
+
+**Why This Is Suboptimal:** Without rate limiting, attackers can: (1) enumerate valid email addresses via the forgot-password flow, (2) spam reset emails to users (denial of service/harassment), (3) attempt to brute-force reset tokens, (4) abuse the endpoint for resource exhaustion.
+
+**Recommended Approach:** Apply strict rate limiting to all password reset related endpoints. Use per-IP limits with lower thresholds than general endpoints.
+
+**Why Better:** Prevents enumeration attacks, email spam, and token brute-forcing.
+
+**Implementation:**
+1. Add `express-rate-limit` middleware (as suggested in Finding 7)
+2. Apply strict limits: e.g., 3-5 requests per 15 minutes per IP for `/api/post/create-reset-token`
+3. Apply limits to GET and POST reset password endpoints
+4. Consider account-based limiting in addition to IP-based limiting
+
+---
+
 ## Suggested Target Layout (Incremental)
 
 Move toward this only as files are touched — do not create empty folders “for later”:

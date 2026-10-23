@@ -7,34 +7,6 @@ resetPasswordForm.on('submit', forgotPasswordSubmitHandler);
 
 const password1 = getId('password');
 const password2 = getId('password2');
-const password3 = getId('password3');
-
-password1.onkeyup = function () {
-    hashedPassword();
-};
-
-function hashedPassword() {
-    let password = password1.value;
-
-    if (password !== '') {
-        $.ajax({
-            url: '/api/post/password-hashing',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                password: password,
-            }),
-            success: function (response) {
-                password3.value = response;
-            },
-        });
-    } else {
-        password3.value = '';
-    }
-}
-
-// const new_password = getId('password');
-// const confirm_password = getId('password2');
 
 function forgotPasswordSubmitHandler(e) {
     e.preventDefault();

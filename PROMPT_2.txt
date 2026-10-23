@@ -38,6 +38,9 @@ Instructions for AI agents
 for Full codebase review of the All World Trade B2B marketplace platform.
 This document is not a rewrite plan. It is a set of incremental recommendations to optimize, refactor, and modernize the code while keeping behavior stable.
 
+Note. This codebase is currently working properly in the production.
+Dont make any changes that break this system.
+
 Now, lets do the task in docs/tasks/003-plaintext-password-torage-on-reset.md
 
 
