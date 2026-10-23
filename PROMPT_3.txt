@@ -238,5 +238,7 @@ Follow this sequence:
 Begin by inspecting the actual code changes and the existing test infrastructure. Then proceed systematically. Do not declare the changes production-ready until the required checks have been completed and the available evidence supports that conclusion.
 
 
-And create a 050-Forgot-Password-Flow-Exposes-Password-Hash-in-Response-Test-Result.md for your test result and documentation.
+And create a
+050-Forgot-Password-Flow-Exposes-Password-Hash-in-Response-Test-Result.md
+for your test result and documentation.
 And If you need folder for your test works, I recommend to use this folder test/
