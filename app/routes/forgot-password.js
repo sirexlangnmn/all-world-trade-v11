@@ -21,6 +21,10 @@ module.exports = (app) => {
 
     const AWT_HOSTNAME = process.env.AWT_HOSTNAME;
 
+    const INVALID_RESET_TOKEN_MESSAGE = 'Invalid or expired reset token';
+    const RESET_PASSWORD_SUCCESS_MESSAGE = 'reset password successfully';
+    const RESET_PASSWORD_FAILURE_MESSAGE = 'reset password failed';
+
     // Database connection
     // const db = mysql.createConnection({
     //     host: process.env.DB_SERVERHOST,
@@ -150,26 +154,57 @@ module.exports = (app) => {
         });
     };
 
-    // Both reset handlers need the account behind a token. Null handling for a
-    // missing token is intentionally unchanged (Finding 19); that is a separate
-    // task.
+    function isNonEmptyString(value) {
+        return typeof value === 'string' && value.length > 0;
+    }
+
+    // A token is only usable before its stored expiration. A missing or
+    // unparseable expiration fails closed so old/partial rows cannot be used.
+    function isResetTokenExpired(resetToken) {
+        const expiresAt = new Date(resetToken.expiration).getTime();
+
+        return !Number.isFinite(expiresAt) || expiresAt <= Date.now();
+    }
+
+    // Both reset handlers need the same validity decision: the token must be a
+    // non-empty string, exist, be unexpired, and map to an account. Returning
+    // both records lets the POST handler delete the token after a successful
+    // reset. Invalid input always resolves to null; callers own the response.
     async function findUserAccountByResetToken(token) {
+        if (!isNonEmptyString(token)) {
+            return null;
+        }
+
         const resetToken = await db_models.reset_tokens.findOne({
             where: { token: token },
         });
 
-        return db_models.users_accounts.findOne({
+        if (!resetToken || isResetTokenExpired(resetToken)) {
+            return null;
+        }
+
+        const userAccount = await db_models.users_accounts.findOne({
             where: { uuid: resetToken.uuid },
         });
+
+        if (!userAccount) {
+            return null;
+        }
+
+        return { resetToken, userAccount };
     }
 
     app.get(['/reset-password/:token'], async function (req, res, next) {
-        const token = req.params.token;
-        const userAccount = await findUserAccountByResetToken(token);
-        const EMAIL = userAccount.email_or_social_media;
+        const result = await findUserAccountByResetToken(req.params.token);
+
+        if (!result) {
+            return res.status(404).send(INVALID_RESET_TOKEN_MESSAGE);
+        }
 
         try {
-            res.render(path.join(__dirname, '../../', 'public/view/reset-password/index'), { email: EMAIL });
+            res.render(path.join(__dirname, '../../', 'public/view/reset-password/index'), {
+                email: result.userAccount.email_or_social_media,
+            });
         } catch (error) {
             res.send(error.message);
         }
@@ -178,16 +213,24 @@ module.exports = (app) => {
     app.post(['/reset-password/:token'], async function (req, res) {
         const token = req.params.token;
         const { password, password2 } = req.body;
+        const result = await findUserAccountByResetToken(token);
 
-        const userAccount = await findUserAccountByResetToken(token);
+        if (!result) {
+            return res.send(RESET_PASSWORD_FAILURE_MESSAGE);
+        }
 
         try {
-            await passwordResetService.setNewPassword(userAccount.uuid, { password, password2 });
+            await passwordResetService.setNewPassword(result.userAccount.uuid, { password, password2 });
 
-            return res.send('reset password successfully');
+            // Only after the password is updated: make the token single-use.
+            // A deletion failure must not report success, because the link
+            // could still be reused.
+            await db_models.reset_tokens.destroy({ where: { token: token } });
+
+            return res.send(RESET_PASSWORD_SUCCESS_MESSAGE);
         } catch (error) {
             console.error('Password reset failed:', error.message);
-            return res.send('reset password failed');
+            return res.send(RESET_PASSWORD_FAILURE_MESSAGE);
         }
     });
 

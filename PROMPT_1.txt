@@ -1,3 +1,6 @@
+placeholders value:
+{findings} = Finding 49: Reset Tokens Not Invalidated After Use and Missing Expiry Enforcement
+{file_name} = 049-Reset-Tokens-Not-Invalidated-After-Use-and-Missing-Expiry-Enforcement.md
 
 read the file
 
@@ -44,15 +47,10 @@ Now. After you understand all 3 .md file.
 Creat a new .md file to list down how to fix the
 "Detailed Findings"
 that you can found in CODE_REVIEW.md.
-Lets go to:
+Lets go to: {findings}
 
-Finding 50: Forgot Password Flow Exposes Password Hash in Response
+I want you to create an docs/tasks/{file_name} file that serve as documentation or AI guidance how to do that kind of task.
 
-I want you to create an
-
-050-Forgot-Password-Flow-Exposes-Password-Hash-in-Response.md
-
-file that serve as documentation or AI guidance how to do that kind of task.
 Something like this :
 # AI Prompt: Generate a Detailed Implementation Task `.md`
 
@@ -688,10 +686,12 @@ Do not provide a general explanation outside the Markdown document.
 The result should be ready to save as:
 
 ```text
-docs/tasks/050-Forgot-Password-Flow-Exposes-Password-Hash-in-Response.md
+docs/tasks/{file_name}
 ```
 
 Use clear Markdown headings, tables, code blocks, checklists, and step-by-step instructions.
 
 Make the document detailed enough for an AI coding agent to execute, but do not include unnecessary instructions that are unrelated to the task.
+
+
 

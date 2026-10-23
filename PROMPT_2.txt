@@ -1,5 +1,5 @@
-
-
+placeholders value:
+{file_name} = 049-Reset-Tokens-Not-Invalidated-After-Use-and-Missing-Expiry-Enforcement.md
 
 read the file
 
@@ -46,9 +46,9 @@ README.md,
 AGENTS.md, and
 CODE_REVIEW.md,
 lets do the task in
-docs/050-Forgot-Password-Flow-Exposes-Password-Hash-in-Response.md
+docs/tasks/{file_name}
 
-review all code associated to docs/tasks/050-Forgot-Password-Flow-Exposes-Password-Hash-in-Response.md
+review all code associated to docs/tasks/{file_name}
 Please optimize and refactor the following code according to best practices, updated, modern approach.
 Break down the code into smaller, more focused functions, each handling a specific task.
 Ensure the code is aligned with the 'Don't Repeat Yourself' (DRY), and 'Keep It Simple, Stupid' (KISS) principles.

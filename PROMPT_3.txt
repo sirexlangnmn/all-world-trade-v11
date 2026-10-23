@@ -1,5 +1,7 @@
 
-
+placeholders value:
+{file_name} = 049-Reset-Tokens-Not-Invalidated-After-Use-and-Missing-Expiry-Enforcement.md
+{file_test_result} = 049-Reset-Tokens-Not-Invalidated-After-Use-and-Missing-Expiry-Enforcement-Test-Result.md
 
 read the file
 
@@ -45,7 +47,7 @@ Now, since you read the
 README.md,
 AGENTS.md,
 CODE_REVIEW.md, and
-docs/tasks/050-Forgot-Password-Flow-Exposes-Password-Hash-in-Response.md
+docs/tasks/{file_name}
 
 
 # Role: Senior Software Engineer, QA Engineer, and Production Readiness Reviewer
@@ -238,7 +240,6 @@ Follow this sequence:
 Begin by inspecting the actual code changes and the existing test infrastructure. Then proceed systematically. Do not declare the changes production-ready until the required checks have been completed and the available evidence supports that conclusion.
 
 
-And create a
-050-Forgot-Password-Flow-Exposes-Password-Hash-in-Response-Test-Result.md
+And create a test/{file_test_result}
 for your test result and documentation.
 And If you need folder for your test works, I recommend to use this folder test/
