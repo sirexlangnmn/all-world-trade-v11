@@ -4,8 +4,15 @@ module.exports = (app) => {
     const USERS_ACCOUNTS = require('../query/users_accounts.query.js');
     const RESET_TOKENS = require('../query/reset_tokens.query.js');
     const { PasswordResetService } = require('../services/password-reset.service.js');
+    const middleware = require('../middleware');
 
     const passwordResetService = new PasswordResetService();
+    const {
+        createResetTokenLimiter,
+        sendResetEmailLimiter,
+        resetPasswordPageLimiter,
+        resetPasswordSubmitLimiter,
+    } = middleware.passwordResetRateLimit;
 
     const express = require('express');
     const path = require('path');
@@ -44,7 +51,7 @@ module.exports = (app) => {
         res.render(path.join(__dirname, '../../', 'public/view/forgot-password/index'));
     });
 
-    app.post('/api/post/create-reset-token', async function (req, res, next) {
+    app.post('/api/post/create-reset-token', createResetTokenLimiter, async function (req, res, next) {
         const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;
 
         const { uuid, email_or_social_media: receiverEmailAddress } = req.body;
@@ -86,7 +93,7 @@ module.exports = (app) => {
         });
     });
 
-    app.post('/api/post/send-email-for-change-password', (req, res) => {
+    app.post('/api/post/send-email-for-change-password', sendResetEmailLimiter, (req, res) => {
         let uuid = req.body.uuid;
         let link = req.body.link;
         let receiverEmailAddress = req.body.receiverEmailAddress;
@@ -194,7 +201,7 @@ module.exports = (app) => {
         return { resetToken, userAccount };
     }
 
-    app.get(['/reset-password/:token'], async function (req, res, next) {
+    app.get(['/reset-password/:token'], resetPasswordPageLimiter, async function (req, res, next) {
         const result = await findUserAccountByResetToken(req.params.token);
 
         if (!result) {
@@ -210,7 +217,7 @@ module.exports = (app) => {
         }
     });
 
-    app.post(['/reset-password/:token'], async function (req, res) {
+    app.post(['/reset-password/:token'], resetPasswordSubmitLimiter, async function (req, res) {
         const token = req.params.token;
         const { password, password2 } = req.body;
         const result = await findUserAccountByResetToken(token);

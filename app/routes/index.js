@@ -95,7 +95,11 @@ module.exports = (app) => {
 
     app.post(['/api/post/help-and-support-login-process'], helpAndSupportLogin.create);
 
-    app.post(['/api/post/forgot-password-process'], forgotPassword.create);
+    app.post(
+        ['/api/post/forgot-password-process'],
+        middleware.passwordResetRateLimit.forgotPasswordProcessLimiter,
+        forgotPassword.create,
+    );
 
     // Retrieve all Company Details
     app.post(['/api/get/company-details'], usersBusiness.findAll);

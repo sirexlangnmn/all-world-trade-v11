@@ -1,6 +1,14 @@
 const forgotPasswordForm = $('#forgotPasswordForm');
 forgotPasswordForm.on('submit', forgotPasswordSubmitHandler);
 
+function showRateLimitMessage(xhr) {
+    if (xhr && xhr.status === 429) {
+        Swal.fire('Please wait', 'Too many requests. Please try again later.', 'warning');
+        return true;
+    }
+    return false;
+}
+
 function forgotPasswordSubmitHandler(e) {
     e.preventDefault();
 
@@ -15,6 +23,9 @@ function forgotPasswordSubmitHandler(e) {
             } else {
                 Swal.fire('Warning', 'Email not found', 'warning');
             }
+        },
+        error: function (xhr) {
+            showRateLimitMessage(xhr);
         },
     });
 }
@@ -33,8 +44,8 @@ function createResetToken(email, uuid) {
             } else {
             }
         },
-        error: function (e) {
-            // some code here
+        error: function (xhr) {
+            showRateLimitMessage(xhr);
         },
     });
 }
@@ -54,8 +65,8 @@ function sendEmailForChangePasswordRequest(data) {
             } else {
             }
         },
-        error: function (e) {
-            // some code here
+        error: function (xhr) {
+            showRateLimitMessage(xhr);
         },
     });
 }

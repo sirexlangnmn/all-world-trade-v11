@@ -77,8 +77,8 @@ before(() => {
 
     const app = {
         use: () => {},
-        get: (paths, handler) => captureRoute(app, 'get', paths, handler),
-        post: (paths, handler) => captureRoute(app, 'post', paths, handler),
+        get: (paths, ...handlers) => captureRoute(app, 'get', paths, handlers[handlers.length - 1]),
+        post: (paths, ...handlers) => captureRoute(app, 'post', paths, handlers[handlers.length - 1]),
     };
 
     registerResetRoutes(app);

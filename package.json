@@ -30,6 +30,7 @@
         "ejs": "^4.0.1",
         "express": "^5.2.1",
         "express-flash": "^0.0.2",
+        "express-rate-limit": "^8.7.1",
         "express-session": "^1.18.2",
         "express-validator": "^7.3.1",
         "flowbite": "^4.0.1",

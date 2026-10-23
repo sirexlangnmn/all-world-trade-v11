@@ -49,6 +49,12 @@ const path = require('path');
 const app = express();
 const cron = require('node-cron');
 
+// The documented deployment puts a single Nginx reverse proxy on this host
+// (README §13.2, proxy_pass http://127.0.0.1:3000). Trust only loopback so
+// req.ip is the real client IP while client-supplied X-Forwarded-For headers
+// from direct external connections are ignored. Never use `true` here.
+app.set('trust proxy', 'loopback');
+
 // let corsOptions = {
 //     origin: "dev.allworldtrade.com"
 // };

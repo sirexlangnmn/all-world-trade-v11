@@ -35,5 +35,10 @@ function forgotPasswordSubmitHandler(e) {
                 location.replace(host + '/login');
             }, 3000);
         },
+        error: function (xhr) {
+            if (xhr && xhr.status === 429) {
+                showWarning('Too many requests. Please try again later.');
+            }
+        },
     });
 }

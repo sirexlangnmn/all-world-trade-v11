@@ -1,4 +1,5 @@
 const middleware = {};
+middleware.passwordResetRateLimit = require('./rate-limit/password-reset.rate-limit.js');
 middleware.smallScaleCompanyRegistrationValidation = require('./validations/small-scale-company-registration.validation.js');
 middleware.mediumScaleCompanyRegistrationValidation = require('./validations/medium-scale-company-registration.validation.js');
 middleware.largeScaleCompanyRegistrationValidation = require('./validations/large-scale-company-registration.validation.js');

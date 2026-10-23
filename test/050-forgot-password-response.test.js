@@ -46,9 +46,9 @@ let createResetTokenHandler;
 const captureApp = {
     use: () => {},
     get: () => {},
-    post: (paths, handler) => {
+    post: (paths, ...handlers) => {
         if ([].concat(paths).includes('/api/post/create-reset-token')) {
-            createResetTokenHandler = handler;
+            createResetTokenHandler = handlers[handlers.length - 1];
         }
     },
 };
