@@ -43,7 +43,7 @@ module.exports = (app) => {
     const upgradeToMediumScaleCompany = require('../controllers/upgrade-to-medium-scale-company.controller.js');
     const upgradeToLargeScaleCompany = require('../controllers/upgrade-to-large-scale-company.controller.js');
     const upgradeToTraders = require('../controllers/upgrade-to-traders.controller.js');
-    const login = require('../controllers/login.controller.js');
+    const login = require('../db_controllers/login.controller.js');
     const forgotPassword = require('../controllers/forgot-password.controller.js');
     const visitorsOfTraders = require('../controllers/visitors-of-traders.controller.js');
     const helpAndSupport = require('../controllers/help-and-support.controller.js');

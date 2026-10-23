@@ -37,14 +37,8 @@ const CHARACTERISTIC_ATTRIBUTES = Object.freeze([
 const MEDIA_ATTRIBUTES = Object.freeze(['banner', 'logo']);
 
 // Coerce a user-supplied value into a scalar that is safe inside an Op.*
-// operator. Strings pass through unchanged, numbers/booleans are stringified,
-// and objects/arrays are dropped entirely so operators can never be smuggled
-// in as values.
-function toScalar(value) {
-    if (typeof value === 'string') return value;
-    if (typeof value === 'number' || typeof value === 'boolean') return String(value);
-    return undefined;
-}
+// operator. Shared with the login path -- see app/utils/sanitize.utils.js.
+const { toScalar } = require('../utils/sanitize.utils');
 
 class BusinessSearchService {
     constructor(dbRef = db) {
