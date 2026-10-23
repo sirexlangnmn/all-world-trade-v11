@@ -162,21 +162,22 @@ module.exports = (app) => {
         });
     };
 
+    // Both reset handlers need the account behind a token. Null handling for a
+    // missing token is intentionally unchanged (Finding 19); that is a separate
+    // task.
+    async function findUserAccountByResetToken(token) {
+        const resetToken = await db_models.reset_tokens.findOne({
+            where: { token: token },
+        });
+
+        return db_models.users_accounts.findOne({
+            where: { uuid: resetToken.uuid },
+        });
+    }
 
     app.get(['/reset-password/:token'], async function (req, res, next) {
         const token = req.params.token;
-
-        const Users_accounts = db_models.users_accounts;
-        const Reset_tokens = db_models.reset_tokens;
-
-        const resetToken = await Reset_tokens.findOne({
-            where: { token: token }
-        });
-
-        const userAccount = await Users_accounts.findOne({
-            where: { uuid: resetToken.uuid }
-        });
-
+        const userAccount = await findUserAccountByResetToken(token);
         const EMAIL = userAccount.email_or_social_media;
 
         try {
@@ -190,16 +191,7 @@ module.exports = (app) => {
         const token = req.params.token;
         const { password, password2 } = req.body;
 
-        const Users_accounts = db_models.users_accounts;
-        const Reset_tokens = db_models.reset_tokens;
-
-        const resetToken = await Reset_tokens.findOne({
-            where: { token: token },
-        });
-
-        const userAccount = await Users_accounts.findOne({
-            where: { uuid: resetToken.uuid },
-        });
+        const userAccount = await findUserAccountByResetToken(token);
 
         try {
             await passwordResetService.setNewPassword(userAccount.uuid, { password, password2 });

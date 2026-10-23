@@ -13,6 +13,12 @@ const PASSWORD_HASH_ROUNDS = 12;
 // identically.
 const MAX_PASSWORD_BYTES = 72;
 
+function assertUserUuid(uuid) {
+    if (typeof uuid !== 'string' || uuid.length === 0) {
+        throw new TypeError('A user UUID is required');
+    }
+}
+
 function assertPassword(password) {
     if (typeof password !== 'string' || password.length === 0) {
         throw new TypeError('Password must be a non-empty string');
@@ -48,22 +54,24 @@ class PasswordResetService {
 
     // Persist only a server-generated bcrypt hash. `silent: true` keeps the
     // legacy raw-SQL behaviour of not touching `updatedAt`.
-    async setNewPassword(uuid, { password, password2 } = {}) {
-        if (typeof uuid !== 'string' || uuid.length === 0) {
-            throw new TypeError('A user UUID is required');
-        }
+    async persistPasswordHash(uuid, hashedPassword) {
+        await this.UsersAccounts.update({ password: hashedPassword }, { where: { uuid }, silent: true });
+    }
 
+    async setNewPassword(uuid, { password, password2 } = {}) {
+        assertUserUuid(uuid);
         assertPasswordConfirmation(password, password2);
 
         const hashedPassword = await hashPassword(password);
 
-        await this.UsersAccounts.update({ password: hashedPassword }, { where: { uuid }, silent: true });
+        await this.persistPasswordHash(uuid, hashedPassword);
     }
 }
 
 module.exports = {
     PasswordResetService,
     hashPassword,
+    assertUserUuid,
     assertPassword,
     assertPasswordConfirmation,
     PASSWORD_HASH_ROUNDS,

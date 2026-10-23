@@ -15,7 +15,9 @@ require('dotenv').config();
 const {
     PasswordResetService,
     hashPassword,
+    assertUserUuid,
     assertPassword,
+    assertPasswordConfirmation,
     PASSWORD_HASH_ROUNDS,
     MAX_PASSWORD_BYTES,
 } = require('../app/services/password-reset.service.js');
@@ -77,6 +79,21 @@ test('passwords longer than bcrypt can consume are rejected explicitly', () => {
     assert.doesNotThrow(() => assertPassword('a'.repeat(MAX_PASSWORD_BYTES)));
     assert.throws(() => assertPassword('a'.repeat(MAX_PASSWORD_BYTES + 1)), /must not exceed/);
     assert.throws(() => assertPassword('€'.repeat(MAX_PASSWORD_BYTES)), /must not exceed/);
+});
+
+test('the byte limit counts UTF-8 bytes, not code units', () => {
+    // 24 * 3 = 72 bytes: exactly at the limit, so it is accepted.
+    assert.doesNotThrow(() => assertPassword('€'.repeat(24)));
+    // 25 * 3 = 75 bytes: over the limit, rejected even though it is only 25
+    // characters long.
+    assert.throws(() => assertPassword('€'.repeat(25)), /must not exceed/);
+});
+
+test('the confirmation must match only when it is supplied', () => {
+    assert.doesNotThrow(() => assertPasswordConfirmation(PASSWORD, PASSWORD));
+    assert.doesNotThrow(() => assertPasswordConfirmation(PASSWORD, undefined));
+    assert.doesNotThrow(() => assertPasswordConfirmation(PASSWORD, null));
+    assert.throws(() => assertPasswordConfirmation(PASSWORD, 'different'), /does not match/);
 });
 
 test('Unicode and SQL-shaped passwords are hashed as data', async () => {
@@ -175,4 +192,22 @@ test('an invalid uuid is rejected without writing anything', async () => {
         await assert.rejects(() => service.setNewPassword(uuid, { password: PASSWORD }), /UUID is required/);
         assert.strictEqual(stub.updates.length, 0);
     }
+});
+
+test('assertUserUuid accepts only a non-empty string', () => {
+    assert.doesNotThrow(() => assertUserUuid(UUID));
+    for (const uuid of [undefined, null, '', 42, ['a']]) {
+        assert.throws(() => assertUserUuid(uuid), /UUID is required/);
+    }
+});
+
+test('a failed update is propagated to the caller and never returns a hash', async () => {
+    const failure = new Error('database unavailable');
+    const service = new PasswordResetService({
+        users_accounts: {
+            update: () => Promise.reject(failure),
+        },
+    });
+
+    await assert.rejects(() => service.setNewPassword(UUID, { password: PASSWORD }), failure);
 });
