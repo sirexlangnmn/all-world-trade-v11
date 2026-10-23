@@ -44,9 +44,9 @@ Creat a new .md file to list down how to fix the
 "Detailed Findings"
 that you can found in CODE_REVIEW.md.
 Lets go to:
-Finding 2: SQL Injection in Login
+Finding 3: Plaintext Password Storage on Reset
 
-I want you to create an 001-fix-sql-injection-search.md file that serve as documentation or AI guidance how to do that kind of task.
+I want you to create an 003-plaintext-password-torage-on-reset.md file that serve as documentation or AI guidance how to do that kind of task.
 Something like this :
 # AI Prompt: Generate a Detailed Implementation Task `.md`
 
@@ -682,7 +682,7 @@ Do not provide a general explanation outside the Markdown document.
 The result should be ready to save as:
 
 ```text
-docs/tasks/002-SQL-Injection-in-Login.md
+docs/tasks/003-plaintext-password-torage-on-reset.md
 ```
 
 Use clear Markdown headings, tables, code blocks, checklists, and step-by-step instructions.
