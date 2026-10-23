@@ -11,7 +11,7 @@ function forgotPasswordSubmitHandler(e) {
         success: function (res) {
             Swal.fire('Success', 'Email Send Successfully', 'success');
             if (res.message === 'found') {
-                createResetToken(res.email_or_social_media, res.password, res.uuid);
+                createResetToken(res.email_or_social_media, res.uuid);
             } else {
                 Swal.fire('Warning', 'Email not found', 'warning');
             }
@@ -19,13 +19,12 @@ function forgotPasswordSubmitHandler(e) {
     });
 }
 
-function createResetToken(email, password, uuid) {
+function createResetToken(email, uuid) {
     $.ajax({
         url: '/api/post/create-reset-token',
         type: 'POST',
         data: {
             uuid: uuid,
-            password: password,
             email_or_social_media: email,
         },
         success: function (data) {

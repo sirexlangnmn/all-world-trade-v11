@@ -1,4 +1,29 @@
+004-Password-Embedded-in-JWT-Reset-Token.md
+
+Finding 50: Forgot Password Flow Exposes Password Hash in Response,
+Finding 49: Reset Tokens Not Invalidated After Use and Missing Expiry Enforcement,
+Finding 51: Missing Rate Limiting on Reset Endpoints,
+Finding 41: Unused or Overlapping Dependencies
+Finding 19: Missing Null Check Causing Crash in Password Reset
+Finding 23: Reset Token Not Invalidated After Use
+Finding 6: No Authentication Middleware on API Routes
 
 
-create test titled 003.2-plaintext-password-storage-on-reset.test.js
-if the code change related in 003.2-plaintext-password-storage-on-reset.md is working
+050-Forgot-Password-Flow-Exposes-Password-Hash-in-Response.md,
+049-Reset-Tokens-Not-Invalidated-After-Use-and-Missing-Expiry-Enforcement.md,
+051-Missing-Rate-Limiting-on-Reset-Endpoints.md,
+041-Unused-or-Overlapping-Dependencies.md
+019-Missing-Null-Check-Causing-Crash-in-Password-Reset.md
+023-Reset-Token-Not-Invalidated-After-Use.md
+006-No-Authentication-Middleware-on-API-Routes.md
+
+
+050-Forgot-Password-Flow-Exposes-Password-Hash-in-Response-Test-Result.md,
+049-Reset-Tokens-Not-Invalidated-After-Use-and-Missing-Expiry-Enforcement-Test-Result.md,
+051-Missing-Rate-Limiting-on-Reset-Endpoints-Test-Result.md,
+041-Unused-or-Overlapping-Dependencies-Test-Result.md
+019-Missing-Null-Check-Causing-Crash-in-Password-Reset-Test-Result.md
+023-Reset-Token-Not-Invalidated-After-Use-Test-Result.md
+006-No-Authentication-Middleware-on-API-Routes-Test-Result.md
+
+

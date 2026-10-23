@@ -45,9 +45,14 @@ Creat a new .md file to list down how to fix the
 "Detailed Findings"
 that you can found in CODE_REVIEW.md.
 Lets go to:
-Finding 3: Plaintext Password Storage on Reset
 
-I want you to create an 003.2-plaintext-password-storage-on-reset.md file that serve as documentation or AI guidance how to do that kind of task.
+Finding 50: Forgot Password Flow Exposes Password Hash in Response
+
+I want you to create an
+
+050-Forgot-Password-Flow-Exposes-Password-Hash-in-Response.md
+
+file that serve as documentation or AI guidance how to do that kind of task.
 Something like this :
 # AI Prompt: Generate a Detailed Implementation Task `.md`
 
@@ -683,7 +688,7 @@ Do not provide a general explanation outside the Markdown document.
 The result should be ready to save as:
 
 ```text
-docs/tasks/003.2-plaintext-password-storage-on-reset.md
+docs/tasks/050-Forgot-Password-Flow-Exposes-Password-Hash-in-Response.md
 ```
 
 Use clear Markdown headings, tables, code blocks, checklists, and step-by-step instructions.

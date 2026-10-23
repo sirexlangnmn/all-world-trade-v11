@@ -15,13 +15,10 @@ module.exports = (app) => {
     app.use(express.static(path.join(__dirname, '../../', 'public')));
 
     const mysql = require('mysql2');
-    const jwt = require('jsonwebtoken');
-    const CryptoJS = require('crypto-js');
     const { v4: uuidV4 } = require('uuid');
     const Sequelize = require('sequelize');
     const Op = Sequelize.Op;
 
-    const JWT_SECRET = process.env.JWT_SECRET;
     const AWT_HOSTNAME = process.env.AWT_HOSTNAME;
 
     // Database connection
@@ -44,51 +41,42 @@ module.exports = (app) => {
     });
 
     app.post('/api/post/create-reset-token', async function (req, res, next) {
-        let uuid = req.body.uuid;
-        let password = req.body.password;
-        let receiverEmailAddress = req.body.email_or_social_media;
+        const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;
 
-        const PAYLOAD = {
-            password: password,
-        };
+        const { uuid, email_or_social_media: receiverEmailAddress } = req.body;
 
-        const SECRET = JWT_SECRET + password;
-        const TOKEN = jwt.sign(PAYLOAD, SECRET, { expiresIn: '15m' });
+        // A fresh UUID v4 is the reset token. Nothing credential-related is
+        // accepted, derived, or embedded here.
+        function buildResetTokenData() {
+            const token = uuidV4();
+            const link = AWT_HOSTNAME + `reset-password/${token}`;
+            const datetime = currentDatetime();
 
-        // Encrypt
-        let ciphertext = CryptoJS.AES.encrypt(TOKEN, SECRET).toString();
-        let encoded = encodeURIComponent(ciphertext);
-        let decoded = decodeURIComponent(encoded);
-        let bytes = CryptoJS.AES.decrypt(decoded, SECRET);
-        // let originalText = bytes.toString(CryptoJS.enc.Utf8);
-        let originalText = uuidV4();
+            const resetToken = {
+                token,
+                expiration: new Date(new Date().getTime() + RESET_TOKEN_TTL_MS),
+                uuid,
+                createdAt: datetime,
+                updatedAt: datetime,
+            };
 
-        // const LINK = AWT_HOSTNAME + `reset-password/${encoded}`;
-        const LINK = AWT_HOSTNAME + `reset-password/${originalText}`;
-        var expireDate = new Date(new Date().getTime() + 60 * 60 * 1000);
-        let datetime = currentDatetime();
+            const response = {
+                message: 'reset tokens saved',
+                uuid,
+                link,
+                receiverEmailAddress,
+            };
 
-        const resetTokensObject = {
-            token: originalText,
-            expiration: expireDate,
-            uuid: uuid,
-            createdAt: datetime,
-            updatedAt: datetime,
-        };
+            return { resetToken, response };
+        }
 
-        const emailObject = {
-            message: 'reset tokens saved',
-            uuid: uuid,
-            link: LINK,
-            receiverEmailAddress: receiverEmailAddress,
-        };
+        const { resetToken, response } = buildResetTokenData();
 
-        db.query(RESET_TOKENS.CREATE, Object.values(resetTokensObject), (err, rows) => {
+        db.query(RESET_TOKENS.CREATE, Object.values(resetToken), (err, rows) => {
             if (err) {
-                //throw err;
                 console.log(err);
             } else {
-                res.send(emailObject);
+                res.send(response);
                 return;
             }
         });

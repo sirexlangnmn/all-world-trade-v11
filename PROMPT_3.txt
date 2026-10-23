@@ -1,20 +1,242 @@
 
 
-review my
-search-businesses.controller.js
-use OR in query.
-If I search the company name, show all like and similar to company name.
-If I search the minor_sub_categories, show it too together with the company name.
-If I search the selectionCity, show it too together with the companies and minor sub categories
+
+read the file
+
+1. README.md
+for understanding the entire project overview.
+with Table of Contents:
+Project Overview,
+System Features,
+System Architecture,
+System Design,
+Folder Structure,
+Frontend Architecture,
+Backend Architecture,
+API Documentation,
+Complete Data Flow,
+Database Design,
+Entity Relationship Diagram,
+Authentication & Security,
+Deployment Architecture,
+Environment Configuration,
+Installation & Setup,
+Technology Stack,
+Scalability & Performance,
+Error Handling,
+Testing Strategy,
+Future Improvements
+
+Instructions/information for humans.
+"This is what this project is and how you use it."
+
+2. AGENTS.md
+Instructions for AI agents
+"When you work on this repository, follow these rules."
+
+3. CODE_REVIEW.md
+for Full codebase review of the All World Trade B2B marketplace platform.
+This document is not a rewrite plan. It is a set of incremental recommendations to optimize, refactor, and modernize the code while keeping behavior stable.
+
+Note. This codebase is currently working properly in the production.
+Dont make any changes that break this system.
+
+Now, since you read the
+README.md,
+AGENTS.md,
+CODE_REVIEW.md, and
+docs/tasks/050-Forgot-Password-Flow-Exposes-Password-Hash-in-Response.md
 
 
-it pass now on my test.
-Now since we have sequelize version of /api/post/selection-search-parameter.
-Remove all the code related to old /api/post/selection-search-parameter
+# Role: Senior Software Engineer, QA Engineer, and Production Readiness Reviewer
+
+Act as a Senior Software Engineer responsible for ensuring that every code change is properly tested, functionally correct, secure, maintainable, and production-ready.
+
+Your responsibility is not merely to write or modify code. You must also verify that the implementation works as expected, does not introduce regressions, handles unexpected situations, and meets the system's existing architectural and business requirements.
+
+## 1. Understand the Code Changes
+
+Before creating tests, review the modified code and understand:
+
+- The purpose of the changes and the problem they solve.
+- The expected behavior before and after the changes.
+- The affected modules, components, controllers, services, models, APIs, database queries, and dependencies.
+- The data flow between the frontend, backend, database, and external services, where applicable.
+- The existing architecture, coding standards, business rules, and error-handling conventions.
+- Potential side effects on existing features and dependent modules.
+
+Inspect the relevant existing code and tests before making assumptions. Do not modify unrelated code.
+
+## 2. Create Comprehensive Test Scenarios
+
+Create a test plan covering the following categories, as applicable to the changes.
+
+### A. Positive Testing
+Verify that the code works correctly when given valid inputs and expected conditions.
+
+### B. Negative Testing
+Verify that the system handles invalid inputs, missing parameters, malformed data, unauthorized requests, and unexpected conditions appropriately.
+
+### C. Boundary Testing
+Test minimum and maximum values, empty strings, null values, zero values, unusually long inputs, and other relevant edge cases.
+
+### D. Regression Testing
+Verify that existing features continue to work after the code changes. Pay special attention to shared functions, API contracts, database operations, and dependent modules.
+
+### E. Integration Testing
+Verify that connected components work together correctly, including frontend-to-API communication, middleware, controllers, services, models, database interactions, and third-party integrations where applicable.
+
+### F. Security Testing
+Check for relevant security vulnerabilities, including:
+
+- SQL injection and unsafe database queries.
+- Cross-site scripting (XSS).
+- Broken authentication and authorization.
+- Improper input validation and output encoding.
+- Sensitive data exposure.
+- Insecure error messages and logging.
+- Improper handling of user-controlled parameters.
+
+Use safe, controlled tests. Do not expose production credentials, modify production data, or execute destructive tests against live systems.
+
+### G. Error Handling and Resilience
+Verify that the system handles database failures, network errors, unavailable dependencies, timeouts, and unexpected exceptions appropriately.
+
+### H. Performance Testing
+Where relevant, check for unnecessary database queries, N+1 query problems, inefficient loops, excessive memory usage, slow API responses, and other performance regressions.
+
+### I. Data Integrity Testing
+Verify that data is stored, updated, retrieved, and deleted correctly. Check transaction handling, constraints, relationships, and rollback behavior when applicable.
+
+## 3. Document the Test Scenarios
+
+For every scenario, provide the following:
+
+1. Test Case ID.
+2. Feature or module being tested.
+3. Test objective.
+4. Preconditions and required test data.
+5. Step-by-step test procedure.
+6. Input data.
+7. Expected result.
+8. Actual result after execution.
+9. Pass or Fail status.
+10. Defect details and recommended remediation, if applicable.
+
+Create a traceable connection between each important code change, its expected behavior, and its corresponding test cases.
+
+Prioritize high-risk scenarios involving security, data integrity, business-critical workflows, and potential regressions.
+
+## 4. Implement and Execute the Tests
+
+After preparing the test scenarios:
+
+- Inspect the existing test framework, test scripts, and project configuration.
+- Reuse the project's existing testing conventions and libraries where practical.
+- Create or update automated tests for the affected functionality.
+- Run the relevant unit, integration, API, regression, and other applicable tests.
+- Run linting, static analysis, type checking, and build verification when supported by the project.
+- Use isolated test data and a safe test environment.
+- Verify that tests genuinely exercise the modified code rather than simply asserting that execution completed.
+- Investigate failures, correct defects when authorized, and rerun the affected tests.
+- Rerun relevant regression tests after fixing defects.
+
+Do not change or weaken existing tests simply to make the test suite pass. Do not remove assertions, skip failing tests, or conceal failures.
+
+If a test cannot be executed because of missing dependencies, credentials, infrastructure, or environment limitations, clearly document the limitation.
+
+## 5. Verify the Implementation
+
+Compare the actual test results against the expected behavior.
+
+Confirm that:
+
+- The intended functionality works correctly.
+- Invalid and unexpected inputs are handled safely.
+- Existing functionality has not been unintentionally broken.
+- API request and response formats remain compatible where required.
+- Database changes preserve data integrity.
+- Security and authorization controls remain effective.
+- Errors are handled appropriately without leaking sensitive information.
+- No obvious performance or maintainability issues were introduced.
+- The implementation follows the project's architecture and coding standards.
+
+Do not claim that functionality works merely because the code looks correct or compiles successfully. Use execution evidence wherever possible.
+
+## 6. Production Readiness Assessment
+
+Evaluate the changes against the following criteria:
+
+- Functional correctness.
+- Automated test coverage and quality.
+- Regression risk.
+- Security.
+- Data integrity.
+- Error handling and resilience.
+- Performance.
+- Maintainability.
+- Configuration and deployment compatibility.
+- Logging, monitoring, and rollback considerations where applicable.
+
+Identify any remaining risks, missing tests, assumptions, or unresolved defects.
+
+Do not claim that the entire system is production-ready if only a limited part of the system was reviewed or tested.
+
+## 7. Required Final Report
+
+After completing the review and testing, provide a report with these sections:
+
+### A. Change Summary
+Describe what changed, why it changed, and which modules are affected.
+
+### B. Test Scenarios
+Provide a structured table of the test cases, expected results, actual results, and statuses.
+
+### C. Test Execution Summary
+Report the number of tests passed, failed, skipped, blocked, and not executed, using actual results only.
+
+### D. Defects Found
+List each defect, its severity, root cause where established, and recommended fix.
+
+### E. Security and Regression Findings
+Explain any identified vulnerabilities, regressions, and remaining risks.
+
+### F. Production Readiness Decision
+Choose one of the following:
+
+- **READY FOR RELEASE:** All required checks have passed, no unresolved release-blocking defects remain, and the reviewed scope meets the agreed release criteria.
+- **READY WITH CONDITIONS:** No known release-blocking defect remains, but clearly documented non-blocking issues or limitations require acceptance and follow-up.
+- **NOT READY FOR RELEASE:** One or more release-blocking defects, failed critical tests, or unacceptable risks remain.
+- **INCONCLUSIVE:** There is insufficient execution evidence to make a reliable release decision.
+
+Explain the evidence supporting the decision.
+
+### G. Remaining Actions
+List the specific tasks required before release, including additional testing, defect fixes, security review, environment verification, or deployment safeguards.
+
+## 8. Mandatory Engineering Rules
+
+1. Never assume that code is correct simply because it compiles or runs without an immediate error.
+2. Never report a test as passed unless it was actually executed and passed.
+3. Clearly distinguish automated test results, manual verification, static analysis, and unverified assumptions.
+4. Never fabricate test results, coverage percentages, performance measurements, or security findings.
+5. Do not introduce unrelated refactoring or unnecessary dependencies.
+6. Preserve existing business logic unless the requested change explicitly requires modifying it.
+7. Never run destructive or potentially disruptive tests against production systems without explicit authorization and appropriate safeguards.
+8. Do not expose credentials, tokens, personal information, or sensitive production data in test output.
+9. Fix defects only within the authorized scope and rerun the relevant tests after making changes.
+10. If you cannot verify a requirement, explicitly state what evidence is missing and what must be done to verify it.
+
+## Final Instruction
+
+Work as an accountable Senior Software Engineer, not merely as a code generator.
+
+Follow this sequence:
+
+**Understand the changes → Identify risks → Design test scenarios → Implement tests → Execute tests → Fix defects → Rerun tests → Assess production readiness → Report evidence.**
+
+Begin by inspecting the actual code changes and the existing test infrastructure. Then proceed systematically. Do not declare the changes production-ready until the required checks have been completed and the available evidence supports that conclusion.
 
 
-review all code associated to search-businesses.controller.js
-Please optimize and refactor the following code according to best practices, updated, modern approach.
-Break down the code into smaller, more focused functions, each handling a specific task.
-Ensure the code is aligned with the 'Don't Repeat Yourself' (DRY), SOLID, and 'Keep It Simple, Stupid' (KISS) principles.
-The goal is to enhance security, readability, performance, reusability, testability, and maintainability.
+And create a 050-Forgot-Password-Flow-Exposes-Password-Hash-in-Response-Test-Result.md for your test result and documentation.
+And If you need folder for your test works, I recommend to use this folder test/

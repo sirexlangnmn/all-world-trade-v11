@@ -814,7 +814,7 @@ business_tagline=Quality Goods
 [file uploads: logo, banner, video, brochure, webinar]
 ```
 
-### 8.12 JWT Lifecycle (Password Reset)
+### 8.12 Password Reset Token Lifecycle (UUID)
 
 ```mermaid
 sequenceDiagram
@@ -824,19 +824,20 @@ sequenceDiagram
     participant Database
 
     User->>Frontend: Enter email
-    Frontend->>Backend: POST /forgot-password
+    Frontend->>Backend: POST /api/post/forgot-password-process
     Backend->>Database: Find user by email
     Database-->>Backend: User found
-    Backend->>Backend: Generate JWT (exp: 1hr)
-    Backend->>Database: Store reset token
-    Backend->>User: Email with reset link
+    Frontend->>Backend: POST /api/post/create-reset-token (uuid, email)
+    Backend->>Backend: Generate UUID reset token
+    Backend->>Database: Store token + 1-hour expiration in reset_tokens
+    Backend->>User: Email with reset link /reset-password/<uuid>
     User->>Frontend: Click reset link
     Frontend->>Backend: GET /reset-password/:token
-    Backend->>Backend: Verify JWT
+    Backend->>Database: Look up reset_tokens by token (no JWT verification)
     Backend->>Frontend: Show reset form
     User->>Frontend: New password
-    Frontend->>Backend: POST new password
-    Backend->>Backend: Hash password (bcrypt)
+    Frontend->>Backend: POST /reset-password/:token
+    Backend->>Backend: Hash password (bcrypt, cost 12)
     Backend->>Database: Update password
     Backend->>Frontend: Success response
 ```
