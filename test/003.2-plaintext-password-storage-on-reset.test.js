@@ -42,6 +42,7 @@ const tokenLookups = [];
 
 const originals = {
     resetTokensFindOne: db.reset_tokens.findOne,
+    resetTokensDestroy: db.reset_tokens.destroy,
     usersAccountsFindOne: db.users_accounts.findOne,
     usersAccountsUpdate: db.users_accounts.update,
     consoleError: console.error,
@@ -57,8 +58,12 @@ function captureRoute(app, method, paths, handler) {
 before(() => {
     db.reset_tokens.findOne = async (options) => {
         tokenLookups.push(options);
-        return { token: TOKEN, uuid: UUID };
+        // Expiry is enforced by the route (Finding 49); this hashing-focused
+        // suite uses a token that is valid for the whole test run.
+        return { token: TOKEN, uuid: UUID, expiration: new Date(Date.now() + 60 * 60 * 1000) };
     };
+
+    db.reset_tokens.destroy = async () => [1];
 
     db.users_accounts.findOne = async (options) => {
         assert.deepStrictEqual(options.where, { uuid: UUID });
@@ -72,8 +77,8 @@ before(() => {
 
     const app = {
         use: () => {},
-        get: (paths, handler) => captureRoute(app, 'get', paths, handler),
-        post: (paths, handler) => captureRoute(app, 'post', paths, handler),
+        get: (paths, ...handlers) => captureRoute(app, 'get', paths, handlers[handlers.length - 1]),
+        post: (paths, ...handlers) => captureRoute(app, 'post', paths, handlers[handlers.length - 1]),
     };
 
     registerResetRoutes(app);
@@ -82,6 +87,7 @@ before(() => {
 
 after(async () => {
     db.reset_tokens.findOne = originals.resetTokensFindOne;
+    db.reset_tokens.destroy = originals.resetTokensDestroy;
     db.users_accounts.findOne = originals.usersAccountsFindOne;
     db.users_accounts.update = originals.usersAccountsUpdate;
     console.error = originals.consoleError;

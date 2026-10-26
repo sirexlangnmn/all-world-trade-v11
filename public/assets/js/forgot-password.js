@@ -1,6 +1,14 @@
 const forgotPasswordForm = $('#forgotPasswordForm');
 forgotPasswordForm.on('submit', forgotPasswordSubmitHandler);
 
+function showRateLimitMessage(xhr) {
+    if (xhr && xhr.status === 429) {
+        Swal.fire('Please wait', 'Too many requests. Please try again later.', 'warning');
+        return true;
+    }
+    return false;
+}
+
 function forgotPasswordSubmitHandler(e) {
     e.preventDefault();
 
@@ -11,21 +19,23 @@ function forgotPasswordSubmitHandler(e) {
         success: function (res) {
             Swal.fire('Success', 'Email Send Successfully', 'success');
             if (res.message === 'found') {
-                createResetToken(res.email_or_social_media, res.password, res.uuid);
+                createResetToken(res.email_or_social_media, res.uuid);
             } else {
                 Swal.fire('Warning', 'Email not found', 'warning');
             }
         },
+        error: function (xhr) {
+            showRateLimitMessage(xhr);
+        },
     });
 }
 
-function createResetToken(email, password, uuid) {
+function createResetToken(email, uuid) {
     $.ajax({
         url: '/api/post/create-reset-token',
         type: 'POST',
         data: {
             uuid: uuid,
-            password: password,
             email_or_social_media: email,
         },
         success: function (data) {
@@ -34,8 +44,8 @@ function createResetToken(email, password, uuid) {
             } else {
             }
         },
-        error: function (e) {
-            // some code here
+        error: function (xhr) {
+            showRateLimitMessage(xhr);
         },
     });
 }
@@ -55,8 +65,8 @@ function sendEmailForChangePasswordRequest(data) {
             } else {
             }
         },
-        error: function (e) {
-            // some code here
+        error: function (xhr) {
+            showRateLimitMessage(xhr);
         },
     });
 }

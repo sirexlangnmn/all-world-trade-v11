@@ -9,14 +9,14 @@ Monolithic Express SSR marketplace (EJS + MySQL) for B2B trade networking: busin
 - `npm run tailwindBuild` — `tailwindcss -i ./public/assets/css/input.css -o ./public/assets/css-tailwind/output.css --watch`. Regenerate after ANY CSS/class change in `.ejs`/`.js`.
 - `npm run webpackBuild` — `webpack`. Bundles ONLY `public/assets/js/home.js` -> `public/assets/js-min/home.js`. All other client JS is used raw.
 - `npm run lint` — `npx prettier --write .` (Prettier config in `.prettierrc.js`: 4-space tabs, single quotes, printWidth 120, trailing commas all). NOTE: README §15.3 claims `--check`; package.json is authoritative (`--write`).
-- `npm test` — intentionally fails (stub). No test suite. Verify work by running the server, not tests.
+- `npm test` — runs the existing Node.js built-in test suite under `test/`. Some integration tests require the configured database and may skip when it is unavailable; report skips separately.
 
 ## Architecture (you will get lost without this)
 
 - **Two parallel data-access stacks exist.**
   - Legacy: `app/controllers/` + `app/models/` (raw SQL via mysql2 pool; SQL strings isolated in `app/query/`). Callback style: `Model.method(params, (err, data) => ...)`.
   - Sequelize: `app/db_controllers/` (async/await) + `app/db_models/`. **Put all new code in the Sequelize stack**; treat mysql2 layer as frozen (see CODE_REVIEW Finding 34).
-- **Boot sequence** (`app/src/server.js`): dotenv -> cors (origin whitelist) -> compression -> body-parser -> express-session -> nonce -> custom header middleware -> static `public/` -> express.json/urlencoded -> trailing-slash/body error handler -> `db.sequelize.sync()` (`server.js:207`) -> `/api/` routes -> `/api/v2/v3` routes -> cron. Then page GET routes defined inline (use `renderPage(res, '<view-folder>', {data})`, `server.js:297`).
+- **Boot sequence** (`app/src/server.js`): dotenv -> cors (origin whitelist) -> compression -> Express JSON/urlencoded parsers -> express-session -> nonce -> custom header middleware -> static `public/` -> trailing-slash/body error handler -> `db.sequelize.sync()` (`server.js:207`) -> `/api/` routes -> `/api/v2/v3` routes -> cron. Then page GET routes defined inline (use `renderPage(res, '<view-folder>', {data})`, `server.js:297`).
 - `db.sequelize.sync()` runs on **every boot** — tables are created/updated from `app/db_models/` definitions, not migrations. Root `models/`, `migrations/`, `config/config.json` are commented-out Sequelize-CLI artifacts — unused.
 - **Route modules** in `app/routes/*.js` export `module.exports = (app) => {...}`:
   - `index.js` — legacy `/api/` controllers (categories/sub-categories/minor, global-region, languages, login-process, selection, visitors-of-traders, get-count, etc.).
@@ -31,7 +31,7 @@ Monolithic Express SSR marketplace (EJS + MySQL) for B2B trade networking: busin
 
 ## Auth & sessions
 
-- `express-session` (NOT cookie-session — `cookie-session` is required at `server.js:47` but unused). Config: `secret: SESSION_SECRET`, `resave: false`, `saveUninitialized: true`, `cookie { httpOnly, sameSite:'strict', maxAge 1yr }`.
+- `express-session` is the session middleware. Config: `secret: SESSION_SECRET`, `resave: false`, `saveUninitialized: true`, `cookie { httpOnly, sameSite:'strict', maxAge 1yr }`.
 - `req.session.user` holds `{uuid, type, first_name, last_name, email_or_social_media, ...}` where **uuid is AES-encrypted**. Every UUID lookup must first call `ecdc.decryptUuid(req.session.user.uuid)` from `app/shared/ecdc.js` (CryptoJS AES keyed on `JWT_SECRET`).
 - Login: `POST /api/post/login-process` -> `app/controllers/login.controller.js` -> `app/models/login.model.js` (bcrypt.compare against `users_accounts.password`; sets `login_status=1`, writes `user_sessions`, sets session). Logout handler at `server.js:1510`.
 - **There is NO auth middleware on API routes** — page routes check `req.session.user` (see the `isUserLoggedIn`/`checkUserLoginStatus` helpers near `server.js:308`), APIs generally do not. See debt.
@@ -83,7 +83,7 @@ Keys referenced by code (see `README.md` §14 for roles): `DB_SERVERHOST, DB_USE
 
 - **Critical, likely STILL present**: SQL injection in `app/models/login.model.js` (email interpolated into raw SQL); plaintext password stored on reset (`forgot-password.js` stores `req.body.password3` directly); public bcrypt oracle (`app/routes/password.js`); no auth middleware on most API routes; no rate limiting; Helmet/CSP disabled; multer with no file filters or size limits; `tls: { rejectUnauthorized: false }` on all nodemailer transports; weak default env secrets; `encrypt.route.js` + `/session-checker/:random` debug endpoints; `reset_tokens` never invalidated after use.
 - **Correctness**: missing null check in reset-token lookup (can 500/crash); `ORDER BY RAND()` on search; race-condition `setTimeout(1500)` in `visitors-of-traders.model.js`; validation errors return HTTP 200; legacy OR-without-parens SQL patched in selection model but audit similar patterns before touching.
-- **Architecture**: 4 near-identical registration/upgrade stacks (controller + validation + client JS each, `type` 1-4 only difference); 35+ hand-maintained media INSERT variants (`app/query/users_business_medias.query.js`); monolithic 1,577-line `server.js`; two DALs; dead/` copy` files (e.g. `registration_v2.controller copy.js`, `selection.model copy.js`); unused deps (`passport`, `passport-local`, `cookie-session`, `body-parser`, `method-override`).
+- **Architecture**: 4 near-identical registration/upgrade stacks (controller + validation + client JS each, `type` 1-4 only difference); 35+ hand-maintained media INSERT variants (`app/query/users_business_medias.query.js`); monolithic 1,577-line `server.js`; two DALs; dead/` copy` files (e.g. `registration_v2.controller copy.js`, `selection.model copy.js`).
 - Routinely run `npm run lint` after edits; test manually via `npm run dev`.
 
 > Recommendation: When fixing code in `login.model.js`, `forgot-password.js`, `password.js`, `upload-file.js`, or the four `*-registration*.controller.js` files, follow the extraction playbook in CODE_REVIEW.md §2b (pure mappers first, then I/O, leave `res.json` in controllers) and prefer Sequelize over raw SQL for new work.

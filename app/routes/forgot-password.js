@@ -4,8 +4,15 @@ module.exports = (app) => {
     const USERS_ACCOUNTS = require('../query/users_accounts.query.js');
     const RESET_TOKENS = require('../query/reset_tokens.query.js');
     const { PasswordResetService } = require('../services/password-reset.service.js');
+    const middleware = require('../middleware');
 
     const passwordResetService = new PasswordResetService();
+    const {
+        createResetTokenLimiter,
+        sendResetEmailLimiter,
+        resetPasswordPageLimiter,
+        resetPasswordSubmitLimiter,
+    } = middleware.passwordResetRateLimit;
 
     const express = require('express');
     const path = require('path');
@@ -15,14 +22,15 @@ module.exports = (app) => {
     app.use(express.static(path.join(__dirname, '../../', 'public')));
 
     const mysql = require('mysql2');
-    const jwt = require('jsonwebtoken');
-    const CryptoJS = require('crypto-js');
     const { v4: uuidV4 } = require('uuid');
     const Sequelize = require('sequelize');
     const Op = Sequelize.Op;
 
-    const JWT_SECRET = process.env.JWT_SECRET;
     const AWT_HOSTNAME = process.env.AWT_HOSTNAME;
+
+    const INVALID_RESET_TOKEN_MESSAGE = 'Invalid or expired reset token';
+    const RESET_PASSWORD_SUCCESS_MESSAGE = 'reset password successfully';
+    const RESET_PASSWORD_FAILURE_MESSAGE = 'reset password failed';
 
     // Database connection
     // const db = mysql.createConnection({
@@ -43,58 +51,49 @@ module.exports = (app) => {
         res.render(path.join(__dirname, '../../', 'public/view/forgot-password/index'));
     });
 
-    app.post('/api/post/create-reset-token', async function (req, res, next) {
-        let uuid = req.body.uuid;
-        let password = req.body.password;
-        let receiverEmailAddress = req.body.email_or_social_media;
+    app.post('/api/post/create-reset-token', createResetTokenLimiter, async function (req, res, next) {
+        const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;
 
-        const PAYLOAD = {
-            password: password,
-        };
+        const { uuid, email_or_social_media: receiverEmailAddress } = req.body;
 
-        const SECRET = JWT_SECRET + password;
-        const TOKEN = jwt.sign(PAYLOAD, SECRET, { expiresIn: '15m' });
+        // A fresh UUID v4 is the reset token. Nothing credential-related is
+        // accepted, derived, or embedded here.
+        function buildResetTokenData() {
+            const token = uuidV4();
+            const link = AWT_HOSTNAME + `reset-password/${token}`;
+            const datetime = currentDatetime();
 
-        // Encrypt
-        let ciphertext = CryptoJS.AES.encrypt(TOKEN, SECRET).toString();
-        let encoded = encodeURIComponent(ciphertext);
-        let decoded = decodeURIComponent(encoded);
-        let bytes = CryptoJS.AES.decrypt(decoded, SECRET);
-        // let originalText = bytes.toString(CryptoJS.enc.Utf8);
-        let originalText = uuidV4();
+            const resetToken = {
+                token,
+                expiration: new Date(new Date().getTime() + RESET_TOKEN_TTL_MS),
+                uuid,
+                createdAt: datetime,
+                updatedAt: datetime,
+            };
 
-        // const LINK = AWT_HOSTNAME + `reset-password/${encoded}`;
-        const LINK = AWT_HOSTNAME + `reset-password/${originalText}`;
-        var expireDate = new Date(new Date().getTime() + 60 * 60 * 1000);
-        let datetime = currentDatetime();
+            const response = {
+                message: 'reset tokens saved',
+                uuid,
+                link,
+                receiverEmailAddress,
+            };
 
-        const resetTokensObject = {
-            token: originalText,
-            expiration: expireDate,
-            uuid: uuid,
-            createdAt: datetime,
-            updatedAt: datetime,
-        };
+            return { resetToken, response };
+        }
 
-        const emailObject = {
-            message: 'reset tokens saved',
-            uuid: uuid,
-            link: LINK,
-            receiverEmailAddress: receiverEmailAddress,
-        };
+        const { resetToken, response } = buildResetTokenData();
 
-        db.query(RESET_TOKENS.CREATE, Object.values(resetTokensObject), (err, rows) => {
+        db.query(RESET_TOKENS.CREATE, Object.values(resetToken), (err, rows) => {
             if (err) {
-                //throw err;
                 console.log(err);
             } else {
-                res.send(emailObject);
+                res.send(response);
                 return;
             }
         });
     });
 
-    app.post('/api/post/send-email-for-change-password', (req, res) => {
+    app.post('/api/post/send-email-for-change-password', sendResetEmailLimiter, (req, res) => {
         let uuid = req.body.uuid;
         let link = req.body.link;
         let receiverEmailAddress = req.body.receiverEmailAddress;
@@ -162,44 +161,83 @@ module.exports = (app) => {
         });
     };
 
-    // Both reset handlers need the account behind a token. Null handling for a
-    // missing token is intentionally unchanged (Finding 19); that is a separate
-    // task.
+    function isNonEmptyString(value) {
+        return typeof value === 'string' && value.length > 0;
+    }
+
+    // A token is only usable before its stored expiration. A missing or
+    // unparseable expiration fails closed so old/partial rows cannot be used.
+    function isResetTokenExpired(resetToken) {
+        const expiresAt = new Date(resetToken.expiration).getTime();
+
+        return !Number.isFinite(expiresAt) || expiresAt <= Date.now();
+    }
+
+    // Both reset handlers need the same validity decision: the token must be a
+    // non-empty string, exist, be unexpired, and map to an account. Returning
+    // both records lets the POST handler delete the token after a successful
+    // reset. Invalid input always resolves to null; callers own the response.
     async function findUserAccountByResetToken(token) {
+        if (!isNonEmptyString(token)) {
+            return null;
+        }
+
         const resetToken = await db_models.reset_tokens.findOne({
             where: { token: token },
         });
 
-        return db_models.users_accounts.findOne({
+        if (!resetToken || isResetTokenExpired(resetToken)) {
+            return null;
+        }
+
+        const userAccount = await db_models.users_accounts.findOne({
             where: { uuid: resetToken.uuid },
         });
+
+        if (!userAccount) {
+            return null;
+        }
+
+        return { resetToken, userAccount };
     }
 
-    app.get(['/reset-password/:token'], async function (req, res, next) {
-        const token = req.params.token;
-        const userAccount = await findUserAccountByResetToken(token);
-        const EMAIL = userAccount.email_or_social_media;
+    app.get(['/reset-password/:token'], resetPasswordPageLimiter, async function (req, res, next) {
+        const result = await findUserAccountByResetToken(req.params.token);
+
+        if (!result) {
+            return res.status(404).send(INVALID_RESET_TOKEN_MESSAGE);
+        }
 
         try {
-            res.render(path.join(__dirname, '../../', 'public/view/reset-password/index'), { email: EMAIL });
+            res.render(path.join(__dirname, '../../', 'public/view/reset-password/index'), {
+                email: result.userAccount.email_or_social_media,
+            });
         } catch (error) {
             res.send(error.message);
         }
     });
 
-    app.post(['/reset-password/:token'], async function (req, res) {
+    app.post(['/reset-password/:token'], resetPasswordSubmitLimiter, async function (req, res) {
         const token = req.params.token;
-        const { password, password2 } = req.body;
+        const { password, password2 } = req.body ?? {};
+        const result = await findUserAccountByResetToken(token);
 
-        const userAccount = await findUserAccountByResetToken(token);
+        if (!result) {
+            return res.send(RESET_PASSWORD_FAILURE_MESSAGE);
+        }
 
         try {
-            await passwordResetService.setNewPassword(userAccount.uuid, { password, password2 });
+            await passwordResetService.setNewPassword(result.userAccount.uuid, { password, password2 });
 
-            return res.send('reset password successfully');
+            // Only after the password is updated: make the token single-use.
+            // A deletion failure must not report success, because the link
+            // could still be reused.
+            await db_models.reset_tokens.destroy({ where: { token: token } });
+
+            return res.send(RESET_PASSWORD_SUCCESS_MESSAGE);
         } catch (error) {
             console.error('Password reset failed:', error.message);
-            return res.send('reset password failed');
+            return res.send(RESET_PASSWORD_FAILURE_MESSAGE);
         }
     });
 

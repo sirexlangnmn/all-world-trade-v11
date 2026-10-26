@@ -1,5 +1,5 @@
-
-
+placeholders value:
+{file_name} = 006-No-Authentication-Middleware-on-API-Routes.md
 
 read the file
 
@@ -41,9 +41,14 @@ This document is not a rewrite plan. It is a set of incremental recommendations 
 Note. This codebase is currently working properly in the production.
 Dont make any changes that break this system.
 
-Now, since you read the README.md, AGENTS.md, and CODE_REVIEW.md, lets do the task in docs/tasks/003.2-plaintext-password-storage-on-reset.md
+Now, since you read the
+README.md,
+AGENTS.md, and
+CODE_REVIEW.md,
+lets do the task in
+docs/tasks/{file_name}
 
-review all code associated to docs/tasks/003.2-plaintext-password-storage-on-reset.md
+review all code associated to docs/tasks/{file_name}
 Please optimize and refactor the following code according to best practices, updated, modern approach.
 Break down the code into smaller, more focused functions, each handling a specific task.
 Ensure the code is aligned with the 'Don't Repeat Yourself' (DRY), and 'Keep It Simple, Stupid' (KISS) principles.

@@ -640,7 +640,7 @@ The middleware pipeline in `app/src/server.js` registers in this order:
 | **Session Auth** | `express-session` stores user ID in `req.session.userId` |
 | **Password Hashing** | bcrypt with 12 salt rounds |
 | **Login Tracking** | `users_accounts.login_status` tracks active sessions |
-| **Protected Routes** | Middleware checks `req.session.userId` and `req.session.userType` |
+| **Protected Routes** | Page checks inspect `req.session.user`; `/api` uses `app/middleware/auth.middleware.js` (deny-by-default allowlist) |
 | **Role-Based Access** | Tier types (1-4) gate access to specific profile/upgrade pages |
 | **JWT** | Used only for password reset tokens (not for session auth) |
 | **AES Encryption** | UUIDs encrypted/decrypted for communicator links and session data |
@@ -814,7 +814,7 @@ business_tagline=Quality Goods
 [file uploads: logo, banner, video, brochure, webinar]
 ```
 
-### 8.12 JWT Lifecycle (Password Reset)
+### 8.12 Password Reset Token Lifecycle (UUID)
 
 ```mermaid
 sequenceDiagram
@@ -824,19 +824,20 @@ sequenceDiagram
     participant Database
 
     User->>Frontend: Enter email
-    Frontend->>Backend: POST /forgot-password
+    Frontend->>Backend: POST /api/post/forgot-password-process
     Backend->>Database: Find user by email
     Database-->>Backend: User found
-    Backend->>Backend: Generate JWT (exp: 1hr)
-    Backend->>Database: Store reset token
-    Backend->>User: Email with reset link
+    Frontend->>Backend: POST /api/post/create-reset-token (uuid, email)
+    Backend->>Backend: Generate UUID reset token
+    Backend->>Database: Store token + 1-hour expiration in reset_tokens
+    Backend->>User: Email with reset link /reset-password/<uuid>
     User->>Frontend: Click reset link
     Frontend->>Backend: GET /reset-password/:token
-    Backend->>Backend: Verify JWT
+    Backend->>Database: Look up reset_tokens by token (no JWT verification)
     Backend->>Frontend: Show reset form
     User->>Frontend: New password
-    Frontend->>Backend: POST new password
-    Backend->>Backend: Hash password (bcrypt)
+    Frontend->>Backend: POST /reset-password/:token
+    Backend->>Backend: Hash password (bcrypt, cost 12)
     Backend->>Database: Update password
     Backend->>Frontend: Success response
 ```
@@ -1447,7 +1448,7 @@ erDiagram
 ```mermaid
 graph TD
     subgraph "Login Flow"
-        A[User submits credentials] --> B[Passport.js Local Strategy]
+        A[User submits credentials] --> B[Express login route and credential verification]
         B --> C{Valid?}
         C -->|Yes| D[Create session]
         C -->|No| E[Return error]
@@ -1502,6 +1503,16 @@ Access control is enforced via middleware that checks `req.session.userType` bef
 - Session cookie for web application routes
 - No public registration (email verification required)
 - Rate limiting should be implemented at the reverse proxy layer
+
+#### Deny-by-default API authorization
+
+`app/middleware/auth.middleware.js` is mounted with `app.use('/api', isAuthenticated)` before the API route modules, so every `/api` request is protected unless it matches the explicit public allowlist (`PUBLIC_API_PATHS` / `PUBLIC_API_PATTERNS`).
+
+- Normal sessions are decrypted via `app/shared/ecdc.js` and validated against `users_accounts.login_status === 1`.
+- Support-agent sessions are validated separately against `support_accounts.status === 1`.
+- Unknown sessions, inactive accounts, decryption failures, and database errors fail closed with `401 {"status":"error","message":"Unauthorized"}`; the route handler is not called.
+- Public flows (login, registration, password reset, email verification, reference data, member counts, help/support, and MiroTalk callbacks) remain anonymous; registration upload handlers under `/api/post/registration-*` stay public.
+- `OPTIONS` requests pass through so CORS preflight still works. Add new public endpoints to the allowlist deliberately; routes are protected by default.
 
 ---
 
@@ -1741,6 +1752,7 @@ npm run dev
 | `npm run tailwindBuild` | `npx @tailwindcss/cli -i ... -o ...` | Build Tailwind CSS |
 | `npm run webpackBuild` | `npx webpack --mode=production` | Bundle JavaScript |
 | `npm run lint` | `npx prettier --check .` | Check code formatting |
+| `npm test` | `node --test` | Run the existing automated tests |
 
 ### 15.4 Database Migrations
 
@@ -1783,7 +1795,7 @@ npx sequelize-cli db:migrate:undo
 | **JS Bundler** | Webpack | 5.x | JavaScript bundling and minification |
 | **ORM** | Sequelize | 6.x | Database abstraction, migrations |
 | **Database Driver** | mysql2 | Latest | MySQL connection and queries |
-| **Auth** | Passport.js (Local) | Latest | Authentication strategy |
+| **Auth** | express-session | 1.x | Server-side session authentication for the SSR application |
 | **Real-time** | Socket.io | 4.x | WebRTC signaling, peer counting |
 | **Video** | MiroTalk P2P | Latest | WebRTC video meetings |
 | **Email** | Nodemailer | Latest | SMTP email sending |
@@ -1808,7 +1820,7 @@ npx sequelize-cli db:migrate:undo
 | **EJS** | Simple, familiar syntax; no client-side framework overhead; fast server-side rendering |
 | **Tailwind CSS** | Utility-first approach reduces CSS bloat; JIT engine generates only used styles |
 | **Sequelize** | Mature ORM with MySQL support; migrations, associations, and transaction support |
-| **Passport.js** | Modular, extensible auth middleware; simple local strategy integration |
+| **express-session** | Server-side sessions fit the server-rendered Express application |
 | **Socket.io** | Reliable real-time bidirectional communication with auto-reconnect and fallback |
 | **MiroTalk P2P** | Lightweight WebRTC library; no server-side media processing needed |
 | **Multer** | De facto standard for Express file uploads; flexible disk storage configuration |
@@ -1933,7 +1945,7 @@ graph TD
 
 ### 19.1 Current Testing Status
 
-The project currently has **no automated test suite**. Tests are performed manually during development. The following outlines the recommended testing strategy.
+The repository includes automated tests using Node.js's built-in `node:test` runner under `test/`. Run the suite with `npm test`. Some integration cases require the configured database and may skip when it is unavailable; report skipped tests separately from passing tests. Manual runtime checks remain important for production-sensitive changes.
 
 ### 19.2 Recommended Test Structure
 
@@ -1969,8 +1981,8 @@ tests/
 
 | Test Type | Framework | Scope |
 |-----------|-----------|-------|
-| **Unit** | Jest + Sinon | Service functions, utilities, helpers |
-| **Integration** | Jest + Supertest | API endpoints, controller logic |
+| **Unit** | Node.js `node:test` | Service functions, utilities, helpers |
+| **Integration** | Node.js `node:test` | API endpoints, controller logic |
 | **E2E** | Cypress | Full user workflows (login, register, search) |
 | **Database** | Jest + Sequelize Test | Model associations, query accuracy |
 

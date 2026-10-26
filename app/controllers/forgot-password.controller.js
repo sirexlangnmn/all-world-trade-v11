@@ -11,20 +11,23 @@ exports.create = (req, res) => {
         res.status(400).send({
             message: 'Content can not be empty!',
         });
+        return;
     }
 
     // Create a Controller
     const inputData = new Controller({
         email_or_social_media: req.body.emailAddress,
-        session: req.session,
     });
 
     // Save Controller in the database
     Controller.create(inputData, (err, data) => {
-        if (err)
+        if (err) {
             res.status(500).send({
                 message: err.message || 'Some error occurred while creating the Model.',
             });
-        else res.send(data);
+            return;
+        } else {
+            res.send(data);
+        }
     });
 };

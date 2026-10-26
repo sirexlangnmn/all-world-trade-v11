@@ -19,14 +19,10 @@ dependencies: {
     yamljs          : https://www.npmjs.com/package/yamljs
     ejs             : https://www.npmjs.com/package/ejs
     mysql           : https://www.npmjs.com/package/mysql
-    body-parser     : https://www.npmjs.com/package/body-parser
     bcrypt          : https://www.npmjs.com/package/bcrypt
     express-flash   : https://www.npmjs.com/package/express-flash
     express-session : https://www.npmjs.com/package/express-session
-    method-override : https://www.npmjs.com/package/method-override
     nodemon         : https://www.npmjs.com/package/nodemon
-    passport        : https://www.npmjs.com/package/passport
-    passport-local  : https://www.npmjs.com/package/passport-local
     jsonwebtoken    : https://www.npmjs.com/package/jsonwebtoken
     pdfkit          : https://www.npmjs.com/package/pdfkit
 }
@@ -42,12 +38,16 @@ const http = require('http');
 const https = require('https');
 const compression = require('compression');
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
-const cookieSession = require('cookie-session');
 const path = require('path');
 const app = express();
 const cron = require('node-cron');
+
+// The documented deployment puts a single Nginx reverse proxy on this host
+// (README §13.2, proxy_pass http://127.0.0.1:3000). Trust only loopback so
+// req.ip is the real client IP while client-supplied X-Forwarded-For headers
+// from direct external connections are ignored. Never use `true` here.
+app.set('trust proxy', 'loopback');
 
 // let corsOptions = {
 //     origin: "dev.allworldtrade.com"
@@ -71,11 +71,8 @@ app.use(
 
 app.use(compression()); // Compress all HTTP responses using GZip
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// parse requests of content-type - application/json
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 const session = require('express-session');
 const sessionMiddleware = session({
@@ -159,6 +156,12 @@ require('../realtime/call.handler.js')(io);
 
 const api_key_secret = process.env.API_KEY_SECRET;
 
+const { isAuthenticated, isUserLoggedIn } = require('../middleware/auth.middleware.js');
+
+// Deny-by-default for /api; the middleware owns the explicit public allowlist.
+// Must run after sessionMiddleware and before the first API route module.
+app.use('/api', isAuthenticated);
+
 require('../routes/index.js')(app);
 require('../routes/password.js')(app);
 require('../routes/upload-file.js')(app);
@@ -174,12 +177,6 @@ const log = new Logger('server');
 
 // Use all static files from the public folder
 app.use(express.static(path.join(__dirname, '../../', 'public')));
-
-// Api parse body data as json
-app.use(express.json());
-
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true })); // dati naka comment ito
 
 // Remove trailing slashes in url handle bad requests
 app.use((err, req, res, next) => {
@@ -261,11 +258,6 @@ function phTime() {
     return phTime;
 }
 
-const getUserUuidFromSession = (sessionUser) => {
-    if (!sessionUser || !sessionUser.uuid) return null;
-    return ecdc.decryptUuid(sessionUser.uuid);
-};
-
 const buildLoginViewData = () => ({
     ourGenerateNonce: lodashNonce,
 });
@@ -294,19 +286,6 @@ const renderPage = (res, page, data = {}) => {
 // ==============================
 // Business Logic
 // ==============================
-
-const isUserLoggedIn = async (sessionUser) => {
-    const userUuid = getUserUuidFromSession(sessionUser);
-
-    if (!userUuid) return false;
-
-    const loginStatus = await checkUserLoginStatus(userUuid);
-
-    console.log('isUserLoggedIn userUuid:', userUuid);
-    console.log('isUserLoggedIn loginStatus:', loginStatus);
-
-    return !!loginStatus;
-};
 
 // home
 app.get(['/'], async (req, res) => {
@@ -452,35 +431,6 @@ app.get(['/template'], (req, res) => {
 //         }
 //     }
 // });
-
-const checkUserLoginStatus = (userUuid) => {
-    const Users_accounts = db.users_accounts;
-
-    console.log('checkUserLoginStatus() userUuid: ', userUuid);
-
-    if (!userUuid) {
-        console.log('No checkUserLoginStatus userUuid found');
-        return Promise.resolve(null); // return a resolved promise
-    }
-
-    return Users_accounts.findOne({
-        where: { uuid: userUuid },
-        attributes: ['login_status'],
-    })
-        .then((usersAccounts) => {
-            if (!usersAccounts) {
-                console.log('No user found with that UUID');
-                return null;
-            }
-
-            console.log('Successfully got user login status:', usersAccounts.login_status);
-            return usersAccounts.login_status;
-        })
-        .catch((error) => {
-            console.error('Error in getting user login status:', error);
-            return null;
-        });
-};
 
 app.get('/selection', async (req, res) => {
     try {

@@ -29,7 +29,6 @@ const QUERY = {
 
     GET_BY_EMAIL: `SELECT 
 			email_or_social_media, 
-			password, 
 			uuid
             FROM users_accounts 
             WHERE email_or_social_media = ? `,
