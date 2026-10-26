@@ -33,6 +33,9 @@ dependencies: {
 
 require('dotenv').config();
 
+const { validateSecrets } = require('../config/secrets.config.js');
+validateSecrets();
+
 const { Server } = require('socket.io');
 const http = require('http');
 const https = require('https');
@@ -161,8 +164,6 @@ if (isHttps) {
 // carries the same req.session.user as HTTP routes (ring-call feature).
 io.engine.use(sessionMiddleware);
 require('../realtime/call.handler.js')(io);
-
-const api_key_secret = process.env.API_KEY_SECRET;
 
 const { isAuthenticated, isUserLoggedIn } = require('../middleware/auth.middleware.js');
 
@@ -1491,6 +1492,5 @@ server.listen(port, null, () => {
     // server settings
     log.debug('settings', {
         server: host,
-        api_key_secret: api_key_secret,
     });
 });

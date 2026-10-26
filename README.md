@@ -1670,9 +1670,9 @@ AWT_HOSTNAME=           # Public-facing base URL
 # =====================
 # SECURITY CONFIGURATION
 # =====================
-API_KEY_SECRET=         # MiroTalk meeting API key
-SESSION_SECRET=         # Session encryption secret
-JWT_SECRET=             # JWT signing secret
+API_KEY_SECRET=         # MiroTalk integration key (external usage to confirm)
+SESSION_SECRET=         # Signs session cookies
+JWT_SECRET=             # AES passphrase for legacy session UUID encryption
 
 # =====================
 # EMAIL CONFIGURATION (SMTP)
@@ -1698,13 +1698,28 @@ SUPPORT_RECEIVER_EMAIL_ADDRESS=     # Support tickets
 | `DB_SERVERHOST` | MySQL host — localhost for single-server, private IP for distributed | Internal |
 | `DB_USERNAME` / `DB_PASSWORD` | Database credentials | **Secret** |
 | `PORT` | Application listen port (3000 dev, 443 behind Nginx) | Low |
-| `SESSION_SECRET` | Used by `express-session` to sign cookies | **Secret** |
-| `JWT_SECRET` | Signs password reset JWT tokens | **Secret** |
-| `API_KEY_SECRET` | Authenticates MiroTalk meeting API requests | **Secret** |
+| `SESSION_SECRET` | Used by `express-session` to sign session cookies | **Secret** |
+| `JWT_SECRET` | AES passphrase used by the legacy CryptoJS/ECDC session-UUID format. It is **not** a JWT signing key in the current code; reset tokens are UUID v4 database rows. Re-verify before relying on this description. | **Secret** |
+| `API_KEY_SECRET` | MiroTalk integration key. External usage by the deployed MiroTalk instance is not proven from this repository and must be confirmed before rotation. | **Secret** |
 | `EMAIL_PASSWORD` | SMTP authentication | **Secret** |
 | `NODE_ENV` | Controls error verbosity, static file caching | Low |
 
+### 14.3 Application secret requirements and rotation
+
+`API_KEY_SECRET`, `SESSION_SECRET`, and `JWT_SECRET` are validated at startup by `app/config/secrets.config.js`. The process refuses to start when any of them is missing, empty, placeholder-like, a known default, or shorter than 32 characters.
+
+- Generate each value independently with a cryptographically secure source:
+  `node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"` (or `openssl rand -hex 64`).
+- Set the values in the hosting platform's environment configuration for every environment, and in the operator's local `.env` for development. Never commit them.
+- Rotate a secret immediately if it is exposed or shares a value with another environment.
+- Rotating `SESSION_SECRET` invalidates all existing session cookies. Rotating `JWT_SECRET` invalidates the encrypted UUIDs inside existing sessions. Users are signed out once and can log in again normally; plaintext database UUIDs and password-reset tokens are unaffected.
+- `API_KEY_SECRET` may also be configured on the external MiroTalk service. Coordinate both sides in the same change window before rotating it.
+- Startup logs never print secret values. Do not add logging that echoes a secret.
+- The known-default values previously used by this project (see `CODE_REVIEW.md` Finding 8) are permanently rejected by the validator.
+
 ---
+
+
 
 ## 15. Installation & Setup
 

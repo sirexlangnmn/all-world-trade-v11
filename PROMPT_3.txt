@@ -1,7 +1,7 @@
 
 placeholders value:
-{file_name} = 007-No-Rate-Limiting.md
-{file_test_result} = 007-No-Rate-Limiting-Test-Result.md
+{file_name} = 008-Weak-Default-Secrets-in-Environment.md
+{file_test_result} = 008-Weak-Default-Secrets-in-Environment-Test-Result.md
 
 read the file
 

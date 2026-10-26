@@ -32,3 +32,7 @@ Finding 6: No Authentication Middleware on API Routes
 Finding 7: No Rate Limiting
 007-No-Rate-Limiting.md
 007-No-Rate-Limiting-Test-Result.md
+
+Finding 8: Weak/Default Secrets in Environment
+008-Weak-Default-Secrets-in-Environment.md
+008-Weak-Default-Secrets-in-Environment-Test-Result.md
