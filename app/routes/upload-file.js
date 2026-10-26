@@ -10,6 +10,7 @@ module.exports = (app) => {
     const nodemailer = require('nodemailer');
     // const hbs = require('nodemailer-express-handlebars');
     const hbs = require('nodemailer-express-handlebars').default;
+    const { EMAIL_TLS_OPTIONS } = require('../config/email.config');
     app.use(express.static(path.join(__dirname, '../../', 'public')));
 
     const mysql = require('mysql2');
@@ -1714,9 +1715,7 @@ module.exports = (app) => {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASSWORD,
             },
-            tls: {
-                rejectUnauthorized: false,
-            },
+            tls: EMAIL_TLS_OPTIONS,
         });
 
         const handlebarOptions = {
@@ -1777,9 +1776,7 @@ module.exports = (app) => {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASSWORD,
             },
-            tls: {
-                rejectUnauthorized: false,
-            },
+            tls: EMAIL_TLS_OPTIONS,
         });
 
         const handlebarOptions = {
@@ -1833,9 +1830,7 @@ module.exports = (app) => {
                 user: process.env.PAYMENT_EMAIL_ADDRESS,
                 pass: process.env.PAYMENT_EMAIL_ADDRESS_PASSWORD,
             },
-            tls: {
-                rejectUnauthorized: false,
-            },
+            tls: EMAIL_TLS_OPTIONS,
         });
 
         const handlebarOptions = {

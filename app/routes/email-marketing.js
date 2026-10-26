@@ -10,6 +10,7 @@ module.exports = (app) => {
     const CryptoJS = require('crypto-js');
     const nodemailer = require('nodemailer');
     const hbs = require('nodemailer-express-handlebars').default;
+    const { EMAIL_TLS_OPTIONS } = require('../config/email.config');
 
     app.use(express.static(path.join(__dirname, '../../', 'public')));
 
@@ -84,9 +85,7 @@ module.exports = (app) => {
                 user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
                 pass: process.env.SUPPORT_RECEIVER_PASSWORD,
             },
-            tls: {
-                rejectUnauthorized: false,
-            },
+            tls: EMAIL_TLS_OPTIONS,
         });
 
         const handlebarOptions = {
@@ -170,9 +169,7 @@ module.exports = (app) => {
                 user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
                 pass: process.env.SUPPORT_RECEIVER_PASSWORD,
             },
-            tls: {
-                rejectUnauthorized: false,
-            },
+            tls: EMAIL_TLS_OPTIONS,
         });
 
         const handlebarOptions = {
@@ -223,9 +220,7 @@ module.exports = (app) => {
                 user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
                 pass: process.env.SUPPORT_RECEIVER_PASSWORD,
             },
-            tls: {
-                rejectUnauthorized: false,
-            },
+            tls: EMAIL_TLS_OPTIONS,
         });
 
         const handlebarOptions = {
@@ -277,9 +272,7 @@ module.exports = (app) => {
                 user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
                 pass: process.env.SUPPORT_RECEIVER_PASSWORD,
             },
-            tls: {
-                rejectUnauthorized: false,
-            },
+            tls: EMAIL_TLS_OPTIONS,
         });
 
         const handlebarOptions = {

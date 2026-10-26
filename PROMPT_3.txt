@@ -1,7 +1,7 @@
 
 placeholders value:
-{file_name} = 010-Helmet-Security-Headers-Disabled.md
-{file_test_result} = 010-Helmet-Security-Headers-Disabled-Test-Result.md
+{file_name} = 011-TLS-Verification-Disabled-for-Email-Transport.md
+{file_test_result} = 011-TLS-Verification-Disabled-for-Email-Transport-Test-Result.md
 
 read the file
 
