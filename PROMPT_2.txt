@@ -1,5 +1,5 @@
 placeholders value:
-{file_name} = 023-Reset-Token-Not-Invalidated-After-Use.md
+{file_name} = 006-No-Authentication-Middleware-on-API-Routes.md
 
 read the file
 

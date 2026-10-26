@@ -156,6 +156,12 @@ require('../realtime/call.handler.js')(io);
 
 const api_key_secret = process.env.API_KEY_SECRET;
 
+const { isAuthenticated, isUserLoggedIn } = require('../middleware/auth.middleware.js');
+
+// Deny-by-default for /api; the middleware owns the explicit public allowlist.
+// Must run after sessionMiddleware and before the first API route module.
+app.use('/api', isAuthenticated);
+
 require('../routes/index.js')(app);
 require('../routes/password.js')(app);
 require('../routes/upload-file.js')(app);
@@ -252,11 +258,6 @@ function phTime() {
     return phTime;
 }
 
-const getUserUuidFromSession = (sessionUser) => {
-    if (!sessionUser || !sessionUser.uuid) return null;
-    return ecdc.decryptUuid(sessionUser.uuid);
-};
-
 const buildLoginViewData = () => ({
     ourGenerateNonce: lodashNonce,
 });
@@ -285,19 +286,6 @@ const renderPage = (res, page, data = {}) => {
 // ==============================
 // Business Logic
 // ==============================
-
-const isUserLoggedIn = async (sessionUser) => {
-    const userUuid = getUserUuidFromSession(sessionUser);
-
-    if (!userUuid) return false;
-
-    const loginStatus = await checkUserLoginStatus(userUuid);
-
-    console.log('isUserLoggedIn userUuid:', userUuid);
-    console.log('isUserLoggedIn loginStatus:', loginStatus);
-
-    return !!loginStatus;
-};
 
 // home
 app.get(['/'], async (req, res) => {
@@ -443,35 +431,6 @@ app.get(['/template'], (req, res) => {
 //         }
 //     }
 // });
-
-const checkUserLoginStatus = (userUuid) => {
-    const Users_accounts = db.users_accounts;
-
-    console.log('checkUserLoginStatus() userUuid: ', userUuid);
-
-    if (!userUuid) {
-        console.log('No checkUserLoginStatus userUuid found');
-        return Promise.resolve(null); // return a resolved promise
-    }
-
-    return Users_accounts.findOne({
-        where: { uuid: userUuid },
-        attributes: ['login_status'],
-    })
-        .then((usersAccounts) => {
-            if (!usersAccounts) {
-                console.log('No user found with that UUID');
-                return null;
-            }
-
-            console.log('Successfully got user login status:', usersAccounts.login_status);
-            return usersAccounts.login_status;
-        })
-        .catch((error) => {
-            console.error('Error in getting user login status:', error);
-            return null;
-        });
-};
 
 app.get('/selection', async (req, res) => {
     try {

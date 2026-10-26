@@ -1,4 +1,6 @@
 const middleware = {};
+middleware.isAuthenticated = require('./auth.middleware.js').isAuthenticated;
+middleware.createIsAuthenticated = require('./auth.middleware.js').createIsAuthenticated;
 middleware.passwordResetRateLimit = require('./rate-limit/password-reset.rate-limit.js');
 middleware.smallScaleCompanyRegistrationValidation = require('./validations/small-scale-company-registration.validation.js');
 middleware.mediumScaleCompanyRegistrationValidation = require('./validations/medium-scale-company-registration.validation.js');

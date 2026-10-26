@@ -640,7 +640,7 @@ The middleware pipeline in `app/src/server.js` registers in this order:
 | **Session Auth** | `express-session` stores user ID in `req.session.userId` |
 | **Password Hashing** | bcrypt with 12 salt rounds |
 | **Login Tracking** | `users_accounts.login_status` tracks active sessions |
-| **Protected Routes** | Middleware checks `req.session.userId` and `req.session.userType` |
+| **Protected Routes** | Page checks inspect `req.session.user`; `/api` uses `app/middleware/auth.middleware.js` (deny-by-default allowlist) |
 | **Role-Based Access** | Tier types (1-4) gate access to specific profile/upgrade pages |
 | **JWT** | Used only for password reset tokens (not for session auth) |
 | **AES Encryption** | UUIDs encrypted/decrypted for communicator links and session data |
@@ -1503,6 +1503,16 @@ Access control is enforced via middleware that checks `req.session.userType` bef
 - Session cookie for web application routes
 - No public registration (email verification required)
 - Rate limiting should be implemented at the reverse proxy layer
+
+#### Deny-by-default API authorization
+
+`app/middleware/auth.middleware.js` is mounted with `app.use('/api', isAuthenticated)` before the API route modules, so every `/api` request is protected unless it matches the explicit public allowlist (`PUBLIC_API_PATHS` / `PUBLIC_API_PATTERNS`).
+
+- Normal sessions are decrypted via `app/shared/ecdc.js` and validated against `users_accounts.login_status === 1`.
+- Support-agent sessions are validated separately against `support_accounts.status === 1`.
+- Unknown sessions, inactive accounts, decryption failures, and database errors fail closed with `401 {"status":"error","message":"Unauthorized"}`; the route handler is not called.
+- Public flows (login, registration, password reset, email verification, reference data, member counts, help/support, and MiroTalk callbacks) remain anonymous; registration upload handlers under `/api/post/registration-*` stay public.
+- `OPTIONS` requests pass through so CORS preflight still works. Add new public endpoints to the allowlist deliberately; routes are protected by default.
 
 ---
 

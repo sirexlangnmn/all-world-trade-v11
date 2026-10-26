@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 23: Reset Token Not Invalidated After Use
-{file_name} = 023-Reset-Token-Not-Invalidated-After-Use.md
+{findings} = Finding 6: No Authentication Middleware on API Routes
+{file_name} = 006-No-Authentication-Middleware-on-API-Routes.md
 
 read the file
 
