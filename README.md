@@ -1055,10 +1055,18 @@ sequenceDiagram
     end
     Multer-->>Express: File paths (req.files)
     Express->>DB: INSERT or UPDATE users_business_medias<br/>with file paths
-    DB-->>Express: Success
-    Express-->>Browser: JSON response with file URLs
+    alt Persistence succeeds
+        DB-->>Express: Success
+        Express-->>Browser: Existing success response
+    else Persistence fails
+        DB-->>Express: Error
+        Express->>Storage: Remove files published for this request only
+        Express-->>Browser: Sanitized HTTP 500 response
+    end
     Browser-->>User: Display uploaded media
 ```
+
+If persistence fails after publication, the upload route removes only files generated for the current request. Existing media files are retained, including when a replacement update fails.
 
 ---
 

@@ -186,7 +186,7 @@ test('rejects unsupported types, empty requests, and oversized images explicitly
 
     const oversizedResponse = await postFile(server.url, {
         field: 'companyLogo',
-        content: Buffer.alloc(MiB + 1),
+        content: Buffer.alloc(2 * MiB + 1),
         contentType: 'image/png',
         filename: 'oversized.png',
     });

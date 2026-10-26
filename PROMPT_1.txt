@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 12: File Upload Without Validation
-{file_name} = 012-File-Upload-Without-Validation.md
+{findings} = Finding 52: Business Media Files Can Be Orphaned When Database Writes Fail
+{file_name} = 052-Business-Media-Files-Can-Be-Orphaned-When-Database-Writes-Fail.md
 
 read the file
 

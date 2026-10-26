@@ -1,7 +1,7 @@
 
 placeholders value:
-{file_name} = 012-File-Upload-Without-Validation.md
-{file_test_result} = 012-File-Upload-Without-Validation-Test-Result.md
+{file_name} = 052-Business-Media-Files-Can-Be-Orphaned-When-Database-Writes-Fail.md
+{file_test_result} = 052-Business-Media-Files-Can-Be-Orphaned-When-Database-Writes-Fail-Test-Result.md
 
 read the file
 
