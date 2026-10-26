@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 8: Weak/Default Secrets in Environment
-{file_name} = 008-Weak-Default-Secrets-in-Environment.md
+{findings} = Finding 10: Helmet Security Headers Disabled
+{file_name} = 010-Helmet-Security-Headers-Disabled.md
 
 read the file
 

@@ -238,7 +238,8 @@ graph TB
 
 ### 3.4 Security Considerations
 
-- Helmet is available (commented out) for security headers
+- Helmet sets CSP plus `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, `X-DNS-Prefetch-Control`, and related headers; CSP starts report-only (`CSP_REPORT_ONLY=true`) and is enforced when set to `false`
+- `Permissions-Policy` denies camera, microphone, geolocation, payment, and USB on the app origin (MiroTalk opens in a separate tab)
 - bcrypt for password hashing (12 rounds)
 - AES encryption for UUID-based session data
 - SSL termination at the application layer
@@ -1480,12 +1481,13 @@ graph TD
 | **UUID Over ID** | Public references use UUID v4 | Prevents sequential ID enumeration attacks |
 | **AES Encryption** | CryptoJS AES for communicator UUIDs | Protects sensitive meeting identifiers |
 | **Input Validation** | express-validator middleware | Prevents injection and malformed input |
-| **Helmet (available)** | HTTP security headers (commented out) | CSP, XSS, clickjacking protection |
+| **Helmet** | Active security headers; CSP is report-only until `CSP_REPORT_ONLY=false` | CSP, XSS, clickjacking, MIME-sniffing, referrer-leak protection |
 | **SSL/TLS** | Self-signed certificates in `app/ssl/` | Encrypts data in transit |
 | **Verification Codes** | Email verification on registration | Confirms email ownership |
 | **Login Status Tracking** | `users_accounts.login_status` | Detects concurrent sessions |
 | **API Rate Limiting** | `express-rate-limit`: 100 requests/15 min per IP on `/api`, 5/15 min on login and support login | Slows brute-force, credential stuffing, and resource exhaustion |
 | **Password-Reset Rate Limiting** | Dedicated limits on reset lookup, token creation, email, page, and submit | Limits reset-flow abuse |
+| **Permissions-Policy** | `app/middleware/permissions-policy/` | Denies camera, microphone, geolocation, payment, and USB on the app origin |
 
 ### 12.3 RBAC (Role-Based Access Control)
 
@@ -1673,6 +1675,7 @@ AWT_HOSTNAME=           # Public-facing base URL
 API_KEY_SECRET=         # MiroTalk integration key (external usage to confirm)
 SESSION_SECRET=         # Signs session cookies
 JWT_SECRET=             # AES passphrase for legacy session UUID encryption
+CSP_REPORT_ONLY=        # true = report-only CSP, false = enforce CSP
 
 # =====================
 # EMAIL CONFIGURATION (SMTP)
@@ -1702,7 +1705,8 @@ SUPPORT_RECEIVER_EMAIL_ADDRESS=     # Support tickets
 | `JWT_SECRET` | AES passphrase used by the legacy CryptoJS/ECDC session-UUID format. It is **not** a JWT signing key in the current code; reset tokens are UUID v4 database rows. Re-verify before relying on this description. | **Secret** |
 | `API_KEY_SECRET` | MiroTalk integration key. External usage by the deployed MiroTalk instance is not proven from this repository and must be confirmed before rotation. | **Secret** |
 | `EMAIL_PASSWORD` | SMTP authentication | **Secret** |
-| `NODE_ENV` | Controls error verbosity, static file caching | Low |
+| `NODE_ENV` | Controls error verbosity, static file caching, and HSTS/upgrade-insecure-requests gating | Low |
+| `CSP_REPORT_ONLY` | `true` keeps CSP in report-only mode; `false` enforces Content-Security-Policy | Low |
 
 ### 14.3 Application secret requirements and rotation
 
@@ -2093,7 +2097,7 @@ describe('POST /api/post/login-process', () => {
 | **Automated Tests** | Quality | Add unit, integration, and E2E test suites |
 | **CI/CD Pipeline** | DevOps | GitHub Actions or GitLab CI for automated testing and deployment |
 | **TypeScript Migration** | Code Quality | Gradual migration from JavaScript for type safety |
-| **Helmet Enablement** | Security | Enable CSP and other security headers |
+| **CSP Enforcement** | Security | Collect report-only violations, then set `CSP_REPORT_ONLY=false` and remove temporary inline allowances |
 | **Proxy-Layer Rate Limiting** | Security | Add optional reverse-proxy/DDoS throttling in front of the in-app API limiters |
 | **API Documentation** | Developer Experience | Generate OpenAPI/Swagger spec for all endpoints |
 
@@ -2109,7 +2113,7 @@ describe('POST /api/post/login-process', () => {
 - Enforce strong password policies (minimum length, complexity)
 - Implement account lockout after failed login attempts
 - Add two-factor authentication (TOTP)
-- Enable Helmet middleware for security headers
+- Remove remaining CSP inline allowances after inline event handlers/styles are refactored
 - Regular security audit of dependencies
 
 ---

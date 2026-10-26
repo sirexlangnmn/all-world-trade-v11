@@ -91,7 +91,7 @@
         <script  src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js"></script>
         <%- include('../includes/scripts/index.ejs') %>
         <script  src="assets/js/forgot-password.js"></script>
-        <script >
+        <script  nonce="<%= cspNonce %>">
             function goToLoginPage() {
               location.replace(host + '/login');
             }

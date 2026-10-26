@@ -77,7 +77,7 @@
       <script 
         src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js"></script>
       <script  src="assets/js/email-verification.js"></script>
-      <script >
+      <script  nonce="<%= cspNonce %>">
         function goToLogin() {
           location.replace(host + '/login');
         }

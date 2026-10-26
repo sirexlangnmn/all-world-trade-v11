@@ -1,5 +1,5 @@
 placeholders value:
-{file_name} = 008-Weak-Default-Secrets-in-Environment.md
+{file_name} = 010-Helmet-Security-Headers-Disabled.md
 
 read the file
 

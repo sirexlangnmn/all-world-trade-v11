@@ -62,7 +62,7 @@
 
 <%- include('../../modal/email-if-help-and-suggest-link-not-available.ejs') %>
 
-<script >
+<script  nonce="<%= cspNonce %>">
 function goToHomePage() {
     location.replace(host + '/');
 }
