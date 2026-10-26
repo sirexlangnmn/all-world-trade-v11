@@ -1,5 +1,5 @@
 <%- include('../includes/head/index.ejs') %>
-<!-- <script>
+<!-- <script nonce="<%= cspNonce %>">
     const ip = window.location.host;
     const url = 'https://get.geojs.io/v1/ip/geo.json';
     fetch(url)
@@ -455,7 +455,7 @@
     <!-- comment muna itong home.js code lang ito pang count ng trader at visitors pero pinatanggal muna -->
     <script src="assets/js/home.js"></script>
 
-    <script >
+    <script  nonce="<%= cspNonce %>">
         // delete na ito
         // function goToAllAboutEvents() {
         //     location.replace(host + '/all-about-events');

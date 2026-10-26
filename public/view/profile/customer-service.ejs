@@ -1299,7 +1299,7 @@
           <!-- <script src="assets/js/getCityNameToBeDisplayUsingCode.js"></script> -->
 
 
-          <script type="text/javascript">
+          <script type="text/javascript" nonce="<%= cspNonce %>">
             const sessionType = `<%= data.type %>`;
             const sessionFirstName = `<%= data.first_name %>`;
             const sessionLastName = `<%= data.last_name %>`;
@@ -1346,7 +1346,7 @@
                 break;
             }
           </script>
-          <script type="text/javascript">
+          <script type="text/javascript" nonce="<%= cspNonce %>">
 
           </script>
 

@@ -1,7 +1,7 @@
 
 placeholders value:
-{file_name} = 006-No-Authentication-Middleware-on-API-Routes.md
-{file_test_result} = 006-No-Authentication-Middleware-on-API-Routes-Test-Result.md
+{file_name} = 010-Helmet-Security-Headers-Disabled.md
+{file_test_result} = 010-Helmet-Security-Headers-Disabled-Test-Result.md
 
 read the file
 

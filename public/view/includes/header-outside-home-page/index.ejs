@@ -55,7 +55,7 @@
 </header>
 
 
-<script >
+<script  nonce="<%= cspNonce %>">
     let sessionUuid = `<%= data.uuid %>`;
     if (sessionUuid) {
         document.getElementById('right_side_with_session').style.display = 'block';

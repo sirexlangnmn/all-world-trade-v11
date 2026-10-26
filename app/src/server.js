@@ -33,6 +33,9 @@ dependencies: {
 
 require('dotenv').config();
 
+const { validateSecrets } = require('../config/secrets.config.js');
+validateSecrets();
+
 const { Server } = require('socket.io');
 const http = require('http');
 const https = require('https');
@@ -71,6 +74,14 @@ app.use(
 
 app.use(compression()); // Compress all HTTP responses using GZip
 
+const { generalApiLimiter } = require('../middleware/rate-limit/api.rate-limit.js');
+
+// General API protection. Mounted before body parsing, session, authentication,
+// and every API route module so abusive or malformed floods are rejected cheaply.
+// Scoped to '/api' so static assets, uploads, and page requests do not consume
+// the API budget.
+app.use('/api', generalApiLimiter);
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -87,11 +98,15 @@ const sessionMiddleware = session({
 });
 app.use(sessionMiddleware);
 
-let { lodashNonce } = require('../middleware/nonces');
+const { nonceMiddleware } = require('../middleware/nonces');
+const helmet = require('../middleware/helmet');
+const { permissionsPolicyMiddleware } = require('../middleware/permissions-policy');
 
-// Set CSP with helmet
-// const helmet = require("../middleware/helmet")
-// app.use(helmet);
+// Generate a fresh CSP nonce for every response before Helmet builds the CSP,
+// then let Helmet own all security headers (including X-Frame-Options).
+app.use(nonceMiddleware);
+app.use(helmet);
+app.use(permissionsPolicyMiddleware);
 
 app.use(function (req, res, next) {
     // let location_hostname = req.hostname;
@@ -112,19 +127,14 @@ app.use(function (req, res, next) {
         'https://dev.allworldtrade.com',
     ];
 
-    //console.log('check: ', 'Content-Security-Policy-Report-Only', "font-src 'self' https://fonts.gstatic.com; img-src 'self'; script-src 'self' https://code.jquery.com/jquery-3.6.0.min.js https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.0/sweetalert2.min.js https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js https://unpkg.com/ionicons@5.2.3/dist/ionicons.js 'nonce-" + lodashNonce +"'; frame-ancestors 'self'; frame-src 'self'");
     if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     }
 
+    // Helmet owns CSP, X-Frame-Options, and the other security headers. Keep
+    // this app-specific cache policy as the single source of truth.
     res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-    // res.setHeader('Content-Security-Policy', "frame-ancestors 'self'; frame-src 'self'");
-    // res.setHeader(
-    //     'Content-Security-Policy-Report-Only', "default-src 'self'; font-src 'self' https://fonts.gstatic.com/s/orbitron/v25/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nyGy6BoWgz.woff2; img-src 'self'; script-src 'self' 'nonce-" + lodashNonce +"' ; style-src 'self' 'nonce-" + lodashNonce +"' https://fonts.googleapis.com; frame-ancestors 'self'; form-action 'self'; frame-src 'self'",
-    // );
-
-    res.setHeader('X-Frame-Options', 'sameorigin');
 
     next();
 });
@@ -153,8 +163,6 @@ if (isHttps) {
 // carries the same req.session.user as HTTP routes (ring-call feature).
 io.engine.use(sessionMiddleware);
 require('../realtime/call.handler.js')(io);
-
-const api_key_secret = process.env.API_KEY_SECRET;
 
 const { isAuthenticated, isUserLoggedIn } = require('../middleware/auth.middleware.js');
 
@@ -258,21 +266,23 @@ function phTime() {
     return phTime;
 }
 
-const buildLoginViewData = () => ({
-    ourGenerateNonce: lodashNonce,
+const buildLoginViewData = (nonce) => ({
+    ourGenerateNonce: nonce,
 });
 
-const buildViewData = (sessionUser) => ({
+const buildViewData = (sessionUser, nonce) => ({
     uuid: sessionUser.uuid,
     type: sessionUser.type,
     first_name: sessionUser.first_name,
     last_name: sessionUser.last_name,
     email: sessionUser.email_or_social_media,
-    ourGenerateNonce: lodashNonce,
+    ourGenerateNonce: nonce,
 });
 
 const renderLogin = (res) => {
-    return res.render(path.join(__dirname, '../../', 'public/view/login/index'), { data: buildLoginViewData() });
+    return res.render(path.join(__dirname, '../../', 'public/view/login/index'), {
+        data: buildLoginViewData(res.locals.cspNonce),
+    });
 };
 
 const VIEW_BASE_PATH = path.join(__dirname, '../../', 'public/view');
@@ -304,7 +314,7 @@ app.get(['/'], async (req, res) => {
             return renderLogin(res);
         }
 
-        return renderPage(res, 'home', buildViewData(sessionUser));
+        return renderPage(res, 'home', buildViewData(sessionUser, res.locals.cspNonce));
     } catch (error) {
         console.error('Error in home route:', error);
         return renderLogin(res);
@@ -321,7 +331,7 @@ app.get(['/all-about-events'], (req, res) => {
             email: '',
             country: '',
             state_or_province: '',
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
 
         res.render(path.join(__dirname, '../../', 'public/view/all-about-events/index'), {
@@ -336,7 +346,7 @@ app.get(['/all-about-events'], (req, res) => {
             email: req.session.user.email_or_social_media,
             country: req.session.user.country,
             state_or_province: req.session.user.state_or_province,
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
 
         res.render(path.join(__dirname, '../../', 'public/view/all-about-events/index'), {
@@ -348,7 +358,7 @@ app.get(['/all-about-events'], (req, res) => {
 app.get(['/job-fair'], (req, res) => {
     if (req.session.user === undefined) {
         const sessionData = {
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
         res.render(path.join(__dirname, '../../', 'public/view/login/index'), {
             data: sessionData,
@@ -362,7 +372,7 @@ app.get(['/job-fair'], (req, res) => {
             email: req.session.user.email_or_social_media,
             country: req.session.user.country,
             state_or_province: req.session.user.state_or_province,
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
 
         res.render(path.join(__dirname, '../../', 'public/view/wizard-job-fair/index'), {
@@ -396,7 +406,7 @@ app.get(['/template'], (req, res) => {
 
 //     if (req.session.user === undefined) {
 //         const sessionData = {
-//             ourGenerateNonce: lodashNonce,
+//             ourGenerateNonce: res.locals.cspNonce,
 //         };
 //         res.render(path.join(__dirname, '../../', 'public/view/login/index'), {
 //             data: sessionData,
@@ -415,7 +425,7 @@ app.get(['/template'], (req, res) => {
 //                 first_name: req.session.user.first_name,
 //                 last_name: req.session.user.last_name,
 //                 email: req.session.user.email_or_social_media,
-//                 ourGenerateNonce: lodashNonce,
+//                 ourGenerateNonce: res.locals.cspNonce,
 //             };
 
 //             res.render(path.join(__dirname, '../../', 'public/view/selection/index'), {
@@ -423,7 +433,7 @@ app.get(['/template'], (req, res) => {
 //             });
 //         } else {
 //             const sessionData = {
-//                 ourGenerateNonce: lodashNonce,
+//                 ourGenerateNonce: res.locals.cspNonce,
 //             };
 //             res.render(path.join(__dirname, '../../', 'public/view/login/index'), {
 //                 data: sessionData,
@@ -451,7 +461,7 @@ app.get('/selection', async (req, res) => {
             return renderLogin(res);
         }
 
-        return renderPage(res, 'selection', buildViewData(sessionUser));
+        return renderPage(res, 'selection', buildViewData(sessionUser, res.locals.cspNonce));
     } catch (error) {
         console.error('Error in selection route:', error);
 
@@ -478,7 +488,7 @@ app.get(['/profile'], (req, res) => {
 
     if (req.session.user === undefined) {
         const sessionData = {
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
 
         res.render(path.join(__dirname, '../../', 'public/view/login/index'), {
@@ -491,7 +501,7 @@ app.get(['/profile'], (req, res) => {
             first_name: req.session.user.first_name,
             last_name: req.session.user.last_name,
             email: req.session.user.email_or_social_media,
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
 
         if (req.session.user.type == 1) {
@@ -525,7 +535,7 @@ app.get(['/profile'], (req, res) => {
 app.get(['/profile2'], (req, res) => {
     if (req.session.user === undefined) {
         const sessionData = {
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
         res.render(path.join(__dirname, '../../', 'public/view/login/index'), {
             data: sessionData,
@@ -548,7 +558,7 @@ app.get(['/profile2'], (req, res) => {
 app.get(['/help-and-support-profile'], (req, res) => {
     if (req.session.user === undefined) {
         const sessionData = {
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
 
         res.render(path.join(__dirname, '../../', 'public/view/login/help-and-support-login'), {
@@ -562,7 +572,7 @@ app.get(['/help-and-support-profile'], (req, res) => {
             first_name: req.session.user.first_name,
             last_name: req.session.user.last_name,
             email: req.session.user.email_address,
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
 
         if (req.session.user.status == 1) {
@@ -935,7 +945,7 @@ function formattingBusinessScale(id) {
 app.get(['/edit-traders-profile'], (req, res) => {
     if (req.session.user === undefined) {
         const sessionData = {
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
         res.render(path.join(__dirname, '../../', 'public/view/login/index'), {
             data: sessionData,
@@ -958,7 +968,7 @@ app.get(['/edit-traders-profile'], (req, res) => {
 app.get(['/edit-small-scale-profile'], (req, res) => {
     if (req.session.user === undefined) {
         const sessionData = {
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
         res.render(path.join(__dirname, '../../', 'public/view/login/index'), {
             data: sessionData,
@@ -981,7 +991,7 @@ app.get(['/edit-small-scale-profile'], (req, res) => {
 app.get(['/edit-medium-scale-profile'], (req, res) => {
     if (req.session.user === undefined) {
         const sessionData = {
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
         res.render(path.join(__dirname, '../../', 'public/view/login/index'), {
             data: sessionData,
@@ -1004,7 +1014,7 @@ app.get(['/edit-medium-scale-profile'], (req, res) => {
 app.get(['/edit-large-scale-profile'], (req, res) => {
     if (req.session.user === undefined) {
         const sessionData = {
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
         res.render(path.join(__dirname, '../../', 'public/view/login/index'), {
             data: sessionData,
@@ -1027,7 +1037,7 @@ app.get(['/edit-large-scale-profile'], (req, res) => {
 // registration new
 app.get(['/registration'], (req, res) => {
     // const sessionData = {
-    //     ourGenerateNonce: lodashNonce,
+    //     ourGenerateNonce: res.locals.cspNonce,
     // };
     // res.render(path.join(__dirname, '../../', 'public/view/registration-v2/index'), {
     //     data: sessionData,
@@ -1035,7 +1045,7 @@ app.get(['/registration'], (req, res) => {
 
     if (req.session.user === undefined) {
         const sessionData = {
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
         res.render(path.join(__dirname, '../../', 'public/view/registration-v2/index'), {
             data: sessionData,
@@ -1047,7 +1057,7 @@ app.get(['/registration'], (req, res) => {
             first_name: req.session.user.first_name,
             last_name: req.session.user.last_name,
             email: req.session.user.email_or_social_media,
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
 
         res.render(path.join(__dirname, '../../', 'public/view/selection/index'), {
@@ -1059,7 +1069,7 @@ app.get(['/registration'], (req, res) => {
 // registration old
 app.get(['/registration-for-small-scale-company'], (req, res) => {
     const sessionData = {
-        ourGenerateNonce: lodashNonce,
+        ourGenerateNonce: res.locals.cspNonce,
     };
     res.render(path.join(__dirname, '../../', 'public/view/registration/small-scale-company'), {
         data: sessionData,
@@ -1069,7 +1079,7 @@ app.get(['/registration-for-small-scale-company'], (req, res) => {
 // registration old
 app.get(['/registration-for-medium-scale-company'], (req, res) => {
     const sessionData = {
-        ourGenerateNonce: lodashNonce,
+        ourGenerateNonce: res.locals.cspNonce,
     };
     res.render(path.join(__dirname, '../../', 'public/view/registration/medium-scale-company'), {
         data: sessionData,
@@ -1079,7 +1089,7 @@ app.get(['/registration-for-medium-scale-company'], (req, res) => {
 // registration old
 app.get(['/registration-for-large-scale-company'], (req, res) => {
     const sessionData = {
-        ourGenerateNonce: lodashNonce,
+        ourGenerateNonce: res.locals.cspNonce,
     };
     res.render(path.join(__dirname, '../../', 'public/view/registration/large-scale-company'), {
         data: sessionData,
@@ -1089,7 +1099,7 @@ app.get(['/registration-for-large-scale-company'], (req, res) => {
 // registration old
 app.get(['/traders-registration'], (req, res) => {
     const sessionData = {
-        ourGenerateNonce: lodashNonce,
+        ourGenerateNonce: res.locals.cspNonce,
     };
     res.render(path.join(__dirname, '../../', 'public/view/registration/traders'), {
         data: sessionData,
@@ -1104,7 +1114,7 @@ app.get(['/help-and-support-registration'], (req, res) => {
 app.get(['/upgrade-plan'], (req, res) => {
     if (req.session.user === undefined) {
         const sessionData = {
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
         res.render(path.join(__dirname, '../../', 'public/view/login/index'), {
             data: sessionData,
@@ -1127,7 +1137,7 @@ app.get(['/upgrade-plan'], (req, res) => {
 app.get(['/upgrade-to-medium-scale'], (req, res) => {
     if (req.session.user === undefined) {
         const sessionData = {
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
         res.render(path.join(__dirname, '../../', 'public/view/login/index'), {
             data: sessionData,
@@ -1150,7 +1160,7 @@ app.get(['/upgrade-to-medium-scale'], (req, res) => {
 app.get(['/upgrade-to-large-scale'], (req, res) => {
     if (req.session.user === undefined) {
         const sessionData = {
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
         res.render(path.join(__dirname, '../../', 'public/view/login/index'), {
             data: sessionData,
@@ -1173,7 +1183,7 @@ app.get(['/upgrade-to-large-scale'], (req, res) => {
 app.get(['/upgrade-to-traders'], (req, res) => {
     if (req.session.user === undefined) {
         const sessionData = {
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
         res.render(path.join(__dirname, '../../', 'public/view/login/index'), {
             data: sessionData,
@@ -1202,7 +1212,7 @@ app.get(['/email-verification'], (req, res) => {
 
 app.get(['/login'], (req, res) => {
     const sessionData = {
-        ourGenerateNonce: lodashNonce,
+        ourGenerateNonce: res.locals.cspNonce,
     };
 
     res.render(path.join(__dirname, '../../', 'public/view/login/index'), {
@@ -1223,7 +1233,7 @@ app.get(['/terms-and-conditions'], (req, res) => {
             first_name: null,
             last_name: null,
             email: null,
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
 
         res.render(path.join(__dirname, '../../', 'public/view/legal/terms-and-conditions'), {
@@ -1253,7 +1263,7 @@ app.get(['/data-privacy-notice'], (req, res) => {
             first_name: null,
             last_name: null,
             email: null,
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
 
         res.render(path.join(__dirname, '../../', 'public/view/legal/data-privacy-notice'), {
@@ -1283,7 +1293,7 @@ app.get(['/cookie-policy'], (req, res) => {
             first_name: null,
             last_name: null,
             email: null,
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
 
         res.render(path.join(__dirname, '../../', 'public/view/legal/cookie-policy'), {
@@ -1313,7 +1323,7 @@ app.get(['/pricing'], (req, res) => {
             first_name: null,
             last_name: null,
             email: null,
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
 
         res.render(path.join(__dirname, '../../', 'public/view/pricing/index'), {
@@ -1343,7 +1353,7 @@ app.get(['/pricing2'], (req, res) => {
             first_name: null,
             last_name: null,
             email: null,
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
 
         res.render(path.join(__dirname, '../../', 'public/view/pricing/pricing2'), {
@@ -1381,7 +1391,7 @@ app.get('/traders-page/:companyName', (req, res) => {
             email: '',
             country: '',
             state_or_province: '',
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
 
         res.render(path.join(__dirname, '../../', 'public/view/home/index'), {
@@ -1397,7 +1407,7 @@ app.get('/traders-page/:companyName', (req, res) => {
             country: req.session.user.country,
             state_or_province: req.session.user.state_or_province,
             companyName: companyName,
-            ourGenerateNonce: lodashNonce,
+            ourGenerateNonce: res.locals.cspNonce,
         };
 
         res.render(path.join(__dirname, '../../', 'public/view/traders-page/index'), {
@@ -1483,6 +1493,5 @@ server.listen(port, null, () => {
     // server settings
     log.debug('settings', {
         server: host,
-        api_key_secret: api_key_secret,
     });
 });

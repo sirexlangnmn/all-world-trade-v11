@@ -18,6 +18,11 @@ function loginSubmitHandler(e) {
                 Swal.fire('Error', 'Please check your email address and password', 'error');
             }
         },
+        error: function (xhr) {
+            if (xhr && xhr.status === 429) {
+                Swal.fire('Too many attempts', 'Please try again later.', 'warning');
+            }
+        },
     });
 }
 

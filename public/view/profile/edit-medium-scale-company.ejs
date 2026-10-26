@@ -279,7 +279,7 @@
         <script src="assets/js/getBusinessStatesLocationToBeEditAndOptions.js"></script>
         <script src="assets/js/getBusinessCityLocationToBeEditAndOptions.js"></script>
 
-        <script type="text/javascript">
+        <script type="text/javascript" nonce="<%= cspNonce %>">
           function calcTime(city, offset) {
             var b = new Date()
             var utc = b.getTime() + (b.getTimezoneOffset() * 60000);

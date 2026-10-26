@@ -16,7 +16,7 @@ Monolithic Express SSR marketplace (EJS + MySQL) for B2B trade networking: busin
 - **Two parallel data-access stacks exist.**
   - Legacy: `app/controllers/` + `app/models/` (raw SQL via mysql2 pool; SQL strings isolated in `app/query/`). Callback style: `Model.method(params, (err, data) => ...)`.
   - Sequelize: `app/db_controllers/` (async/await) + `app/db_models/`. **Put all new code in the Sequelize stack**; treat mysql2 layer as frozen (see CODE_REVIEW Finding 34).
-- **Boot sequence** (`app/src/server.js`): dotenv -> cors (origin whitelist) -> compression -> Express JSON/urlencoded parsers -> express-session -> nonce -> custom header middleware -> static `public/` -> trailing-slash/body error handler -> `db.sequelize.sync()` (`server.js:207`) -> `/api/` routes -> `/api/v2/v3` routes -> cron. Then page GET routes defined inline (use `renderPage(res, '<view-folder>', {data})`, `server.js:297`).
+- **Boot sequence** (`app/src/server.js`): dotenv -> cors (origin whitelist) -> compression -> Express JSON/urlencoded parsers -> express-session -> nonce -> Helmet -> Permissions-Policy -> custom header middleware -> static `public/` -> trailing-slash/body error handler -> `db.sequelize.sync()` (`server.js:207`) -> `/api/` routes -> `/api/v2/v3` routes -> cron. Then page GET routes defined inline (use `renderPage(res, '<view-folder>', {data})`, `server.js:297`).
 - `db.sequelize.sync()` runs on **every boot** — tables are created/updated from `app/db_models/` definitions, not migrations. Root `models/`, `migrations/`, `config/config.json` are commented-out Sequelize-CLI artifacts — unused.
 - **Route modules** in `app/routes/*.js` export `module.exports = (app) => {...}`:
   - `index.js` — legacy `/api/` controllers (categories/sub-categories/minor, global-region, languages, login-process, selection, visitors-of-traders, get-count, etc.).
@@ -35,7 +35,7 @@ Monolithic Express SSR marketplace (EJS + MySQL) for B2B trade networking: busin
 - `req.session.user` holds `{uuid, type, first_name, last_name, email_or_social_media, ...}` where **uuid is AES-encrypted**. Every UUID lookup must first call `ecdc.decryptUuid(req.session.user.uuid)` from `app/shared/ecdc.js` (CryptoJS AES keyed on `JWT_SECRET`).
 - Login: `POST /api/post/login-process` -> `app/controllers/login.controller.js` -> `app/models/login.model.js` (bcrypt.compare against `users_accounts.password`; sets `login_status=1`, writes `user_sessions`, sets session). Logout handler at `server.js:1510`.
 - **There is NO auth middleware on API routes** — page routes check `req.session.user` (see the `isUserLoggedIn`/`checkUserLoginStatus` helpers near `server.js:308`), APIs generally do not. See debt.
-- Helmet is commented out (`server.js:96-98`); only `X-Frame-Options: sameorigin` + `Cache-Control: no-store` are set manually. Nonce plumbing (`app/middleware/nonces`, `app/middleware/helmet`) exists but CSP is disabled.
+- Helmet is active in `server.js` and owns CSP/security headers; `app/middleware/nonces` issues a per-request nonce exposed as `res.locals.cspNonce` (inline scripts use it). CSP defaults to report-only; set `CSP_REPORT_ONLY=false` to enforce. HSTS is production-only. The app-specific `Cache-Control` header remains manual.
 
 ## Database & models
 
@@ -72,7 +72,7 @@ Monolithic Express SSR marketplace (EJS + MySQL) for B2B trade networking: busin
 
 ## Environment (names only — never commit/get values)
 
-Keys referenced by code (see `README.md` §14 for roles): `DB_SERVERHOST, DB_USERNAME, DB_PASSWORD, DB_NAME, DB_DIALECT, PORT, NODE_ENV, AWT_HOSTNAME, API_KEY_SECRET, SESSION_SECRET, JWT_SECRET, EMAIL_SERVERHOST, EMAIL_PORT, EMAIL_SECURE, EMAIL_USER, EMAIL_PASSWORD, EMAIL_SENDER_ADDRESS, PAYMENT_EMAIL_ADDRESS, PAYMENT_EMAIL_ADDRESS_PASSWORD, SUPPORT_RECEIVER_EMAIL_ADDRESS, SUPPORT_RECEIVER_PASSWORD, FREE_CONTACT_LIMIT`. `.env` is gitignored; there is **no committed `.env.example`**.
+Keys referenced by code (see `README.md` §14 for roles): `DB_SERVERHOST, DB_USERNAME, DB_PASSWORD, DB_NAME, DB_DIALECT, PORT, NODE_ENV, AWT_HOSTNAME, API_KEY_SECRET, SESSION_SECRET, JWT_SECRET, EMAIL_SERVERHOST, EMAIL_PORT, EMAIL_SECURE, EMAIL_USER, EMAIL_PASSWORD, EMAIL_SENDER_ADDRESS, PAYMENT_EMAIL_ADDRESS, PAYMENT_EMAIL_ADDRESS_PASSWORD, SUPPORT_RECEIVER_EMAIL_ADDRESS, SUPPORT_RECEIVER_PASSWORD, FREE_CONTACT_LIMIT, CSP_REPORT_ONLY`. `.env` is gitignored; `.env.example` is committed with placeholders only (its secret placeholders intentionally fail startup validation).
 
 ## Deployment / HTTPS
 
@@ -81,7 +81,7 @@ Keys referenced by code (see `README.md` §14 for roles): `DB_SERVERHOST, DB_USE
 
 ## Known technical debt & risks (from `CODE_REVIEW.md` — some fixed, verify current state before acting)
 
-- **Critical, likely STILL present**: SQL injection in `app/models/login.model.js` (email interpolated into raw SQL); plaintext password stored on reset (`forgot-password.js` stores `req.body.password3` directly); public bcrypt oracle (`app/routes/password.js`); no auth middleware on most API routes; no rate limiting; Helmet/CSP disabled; multer with no file filters or size limits; `tls: { rejectUnauthorized: false }` on all nodemailer transports; weak default env secrets; `encrypt.route.js` + `/session-checker/:random` debug endpoints; `reset_tokens` never invalidated after use.
+- **Critical, likely STILL present**: SQL injection in `app/models/login.model.js` (email interpolated into raw SQL); plaintext password stored on reset (`forgot-password.js` stores `req.body.password3` directly); public bcrypt oracle (`app/routes/password.js`); no auth middleware on most API routes; no rate limiting; CSP still report-only by default with temporary `unsafe-inline` for event handlers/styles; multer with no file filters or size limits; `tls: { rejectUnauthorized: false }` on all nodemailer transports; weak default env secrets; `encrypt.route.js` + `/session-checker/:random` debug endpoints; `reset_tokens` never invalidated after use.
 - **Correctness**: missing null check in reset-token lookup (can 500/crash); `ORDER BY RAND()` on search; race-condition `setTimeout(1500)` in `visitors-of-traders.model.js`; validation errors return HTTP 200; legacy OR-without-parens SQL patched in selection model but audit similar patterns before touching.
 - **Architecture**: 4 near-identical registration/upgrade stacks (controller + validation + client JS each, `type` 1-4 only difference); 35+ hand-maintained media INSERT variants (`app/query/users_business_medias.query.js`); monolithic 1,577-line `server.js`; two DALs; dead/` copy` files (e.g. `registration_v2.controller copy.js`, `selection.model copy.js`).
 - Routinely run `npm run lint` after edits; test manually via `npm run dev`.

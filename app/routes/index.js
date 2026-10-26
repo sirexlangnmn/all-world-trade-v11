@@ -91,9 +91,11 @@ module.exports = (app) => {
 
     app.get('/api/get/minor-sub-category-by-title/:title', minorSubCategories.getMinorSubCategoryByTitle);
 
-    app.post(['/api/post/login-process'], middleware.login_process, login.create);
+    const apiRateLimit = middleware.apiRateLimit;
 
-    app.post(['/api/post/help-and-support-login-process'], helpAndSupportLogin.create);
+    app.post(['/api/post/login-process'], apiRateLimit.loginLimiter, middleware.login_process, login.create);
+
+    app.post(['/api/post/help-and-support-login-process'], apiRateLimit.supportLoginLimiter, helpAndSupportLogin.create);
 
     app.post(
         ['/api/post/forgot-password-process'],

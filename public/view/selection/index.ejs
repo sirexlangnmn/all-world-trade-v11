@@ -586,7 +586,7 @@
         }
       </style>
 
-      <script type="text/javascript">
+      <script type="text/javascript" nonce="<%= cspNonce %>">
         // Mobile panel switching via profile avatar dropdown (only active below lg breakpoint)
         (function() {
           'use strict';
@@ -654,7 +654,7 @@
         })();
       </script>
 
-      <script>
+      <script nonce="<%= cspNonce %>">
         (function() {
           'use strict';
           var nav = document.querySelector('nav.sticky');

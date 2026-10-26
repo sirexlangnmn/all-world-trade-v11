@@ -1,5 +1,5 @@
 <%- include('../includes/head/index.ejs') %>
-<!-- <script>
+<!-- <script nonce="<%= cspNonce %>">
     const ip = window.location.host;
     const url = 'https://get.geojs.io/v1/ip/geo.json';
     fetch(url)
@@ -373,7 +373,7 @@
 
     <script src=""></script>
 
-    <script >
+    <script  nonce="<%= cspNonce %>">
         // Sample data (you can replace this with your actual data)
         const mediaPartnerData = [
             {

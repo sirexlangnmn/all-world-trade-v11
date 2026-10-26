@@ -238,11 +238,12 @@ graph TB
 
 ### 3.4 Security Considerations
 
-- Helmet is available (commented out) for security headers
+- Helmet sets CSP plus `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, `X-DNS-Prefetch-Control`, and related headers; CSP starts report-only (`CSP_REPORT_ONLY=true`) and is enforced when set to `false`
+- `Permissions-Policy` denies camera, microphone, geolocation, payment, and USB on the app origin (MiroTalk opens in a separate tab)
 - bcrypt for password hashing (12 rounds)
 - AES encryption for UUID-based session data
 - SSL termination at the application layer
-- Rate limiting should be added at the Nginx layer
+- In-app rate limiting: `/api` is limited to 100 requests per 15 minutes per IP, and login/support-login to 5 attempts per 15 minutes per IP (`app/middleware/rate-limit/api.rate-limit.js`); proxy-layer limiting remains optional defense-in-depth
 
 ---
 
@@ -1480,10 +1481,13 @@ graph TD
 | **UUID Over ID** | Public references use UUID v4 | Prevents sequential ID enumeration attacks |
 | **AES Encryption** | CryptoJS AES for communicator UUIDs | Protects sensitive meeting identifiers |
 | **Input Validation** | express-validator middleware | Prevents injection and malformed input |
-| **Helmet (available)** | HTTP security headers (commented out) | CSP, XSS, clickjacking protection |
+| **Helmet** | Active security headers; CSP is report-only until `CSP_REPORT_ONLY=false` | CSP, XSS, clickjacking, MIME-sniffing, referrer-leak protection |
 | **SSL/TLS** | Self-signed certificates in `app/ssl/` | Encrypts data in transit |
 | **Verification Codes** | Email verification on registration | Confirms email ownership |
 | **Login Status Tracking** | `users_accounts.login_status` | Detects concurrent sessions |
+| **API Rate Limiting** | `express-rate-limit`: 100 requests/15 min per IP on `/api`, 5/15 min on login and support login | Slows brute-force, credential stuffing, and resource exhaustion |
+| **Password-Reset Rate Limiting** | Dedicated limits on reset lookup, token creation, email, page, and submit | Limits reset-flow abuse |
+| **Permissions-Policy** | `app/middleware/permissions-policy/` | Denies camera, microphone, geolocation, payment, and USB on the app origin |
 
 ### 12.3 RBAC (Role-Based Access Control)
 
@@ -1502,7 +1506,7 @@ Access control is enforced via middleware that checks `req.session.userType` bef
 - API key authentication for MiroTalk meeting API (`API_KEY_SECRET`)
 - Session cookie for web application routes
 - No public registration (email verification required)
-- Rate limiting should be implemented at the reverse proxy layer
+- In-app rate limiting is applied to every `/api` request (100 requests per 15 minutes per IP) and more strictly to login and support login (5 attempts per 15 minutes per IP); password-reset endpoints keep their own dedicated limiters. Proxy-layer rate limiting remains optional defense-in-depth.
 
 #### Deny-by-default API authorization
 
@@ -1668,9 +1672,10 @@ AWT_HOSTNAME=           # Public-facing base URL
 # =====================
 # SECURITY CONFIGURATION
 # =====================
-API_KEY_SECRET=         # MiroTalk meeting API key
-SESSION_SECRET=         # Session encryption secret
-JWT_SECRET=             # JWT signing secret
+API_KEY_SECRET=         # MiroTalk integration key (external usage to confirm)
+SESSION_SECRET=         # Signs session cookies
+JWT_SECRET=             # AES passphrase for legacy session UUID encryption
+CSP_REPORT_ONLY=        # true = report-only CSP, false = enforce CSP
 
 # =====================
 # EMAIL CONFIGURATION (SMTP)
@@ -1696,13 +1701,29 @@ SUPPORT_RECEIVER_EMAIL_ADDRESS=     # Support tickets
 | `DB_SERVERHOST` | MySQL host — localhost for single-server, private IP for distributed | Internal |
 | `DB_USERNAME` / `DB_PASSWORD` | Database credentials | **Secret** |
 | `PORT` | Application listen port (3000 dev, 443 behind Nginx) | Low |
-| `SESSION_SECRET` | Used by `express-session` to sign cookies | **Secret** |
-| `JWT_SECRET` | Signs password reset JWT tokens | **Secret** |
-| `API_KEY_SECRET` | Authenticates MiroTalk meeting API requests | **Secret** |
+| `SESSION_SECRET` | Used by `express-session` to sign session cookies | **Secret** |
+| `JWT_SECRET` | AES passphrase used by the legacy CryptoJS/ECDC session-UUID format. It is **not** a JWT signing key in the current code; reset tokens are UUID v4 database rows. Re-verify before relying on this description. | **Secret** |
+| `API_KEY_SECRET` | MiroTalk integration key. External usage by the deployed MiroTalk instance is not proven from this repository and must be confirmed before rotation. | **Secret** |
 | `EMAIL_PASSWORD` | SMTP authentication | **Secret** |
-| `NODE_ENV` | Controls error verbosity, static file caching | Low |
+| `NODE_ENV` | Controls error verbosity, static file caching, and HSTS/upgrade-insecure-requests gating | Low |
+| `CSP_REPORT_ONLY` | `true` keeps CSP in report-only mode; `false` enforces Content-Security-Policy | Low |
+
+### 14.3 Application secret requirements and rotation
+
+`API_KEY_SECRET`, `SESSION_SECRET`, and `JWT_SECRET` are validated at startup by `app/config/secrets.config.js`. The process refuses to start when any of them is missing, empty, placeholder-like, a known default, or shorter than 32 characters.
+
+- Generate each value independently with a cryptographically secure source:
+  `node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"` (or `openssl rand -hex 64`).
+- Set the values in the hosting platform's environment configuration for every environment, and in the operator's local `.env` for development. Never commit them.
+- Rotate a secret immediately if it is exposed or shares a value with another environment.
+- Rotating `SESSION_SECRET` invalidates all existing session cookies. Rotating `JWT_SECRET` invalidates the encrypted UUIDs inside existing sessions. Users are signed out once and can log in again normally; plaintext database UUIDs and password-reset tokens are unaffected.
+- `API_KEY_SECRET` may also be configured on the external MiroTalk service. Coordinate both sides in the same change window before rotating it.
+- Startup logs never print secret values. Do not add logging that echoes a secret.
+- The known-default values previously used by this project (see `CODE_REVIEW.md` Finding 8) are permanently rejected by the validator.
 
 ---
+
+
 
 ## 15. Installation & Setup
 
@@ -2076,8 +2097,8 @@ describe('POST /api/post/login-process', () => {
 | **Automated Tests** | Quality | Add unit, integration, and E2E test suites |
 | **CI/CD Pipeline** | DevOps | GitHub Actions or GitLab CI for automated testing and deployment |
 | **TypeScript Migration** | Code Quality | Gradual migration from JavaScript for type safety |
-| **Helmet Enablement** | Security | Enable CSP and other security headers |
-| **Rate Limiting** | Security | Implement rate limiting on API endpoints |
+| **CSP Enforcement** | Security | Collect report-only violations, then set `CSP_REPORT_ONLY=false` and remove temporary inline allowances |
+| **Proxy-Layer Rate Limiting** | Security | Add optional reverse-proxy/DDoS throttling in front of the in-app API limiters |
 | **API Documentation** | Developer Experience | Generate OpenAPI/Swagger spec for all endpoints |
 
 ### 20.3 Database Improvements
@@ -2092,7 +2113,7 @@ describe('POST /api/post/login-process', () => {
 - Enforce strong password policies (minimum length, complexity)
 - Implement account lockout after failed login attempts
 - Add two-factor authentication (TOTP)
-- Enable Helmet middleware for security headers
+- Remove remaining CSP inline allowances after inline event handlers/styles are refactored
 - Regular security audit of dependencies
 
 ---
