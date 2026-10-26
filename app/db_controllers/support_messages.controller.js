@@ -2,6 +2,7 @@ const { v4: uuidV4 } = require('uuid');
 const { check, validationResult } = require('express-validator');
 const nodemailer = require('nodemailer');
 const db = require('../db_models');
+const { EMAIL_TLS_OPTIONS } = require('../config/email.config');
 const sequelizeConfig = require('../config/sequelize.config.js');
 
 const Support_messages = db.support_messages;
@@ -42,9 +43,7 @@ exports.create = async (req, res) => {
             user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
             pass: process.env.SUPPORT_RECEIVER_PASSWORD,
         },
-        tls: {
-            rejectUnauthorized: false,
-        },
+        tls: EMAIL_TLS_OPTIONS,
     });
 
     // setup email data with unicode symbols

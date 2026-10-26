@@ -41,3 +41,24 @@ Finding 8: Weak/Default Secrets in Environment
 Finding 10: Helmet Security Headers Disabled
 010-Helmet-Security-Headers-Disabled.md
 010-Helmet-Security-Headers-Disabled-Test-Result.md
+
+
+Finding 11: TLS Verification Disabled for Email Transport
+011-TLS-Verification-Disabled-for-Email-Transport.md
+011-TLS-Verification-Disabled-for-Email-Transport-Test-Result.md
+
+
+Finding 12: File Upload Without Validation
+012-File-Upload-Without-Validation.md
+012-File-Upload-Without-Validation-Test-Result.md
+
+
+Finding 52: Business Media Files Can Be Orphaned When Database Writes Fail
+052-Business-Media-Files-Can-Be-Orphaned-When-Database-Writes-Fail.md
+052-Business-Media-Files-Can-Be-Orphaned-When-Database-Writes-Fail-Test-Result.md
+
+
+
+Finding 53: PDF and MP4 Upload Checks Are Structural Screening, Not Full Content Validation
+053-PDF-and-MP4-Upload-Checks-Are-Structural-Screening-Not-Full-Content-Validation.md
+053-PDF-and-MP4-Upload-Checks-Are-Structural-Screening-Not-Full-Content-Validation-Test-Result.md

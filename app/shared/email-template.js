@@ -1,6 +1,7 @@
 const path = require('path');
 const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars').default;
+const { EMAIL_TLS_OPTIONS } = require('../config/email.config');
 
 const et = {};
 
@@ -14,9 +15,7 @@ et.sendEmailToClient = (receiverEmailAddress, emailData) => {
             user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
             pass: process.env.SUPPORT_RECEIVER_PASSWORD,
         },
-        tls: {
-            rejectUnauthorized: false,
-        },
+        tls: EMAIL_TLS_OPTIONS,
     });
 
     const handlebarOptions = {
@@ -68,9 +67,7 @@ et.notifyAWTwhenClientSentEmailToTrader = (emailData) => {
             user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
             pass: process.env.SUPPORT_RECEIVER_PASSWORD,
         },
-        tls: {
-            rejectUnauthorized: false,
-        },
+        tls: EMAIL_TLS_OPTIONS,
     });
 
     const handlebarOptions = {
@@ -120,9 +117,7 @@ et.clientEmailTheTrader = (emailData) => {
             user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
             pass: process.env.SUPPORT_RECEIVER_PASSWORD,
         },
-        tls: {
-            rejectUnauthorized: false,
-        },
+        tls: EMAIL_TLS_OPTIONS,
     });
 
     const handlebarOptions = {
@@ -176,9 +171,7 @@ et.sendEmailReportEveryMidnight = (receiverEmailAddress, emailData) => {
             user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
             pass: process.env.SUPPORT_RECEIVER_PASSWORD,
         },
-        tls: {
-            rejectUnauthorized: false,
-        },
+        tls: EMAIL_TLS_OPTIONS,
     });
 
     const handlebarOptions = {

@@ -10,11 +10,12 @@ module.exports = (app) => {
     const nodemailer = require('nodemailer');
     // const hbs = require('nodemailer-express-handlebars');
     const hbs = require('nodemailer-express-handlebars').default;
+    const { EMAIL_TLS_OPTIONS } = require('../config/email.config');
     app.use(express.static(path.join(__dirname, '../../', 'public')));
 
     const mysql = require('mysql2');
-    const multer = require('multer');
-    // const path = require('path');
+    const createBusinessMediaUpload = require('../middleware/business-media-upload.middleware.js');
+    const executeBusinessMediaQuery = require('../utils/business-media-persistence.js');
 
     // Database connection
     // const db = mysql.createConnection({
@@ -31,19 +32,10 @@ module.exports = (app) => {
     //     console.log('Connected to the MySQL server.');
     // });
 
-    //! Use of Multer
-    var storage = multer.diskStorage({
-        destination: (req, file, callBack) => {
-            callBack(null, './public/uploads/users_upload_files/'); // './public/images/' directory name where save the file
-        },
-        filename: (req, file, callBack) => {
-            callBack(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-        },
-    });
-
-    var upload = multer({
-        storage: storage,
-    });
+    const uploadDirectory = path.resolve(__dirname, '../../public/uploads/users_upload_files/');
+    const upload = createBusinessMediaUpload(uploadDirectory);
+    const runBusinessMediaQuery = (req, res, query, values, callback) =>
+        executeBusinessMediaQuery(db, req, res, query, values, callback, { uploadDirectory });
 
     const uploadUsersBusinessMediasMiddleware = upload.fields([
         { name: 'videoInput', maxCount: 1 },
@@ -272,7 +264,7 @@ module.exports = (app) => {
 
             let insertQuery =
                 'INSERT INTO users_business_medias(logo, banner, video, video_thumbnail, video_title, video_description, brochure, brochure_title, webinars_thumbnail, webinars_title, webinars_description, webinars_link, webinars_schedule, uuid, date_created)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-            db.query(insertQuery, insertData, (err, result) => {
+            runBusinessMediaQuery(req, res, insertQuery, insertData, (err, result) => {
                 if (err) {
                     //throw err;
                     console.log(err);
@@ -326,7 +318,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(USERS_BUSINESS_MEDIAS.CREATE_ALL, Object.values(inputObject), (err, result) => {
+                runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_ALL, Object.values(inputObject), (err, result) => {
                     if (err) {
                         //throw err;
                         console.log(err);
@@ -360,7 +352,7 @@ module.exports = (app) => {
                 date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
             };
 
-            db.query(USERS_BUSINESS_MEDIAS.CREATE_ALL_BUT_NO_LOGO, Object.values(inputObject), (err, result) => {
+            runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_ALL_BUT_NO_LOGO, Object.values(inputObject), (err, result) => {
                 if (err) {
                     //throw err;
                     console.log(err);
@@ -393,7 +385,7 @@ module.exports = (app) => {
                 date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
             };
 
-            db.query(USERS_BUSINESS_MEDIAS.CREATE_ALL_BUT_NO_BANNER, Object.values(inputObject), (err, result) => {
+            runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_ALL_BUT_NO_BANNER, Object.values(inputObject), (err, result) => {
                 if (err) {
                     //throw err;
                     console.log(err);
@@ -423,7 +415,7 @@ module.exports = (app) => {
                 date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
             };
 
-            db.query(USERS_BUSINESS_MEDIAS.CREATE_ALL_BUT_NO_VIDEO, Object.values(inputObject), (err, result) => {
+            runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_ALL_BUT_NO_VIDEO, Object.values(inputObject), (err, result) => {
                 if (err) {
                     //throw err;
                     console.log(err);
@@ -455,7 +447,7 @@ module.exports = (app) => {
                 date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
             };
 
-            db.query(USERS_BUSINESS_MEDIAS.CREATE_ALL_BUT_NO_BROCHURE, Object.values(inputObject), (err, result) => {
+            runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_ALL_BUT_NO_BROCHURE, Object.values(inputObject), (err, result) => {
                 if (err) {
                     //throw err;
                     console.log(err);
@@ -484,7 +476,7 @@ module.exports = (app) => {
                 date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
             };
 
-            db.query(USERS_BUSINESS_MEDIAS.CREATE_ALL_BUT_NO_WEBINAR, Object.values(inputObject), (err, result) => {
+            runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_ALL_BUT_NO_WEBINAR, Object.values(inputObject), (err, result) => {
                 if (err) {
                     //throw err;
                     console.log(err);
@@ -514,7 +506,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(USERS_BUSINESS_MEDIAS.CREATE_LOGO_BANNER_VIDEO, Object.values(inputObject), (err, result) => {
+                runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_LOGO_BANNER_VIDEO, Object.values(inputObject), (err, result) => {
                     if (err) {
                         //throw err;
                         console.log(err);
@@ -543,7 +535,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(
+                runBusinessMediaQuery(req, res,
                     USERS_BUSINESS_MEDIAS.CREATE_LOGO_BANNER_BROCHURE,
                     Object.values(inputObject),
                     (err, result) => {
@@ -579,7 +571,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(
+                runBusinessMediaQuery(req, res,
                     USERS_BUSINESS_MEDIAS.CREATE_LOGO_BANNER_WEBINAR,
                     Object.values(inputObject),
                     (err, result) => {
@@ -615,7 +607,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(
+                runBusinessMediaQuery(req, res,
                     USERS_BUSINESS_MEDIAS.CREATE_LOGO_VIDEO_BROCHURE,
                     Object.values(inputObject),
                     (err, result) => {
@@ -654,7 +646,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(USERS_BUSINESS_MEDIAS.CREATE_LOGO_VIDEO_WEBINAR, Object.values(inputObject), (err, result) => {
+                runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_LOGO_VIDEO_WEBINAR, Object.values(inputObject), (err, result) => {
                     if (err) {
                         //throw err;
                         console.log(err);
@@ -687,7 +679,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(
+                runBusinessMediaQuery(req, res,
                     USERS_BUSINESS_MEDIAS.CREATE_LOGO_BROCHURE_WEBINAR,
                     Object.values(inputObject),
                     (err, result) => {
@@ -723,7 +715,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(
+                runBusinessMediaQuery(req, res,
                     USERS_BUSINESS_MEDIAS.CREATE_BANNER_VIDEO_BROCHURE,
                     Object.values(inputObject),
                     (err, result) => {
@@ -762,7 +754,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(
+                runBusinessMediaQuery(req, res,
                     USERS_BUSINESS_MEDIAS.CREATE_BANNER_VIDEO_WEBINAR,
                     Object.values(inputObject),
                     (err, result) => {
@@ -799,7 +791,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(
+                runBusinessMediaQuery(req, res,
                     USERS_BUSINESS_MEDIAS.CREATE_BANNER_BROCHURE_WEBINAR,
                     Object.values(inputObject),
                     (err, result) => {
@@ -830,7 +822,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(USERS_BUSINESS_MEDIAS.CREATE_LOGO_BANNER, Object.values(inputObject), (err, result) => {
+                runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_LOGO_BANNER, Object.values(inputObject), (err, result) => {
                     if (err) {
                         //throw err;
                         console.log(err);
@@ -860,7 +852,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(USERS_BUSINESS_MEDIAS.CREATE_LOGO_VIDEO, Object.values(inputObject), (err, result) => {
+                runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_LOGO_VIDEO, Object.values(inputObject), (err, result) => {
                     if (err) {
                         //throw err;
                         console.log(err);
@@ -888,7 +880,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(USERS_BUSINESS_MEDIAS.CREATE_LOGO_BROCHURE, Object.values(inputObject), (err, result) => {
+                runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_LOGO_BROCHURE, Object.values(inputObject), (err, result) => {
                     if (err) {
                         //throw err;
                         console.log(err);
@@ -919,7 +911,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(USERS_BUSINESS_MEDIAS.CREATE_LOGO_WEBINAR, Object.values(inputObject), (err, result) => {
+                runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_LOGO_WEBINAR, Object.values(inputObject), (err, result) => {
                     if (err) {
                         //throw err;
                         console.log(err);
@@ -949,7 +941,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(USERS_BUSINESS_MEDIAS.CREATE_BANNER_VIDEO, Object.values(inputObject), (err, result) => {
+                runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_BANNER_VIDEO, Object.values(inputObject), (err, result) => {
                     if (err) {
                         //throw err;
                         console.log(err);
@@ -977,7 +969,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(USERS_BUSINESS_MEDIAS.CREATE_BANNER_BROCHURE, Object.values(inputObject), (err, result) => {
+                runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_BANNER_BROCHURE, Object.values(inputObject), (err, result) => {
                     if (err) {
                         //throw err;
                         console.log(err);
@@ -1008,7 +1000,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(USERS_BUSINESS_MEDIAS.CREATE_BANNER_WEBINAR, Object.values(inputObject), (err, result) => {
+                runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_BANNER_WEBINAR, Object.values(inputObject), (err, result) => {
                     if (err) {
                         //throw err;
                         console.log(err);
@@ -1039,7 +1031,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(USERS_BUSINESS_MEDIAS.CREATE_VIDEO_BROCHURE, Object.values(inputObject), (err, result) => {
+                runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_VIDEO_BROCHURE, Object.values(inputObject), (err, result) => {
                     if (err) {
                         //throw err;
                         console.log(err);
@@ -1073,7 +1065,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(USERS_BUSINESS_MEDIAS.CREATE_VIDEO_WEBINAR, Object.values(inputObject), (err, result) => {
+                runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_VIDEO_WEBINAR, Object.values(inputObject), (err, result) => {
                     if (err) {
                         //throw err;
                         console.log(err);
@@ -1105,7 +1097,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(USERS_BUSINESS_MEDIAS.CREATE_BROCHURE_WEBINAR, Object.values(inputObject), (err, result) => {
+                runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_BROCHURE_WEBINAR, Object.values(inputObject), (err, result) => {
                     if (err) {
                         //throw err;
                         console.log(err);
@@ -1128,7 +1120,7 @@ module.exports = (app) => {
                 date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
             };
 
-            db.query(USERS_BUSINESS_MEDIAS.CREATE_LOGO, Object.values(inputObject), (err, result) => {
+            runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_LOGO, Object.values(inputObject), (err, result) => {
                 if (err) {
                     //throw err;
                     console.log(err);
@@ -1150,7 +1142,7 @@ module.exports = (app) => {
                 date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
             };
 
-            db.query(USERS_BUSINESS_MEDIAS.CREATE_BANNER, Object.values(inputObject), (err, result) => {
+            runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_BANNER, Object.values(inputObject), (err, result) => {
                 if (err) {
                     //throw err;
                     console.log(err);
@@ -1175,7 +1167,7 @@ module.exports = (app) => {
                 date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
             };
 
-            db.query(USERS_BUSINESS_MEDIAS.CREATE_VIDEO, Object.values(inputObject), (err, result) => {
+            runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_VIDEO, Object.values(inputObject), (err, result) => {
                 if (err) {
                     //throw err;
                     console.log(err);
@@ -1201,7 +1193,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(USERS_BUSINESS_MEDIAS.CREATE_BROCHURE, Object.values(inputObject), (err, result) => {
+                runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_BROCHURE, Object.values(inputObject), (err, result) => {
                     if (err) {
                         //throw err;
                         console.log(err);
@@ -1231,7 +1223,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(USERS_BUSINESS_MEDIAS.CREATE_WEBINAR, Object.values(inputObject), (err, result) => {
+                runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_WEBINAR, Object.values(inputObject), (err, result) => {
                     if (err) {
                         //throw err;
                         console.log(err);
@@ -1279,7 +1271,7 @@ module.exports = (app) => {
                 date_created = ?
                 WHERE uuid = ?`;
 
-            db.query(insertQuery, insertData, (err, result) => {
+            runBusinessMediaQuery(req, res, insertQuery, insertData, (err, result) => {
                 if (err) {
                     //throw err;
                     console.log(err);
@@ -1305,7 +1297,7 @@ module.exports = (app) => {
             ];
             let insertQuery =
                 'INSERT INTO users_business_medias(video, video_thumbnail, video_title, video_description, uuid, date_created)VALUES(?, ?, ?, ?, ?, ?)';
-            db.query(insertQuery, insertData, (err, result) => {
+            runBusinessMediaQuery(req, res, insertQuery, insertData, (err, result) => {
                 if (err) {
                     throw err;
                 } else {
@@ -1329,7 +1321,7 @@ module.exports = (app) => {
             let insertQuery =
                 'INSERT INTO users_business_medias(brochure, brochure_title, uuid, date_created)VALUES(?, ?, ?, ?)';
 
-            db.query(insertQuery, insertData, (err, result) => {
+            runBusinessMediaQuery(req, res, insertQuery, insertData, (err, result) => {
                 if (err) {
                     throw err;
                 } else {
@@ -1356,7 +1348,7 @@ module.exports = (app) => {
             let updateQuery =
                 'UPDATE users_business_medias SET brochure = ?, brochure_title = ?, date_created = ? WHERE uuid = ?';
 
-            db.query(updateQuery, updateData, (err, result) => {
+            runBusinessMediaQuery(req, res, updateQuery, updateData, (err, result) => {
                 if (err) {
                     throw err;
                 } else {
@@ -1381,7 +1373,7 @@ module.exports = (app) => {
 
             let updateQuery = 'UPDATE users_business_medias SET logo = ?, date_created = ? WHERE uuid = ?';
 
-            db.query(updateQuery, updateData, (err, result) => {
+            runBusinessMediaQuery(req, res, updateQuery, updateData, (err, result) => {
                 if (err) {
                     throw err;
                 } else {
@@ -1409,12 +1401,12 @@ module.exports = (app) => {
                 date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
             };
 
-            db.query(USERS_BUSINESS_MEDIAS.SELECT_ROW, originalUuid, (err, res) => {
+            runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.SELECT_ROW, originalUuid, (err, rows) => {
                 if (err) {
                     console.log('USERS_BUSINESS_MEDIAS.SELECT_ROW err', err);
                 } else {
-                    if (res.length > 0) {
-                        db.query(
+                    if (rows.length > 0) {
+                        runBusinessMediaQuery(req, res,
                             USERS_BUSINESS_MEDIAS.UPDATE_BANNER,
                             [...Object.values(updateData), originalUuid],
                             function (err, result) {
@@ -1427,7 +1419,7 @@ module.exports = (app) => {
                             },
                         );
                     } else {
-                        db.query(USERS_BUSINESS_MEDIAS.CREATE_BANNER, Object.values(inputObject), (err, result) => {
+                        runBusinessMediaQuery(req, res, USERS_BUSINESS_MEDIAS.CREATE_BANNER, Object.values(inputObject), (err, result) => {
                             if (err) {
                                 //throw err;
                                 console.log(err);
@@ -1455,7 +1447,7 @@ module.exports = (app) => {
             ];
 
             let insertQuery = 'INSERT INTO users_business_medias(logo, banner, uuid, date_created)VALUES(?, ?, ?, ?)';
-            db.query(insertQuery, insertData, (err, result) => {
+            runBusinessMediaQuery(req, res, insertQuery, insertData, (err, result) => {
                 if (err) {
                     throw err;
                 } else {
@@ -1489,7 +1481,7 @@ module.exports = (app) => {
                 date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
             };
 
-            db.query(
+            runBusinessMediaQuery(req, res,
                 USERS_BUSINESS_MEDIAS.UPDATE_VIDEO_BROCHURE_WEBINAR,
                 [...Object.values(inputObject), req.body.uuid],
                 function (err, result) {
@@ -1519,7 +1511,7 @@ module.exports = (app) => {
                 };
 
                 // db.query(USERS_BUSINESS_MEDIAS.UPDATE_LOGO_ONLY, Object.values(inputObject), (err, result) => {
-                db.query(
+                runBusinessMediaQuery(req, res,
                     USERS_BUSINESS_MEDIAS.UPDATE_BROCHURE_ONLY,
                     [...Object.values(inputObject), req.body.uuid],
                     function (err, result) {
@@ -1548,7 +1540,7 @@ module.exports = (app) => {
                 date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
             };
 
-            db.query(
+            runBusinessMediaQuery(req, res,
                 USERS_BUSINESS_MEDIAS.UPDATE_VIDEO_ONLY,
                 [...Object.values(inputObject), req.body.uuid],
                 function (err, result) {
@@ -1580,7 +1572,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(
+                runBusinessMediaQuery(req, res,
                     USERS_BUSINESS_MEDIAS.UPDATE_WEBINAR_ONLY,
                     [...Object.values(inputObject), req.body.uuid],
                     function (err, result) {
@@ -1614,7 +1606,7 @@ module.exports = (app) => {
                 date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
             };
 
-            db.query(
+            runBusinessMediaQuery(req, res,
                 USERS_BUSINESS_MEDIAS.UPDATE_VIDEO_WEBINAR,
                 [...Object.values(inputObject), req.body.uuid],
                 function (err, result) {
@@ -1648,7 +1640,7 @@ module.exports = (app) => {
                     date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
                 };
 
-                db.query(
+                runBusinessMediaQuery(req, res,
                     USERS_BUSINESS_MEDIAS.UPDATE_BROCHURE_WEBINAR,
                     [...Object.values(inputObject), req.body.uuid],
                     function (err, result) {
@@ -1679,7 +1671,7 @@ module.exports = (app) => {
                 date_created: new Date().toISOString().replace('T', ' ').substr(0, 19),
             };
 
-            db.query(
+            runBusinessMediaQuery(req, res,
                 USERS_BUSINESS_MEDIAS.UPDATE_VIDEO_BROCHURE,
                 [...Object.values(inputObject), req.body.uuid],
                 function (err, result) {
@@ -1714,9 +1706,7 @@ module.exports = (app) => {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASSWORD,
             },
-            tls: {
-                rejectUnauthorized: false,
-            },
+            tls: EMAIL_TLS_OPTIONS,
         });
 
         const handlebarOptions = {
@@ -1777,9 +1767,7 @@ module.exports = (app) => {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASSWORD,
             },
-            tls: {
-                rejectUnauthorized: false,
-            },
+            tls: EMAIL_TLS_OPTIONS,
         });
 
         const handlebarOptions = {
@@ -1833,9 +1821,7 @@ module.exports = (app) => {
                 user: process.env.PAYMENT_EMAIL_ADDRESS,
                 pass: process.env.PAYMENT_EMAIL_ADDRESS_PASSWORD,
             },
-            tls: {
-                rejectUnauthorized: false,
-            },
+            tls: EMAIL_TLS_OPTIONS,
         });
 
         const handlebarOptions = {

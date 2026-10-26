@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 10: Helmet Security Headers Disabled
-{file_name} = 010-Helmet-Security-Headers-Disabled.md
+{findings} = Finding 53: PDF and MP4 Upload Checks Are Structural Screening, Not Full Content Validation
+{file_name} = 053-PDF-and-MP4-Upload-Checks-Are-Structural-Screening-Not-Full-Content-Validation.md
 
 read the file
 

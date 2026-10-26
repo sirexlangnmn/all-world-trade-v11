@@ -92,6 +92,8 @@ The platform operates on a **visibility-and-connection model**:
 | **How It Works** | Multer handles multipart uploads; Sharp processes images; files stored in `public/uploads/` |
 | **Technologies** | Multer, Sharp, PDFKit, EJS views |
 
+Business-media uploads accept JPEG/PNG images (logo, banner, and thumbnails) up to 2 MiB per file, PDF brochures up to 10 MiB, and MP4 videos up to 50 MiB. Images above 40 megapixels are also rejected; each request is limited to eight files and 128 text fields (64 KiB per field). The server decodes and re-encodes images, but PDF and MP4 checks are structural screening only: they do not fully parse or sanitize PDFs, decode video streams, or scan files for malware. Uploads are staged outside the public directory until these checks succeed. Accepted files keep the existing `/uploads/users_upload_files/` URL path and use generated filenames; existing media URLs remain unchanged. The stronger PDF/video inspection strategy remains unresolved because product requirements require preserving original PDF bytes and features, original MP4 bytes/codecs, and the currently accepted codec set.
+
 ### 2.3 Business Visibility Controls
 
 | Aspect | Detail |
@@ -1053,10 +1055,18 @@ sequenceDiagram
     end
     Multer-->>Express: File paths (req.files)
     Express->>DB: INSERT or UPDATE users_business_medias<br/>with file paths
-    DB-->>Express: Success
-    Express-->>Browser: JSON response with file URLs
+    alt Persistence succeeds
+        DB-->>Express: Success
+        Express-->>Browser: Existing success response
+    else Persistence fails
+        DB-->>Express: Error
+        Express->>Storage: Remove files published for this request only
+        Express-->>Browser: Sanitized HTTP 500 response
+    end
     Browser-->>User: Display uploaded media
 ```
+
+If persistence fails after publication, the upload route removes only files generated for the current request. Existing media files are retained, including when a replacement update fails.
 
 ---
 
@@ -1686,6 +1696,7 @@ EMAIL_SECURE=           # Use TLS (false for STARTTLS)
 EMAIL_USER=             # SMTP username
 EMAIL_PASSWORD=         # SMTP password
 EMAIL_SENDER_ADDRESS=   # From address
+EMAIL_TLS_REJECT_UNAUTHORIZED=  # Local development only; ignored in production
 
 # =====================
 # NOTIFICATION EMAILS
@@ -1705,6 +1716,7 @@ SUPPORT_RECEIVER_EMAIL_ADDRESS=     # Support tickets
 | `JWT_SECRET` | AES passphrase used by the legacy CryptoJS/ECDC session-UUID format. It is **not** a JWT signing key in the current code; reset tokens are UUID v4 database rows. Re-verify before relying on this description. | **Secret** |
 | `API_KEY_SECRET` | MiroTalk integration key. External usage by the deployed MiroTalk instance is not proven from this repository and must be confirmed before rotation. | **Secret** |
 | `EMAIL_PASSWORD` | SMTP authentication | **Secret** |
+| `EMAIL_TLS_REJECT_UNAUTHORIZED` | Development-only SMTP escape hatch. Cannot disable certificate verification when `NODE_ENV=production`. | Low |
 | `NODE_ENV` | Controls error verbosity, static file caching, and HSTS/upgrade-insecure-requests gating | Low |
 | `CSP_REPORT_ONLY` | `true` keeps CSP in report-only mode; `false` enforces Content-Security-Policy | Low |
 
@@ -1720,6 +1732,14 @@ SUPPORT_RECEIVER_EMAIL_ADDRESS=     # Support tickets
 - `API_KEY_SECRET` may also be configured on the external MiroTalk service. Coordinate both sides in the same change window before rotating it.
 - Startup logs never print secret values. Do not add logging that echoes a secret.
 - The known-default values previously used by this project (see `CODE_REVIEW.md` Finding 8) are permanently rejected by the validator.
+
+### 14.4 SMTP TLS verification
+
+All Nodemailer transports verify the SMTP server's TLS certificate by default (`rejectUnauthorized: true`). The shared decision lives in `app/config/email.config.js` and is consumed as `EMAIL_TLS_OPTIONS`.
+
+- Production (`NODE_ENV=production`) always verifies certificates, even if `EMAIL_TLS_REJECT_UNAUTHORIZED=false` is present.
+- Local development against a self-signed SMTP server may opt out explicitly with `EMAIL_TLS_REJECT_UNAUTHORIZED=false`. Any other value, including `0`, `no`, `off`, or `FALSE`, keeps verification enabled.
+- Never set `EMAIL_TLS_REJECT_UNAUTHORIZED=false` in production. Fix the certificate chain, hostname, or expiry at the SMTP server instead.
 
 ---
 

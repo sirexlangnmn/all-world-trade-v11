@@ -1,0 +1,8 @@
+
+Remaining Risks
+- Existing legacy database callbacks log database write failures without returning an error response. A validated file may therefore remain orphaned if its database write fails; changing that behavior across the duplicated handlers was kept out of scope.
+- PDF and MP4 checks validate structure and signatures, not full standards compliance or complete media decoding.
+- The worktree contained unrelated pre-existing changes, which were left untouched.
+
+If this remaining risk are able to fix,
+revise this CODE_REVIEW.md and add to the list of Findings
