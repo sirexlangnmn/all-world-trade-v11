@@ -27,3 +27,8 @@ Finding 6: No Authentication Middleware on API Routes
 006-No-Authentication-Middleware-on-API-Routes-Test-Result.md
 
 
+
+
+Finding 7: No Rate Limiting
+007-No-Rate-Limiting.md
+007-No-Rate-Limiting-Test-Result.md

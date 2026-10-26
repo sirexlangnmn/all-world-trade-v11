@@ -71,6 +71,14 @@ app.use(
 
 app.use(compression()); // Compress all HTTP responses using GZip
 
+const { generalApiLimiter } = require('../middleware/rate-limit/api.rate-limit.js');
+
+// General API protection. Mounted before body parsing, session, authentication,
+// and every API route module so abusive or malformed floods are rejected cheaply.
+// Scoped to '/api' so static assets, uploads, and page requests do not consume
+// the API budget.
+app.use('/api', generalApiLimiter);
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

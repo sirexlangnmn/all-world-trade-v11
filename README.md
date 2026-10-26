@@ -242,7 +242,7 @@ graph TB
 - bcrypt for password hashing (12 rounds)
 - AES encryption for UUID-based session data
 - SSL termination at the application layer
-- Rate limiting should be added at the Nginx layer
+- In-app rate limiting: `/api` is limited to 100 requests per 15 minutes per IP, and login/support-login to 5 attempts per 15 minutes per IP (`app/middleware/rate-limit/api.rate-limit.js`); proxy-layer limiting remains optional defense-in-depth
 
 ---
 
@@ -1484,6 +1484,8 @@ graph TD
 | **SSL/TLS** | Self-signed certificates in `app/ssl/` | Encrypts data in transit |
 | **Verification Codes** | Email verification on registration | Confirms email ownership |
 | **Login Status Tracking** | `users_accounts.login_status` | Detects concurrent sessions |
+| **API Rate Limiting** | `express-rate-limit`: 100 requests/15 min per IP on `/api`, 5/15 min on login and support login | Slows brute-force, credential stuffing, and resource exhaustion |
+| **Password-Reset Rate Limiting** | Dedicated limits on reset lookup, token creation, email, page, and submit | Limits reset-flow abuse |
 
 ### 12.3 RBAC (Role-Based Access Control)
 
@@ -1502,7 +1504,7 @@ Access control is enforced via middleware that checks `req.session.userType` bef
 - API key authentication for MiroTalk meeting API (`API_KEY_SECRET`)
 - Session cookie for web application routes
 - No public registration (email verification required)
-- Rate limiting should be implemented at the reverse proxy layer
+- In-app rate limiting is applied to every `/api` request (100 requests per 15 minutes per IP) and more strictly to login and support login (5 attempts per 15 minutes per IP); password-reset endpoints keep their own dedicated limiters. Proxy-layer rate limiting remains optional defense-in-depth.
 
 #### Deny-by-default API authorization
 
@@ -2077,7 +2079,7 @@ describe('POST /api/post/login-process', () => {
 | **CI/CD Pipeline** | DevOps | GitHub Actions or GitLab CI for automated testing and deployment |
 | **TypeScript Migration** | Code Quality | Gradual migration from JavaScript for type safety |
 | **Helmet Enablement** | Security | Enable CSP and other security headers |
-| **Rate Limiting** | Security | Implement rate limiting on API endpoints |
+| **Proxy-Layer Rate Limiting** | Security | Add optional reverse-proxy/DDoS throttling in front of the in-app API limiters |
 | **API Documentation** | Developer Experience | Generate OpenAPI/Swagger spec for all endpoints |
 
 ### 20.3 Database Improvements
