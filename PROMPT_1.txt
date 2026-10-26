@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 11: TLS Verification Disabled for Email Transport
-{file_name} = 011-TLS-Verification-Disabled-for-Email-Transport.md
+{findings} = Finding 12: File Upload Without Validation
+{file_name} = 012-File-Upload-Without-Validation.md
 
 read the file
 

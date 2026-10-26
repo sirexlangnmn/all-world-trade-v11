@@ -46,3 +46,8 @@ Finding 10: Helmet Security Headers Disabled
 Finding 11: TLS Verification Disabled for Email Transport
 011-TLS-Verification-Disabled-for-Email-Transport.md
 011-TLS-Verification-Disabled-for-Email-Transport-Test-Result.md
+
+
+Finding 12: File Upload Without Validation
+012-File-Upload-Without-Validation.md
+012-File-Upload-Without-Validation-Test-Result.md

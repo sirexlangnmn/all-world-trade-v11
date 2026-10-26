@@ -92,6 +92,8 @@ The platform operates on a **visibility-and-connection model**:
 | **How It Works** | Multer handles multipart uploads; Sharp processes images; files stored in `public/uploads/` |
 | **Technologies** | Multer, Sharp, PDFKit, EJS views |
 
+Business-media uploads accept JPEG/PNG images (logo, banner, and thumbnails) up to 1 MiB, PDF brochures up to 10 MiB, and MP4 videos up to 50 MiB. Images above 40 megapixels are also rejected; each request is limited to eight files and 128 text fields (64 KiB per field). The server checks file content, decodes and re-encodes images, and stages uploads outside the public directory until validation succeeds. Validated files keep the existing `/uploads/users_upload_files/` URL path and are stored under generated filenames; existing media URLs remain unchanged.
+
 ### 2.3 Business Visibility Controls
 
 | Aspect | Detail |

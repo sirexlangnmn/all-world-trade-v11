@@ -14,8 +14,7 @@ module.exports = (app) => {
     app.use(express.static(path.join(__dirname, '../../', 'public')));
 
     const mysql = require('mysql2');
-    const multer = require('multer');
-    // const path = require('path');
+    const createBusinessMediaUpload = require('../middleware/business-media-upload.middleware.js');
 
     // Database connection
     // const db = mysql.createConnection({
@@ -32,19 +31,7 @@ module.exports = (app) => {
     //     console.log('Connected to the MySQL server.');
     // });
 
-    //! Use of Multer
-    var storage = multer.diskStorage({
-        destination: (req, file, callBack) => {
-            callBack(null, './public/uploads/users_upload_files/'); // './public/images/' directory name where save the file
-        },
-        filename: (req, file, callBack) => {
-            callBack(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-        },
-    });
-
-    var upload = multer({
-        storage: storage,
-    });
+    const upload = createBusinessMediaUpload(path.join(__dirname, '../../public/uploads/users_upload_files/'));
 
     const uploadUsersBusinessMediasMiddleware = upload.fields([
         { name: 'videoInput', maxCount: 1 },

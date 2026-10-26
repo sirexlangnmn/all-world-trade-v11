@@ -1,7 +1,7 @@
 # Code Review: All World Trade v11
 
 **Date:** July 25, 2026  
-**Revised:** September 18, 2026 (refactoring playbook: DRY, SOLID, KISS, smaller functions, modern Node patterns)  
+**Revised:** Upload-validation follow-up (Findings 52–53)
 **Reviewer:** Senior Software Engineer  
 **Scope:** Full codebase review of the All World Trade B2B marketplace platform  
 **Status:** Production system is **complete and working**. This document is not a rewrite plan. It is a set of incremental recommendations to optimize, refactor, and modernize the code while keeping behavior stable.
@@ -307,42 +307,15 @@ tls: { rejectUnauthorized: false }
 
 ---
 
-### Finding 12: File Upload Without Validation
+### Finding 12: Business Media Upload Validation and Residual Risks
 
-**Location:** `app/routes/upload-file.js:35-46`
+**Location:** `app/routes/upload-file.js`; `app/middleware/business-media-upload.middleware.js`
 
-**Current Approach:** Multer is configured with disk storage but no file type filtering, no size limits, and no MIME type verification:
-```js
-var storage = multer.diskStorage({
-    destination: (req, file, callBack) => {
-        callBack(null, './public/uploads/users_upload_files/');
-    },
-    filename: (req, file, callBack) => {
-        callBack(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    },
-});
-var upload = multer({ storage: storage });
-```
+**Current Status:** The upload path now uses shared server-side field policies, finite per-file and request limits, generated filenames, temporary staging outside `public/`, and image decode/re-encoding. Current policy: JPEG/PNG images up to 1 MiB, PDF brochures up to 10 MiB, and MP4 video up to 50 MiB. The existing media URL path is preserved.
 
-Uploads go to a web-accessible directory (`express.static` serves `public/`).
+The remaining reliability and content-inspection gaps are tracked separately in Findings 52 and 53. The PDF and MP4 checks are structural screening, not full document/media parsing; database write failures in the legacy callbacks can leave already-published files orphaned.
 
-**Why This Is Suboptimal:** An attacker can upload `.php`, `.sh`, `.html` (for XSS), or arbitrarily large files. Combined with the web-accessible upload directory, this allows uploading webshells or phishing pages.
-
-**Recommended Approach:** Add `fileFilter` for allowed MIME types, `limits.fileSize` for size constraints, and generate unique filenames that can't be predicted.
-
-**Why Better:** Prevents malicious file uploads, storage exhaustion, and code execution.
-
-**Implementation:**
-1. Add a `fileFilter` to multer configuration:
-```js
-const fileFilter = (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'application/pdf'];
-    cb(null, allowedTypes.includes(file.mimetype));
-};
-```
-2. Add size limits: `limits: { fileSize: 50 * 1024 * 1024 }` (50MB)
-3. Use `uuid` for filenames instead of `file.fieldname + Date.now()`
-4. Serve uploads from a non-public directory and use a dedicated route to serve them after authorization checks
+**Follow-up:** Preserve the current upload policy and public URL contract. Address database failure cleanup (Finding 52) and decide whether stronger isolated format parsing, sanitization, or media scanning is required (Finding 53). Do not widen allowed formats or sizes without verifying product and deployment requirements.
 
 ---
 
@@ -1276,6 +1249,48 @@ Migrate one API family (login/registration) then the rest.
 
 ---
 
+### Finding 52: Business Media Files Can Be Orphaned When Database Writes Fail
+
+**Location:** `app/routes/upload-file.js` — media-upload route handlers and their `db.query(...)` callbacks
+
+**Current Approach:** The shared upload middleware validates and publishes uploaded files under `public/uploads/users_upload_files/` before each route's database callback persists the stored filename. Many callbacks log a database error but do not send an error response, and they do not remove the newly written upload. The client can receive no clear failure response while the public file remains on disk without a database reference.
+
+**Why This Is Suboptimal:** Repeated failed or interrupted writes can accumulate orphaned public files, consume storage, and make it difficult to determine whether an upload succeeded. For update routes, careless cleanup could also delete the previously referenced file, so cleanup must only target files created by the failed request.
+
+**Recommended Approach:** Incrementally centralize the upload persistence completion path without changing endpoint or success-response contracts. On database failure, return a non-success response and remove only the newly generated files belonging to that request. On success, keep the existing stored filename and URL behavior. For updates, do not remove the previous file unless the database update committed and the old file is no longer referenced.
+
+**Why Better:** Gives clients an explicit outcome and prevents failed persistence from leaving unreferenced files, while preserving existing media used by profiles.
+
+**Implementation:**
+1. Extract a small helper that receives the query, values, uploaded-file paths, and response callback; do not consolidate all route/query variants as part of the fix.
+2. On query error, log the underlying error, unlink only the new request's published files, and return a sanitized HTTP 500 response.
+3. Ensure cleanup failures are logged and surfaced as server errors rather than treated as successful persistence.
+4. Keep the existing success text and filename fields for successful writes.
+5. Add tests with a failing database callback: verify a non-success response, cleanup of newly uploaded files, preservation of pre-existing files, and no unhandled response path.
+
+---
+
+### Finding 53: PDF and MP4 Upload Checks Are Structural Screening, Not Full Content Validation
+
+**Location:** `app/middleware/business-media-upload.middleware.js` — `validatePdf` and `validateMp4`
+
+**Current Approach:** Uploaded images are decoded and re-encoded by Sharp. PDFs are checked using a header, catalog marker, cross-reference pointer, and EOF marker. MP4s are checked for top-level box structure, a video handler, and media data. These checks reject common spoofed or malformed inputs, but they do not parse and validate every object, stream, codec, or media payload.
+
+**Why This Is Suboptimal:** A file can satisfy basic structural checks while containing malformed structures or active/hostile content that a downstream browser or media decoder handles differently. Public serving increases the impact of parser discrepancies. The current checks should not be represented as full standards validation or malware scanning.
+
+**Recommended Approach:** Decide the required assurance based on the public-media threat model. For higher assurance, use maintained parsers/decoders in a resource-constrained isolated worker; sanitize PDFs to remove scripts, actions, and embedded files or rasterize them where product behavior permits; and fully decode/transcode video into a supported output profile before publication. Keep `X-Content-Type-Options: nosniff` enabled and use explicit content types when serving uploads.
+
+**Why Better:** Reduces reliance on shallow signatures and limits exposure to parser discrepancies and active document features.
+
+**Implementation:**
+1. Confirm whether users need original PDF/video bytes or whether sanitized/transcoded output is acceptable.
+2. Select and pin maintained parsing/transcoding tools only after confirming supported codecs, deployment resources, and operational capacity.
+3. Run parsing, sanitization, or transcoding outside the request's unbounded execution path, with CPU, memory, and wall-clock limits.
+4. Publish a file only after the selected parser/decoder completes successfully; remove rejected temporary artifacts.
+5. Add representative valid and adversarial fixtures, including malformed object/box structures, embedded PDF actions, and codec/decoder failures.
+
+---
+
 ## Suggested Target Layout (Incremental)
 
 Move toward this only as files are touched — do not create empty folders “for later”:
@@ -1318,29 +1333,30 @@ Keep EJS views as they are unless a UI task requires a change (`UI_UX_MOBILE_REC
 | 8 | **Remove JWT from reset token** (Finding 4) | Low | Eliminates password exposure |
 | 9 | **Enable Helmet/CSP** (Finding 10) | Medium | XSS/clickjacking protection |
 | 10 | **Add rate limiting** (Finding 7) | Low | Brute-force protection |
-| 11 | **Add file upload validation** (Finding 12) | Low | Prevents malicious uploads |
-| 12 | **Invalidate reset tokens after use** (Finding 23) | Low | Single-use token security |
+| 11 | **Invalidate reset tokens after use** (Finding 23) | Low | Single-use token security |
 
 ### Medium Priority (Within 2-4 Weeks — Correctness / Reliability)
 
 | # | Finding | Effort | Impact |
 |---|---------|--------|--------|
-| 13 | **Fix SQL logic bug** (Finding 20) | Low | Correct search results |
-| 14 | **Fix race condition** (Finding 18) | Medium | Reliable data loading |
-| 15 | **HTTP status codes** (Finding 22) | Low | Correct API semantics |
-| 16 | **TLS verification** (Finding 11) | Low | Email transport security |
-| 17 | **Enable cron jobs** (Finding 24 cron) | Low | Features actually run |
-| 18 | **Add global error handler** (Finding 32) | Low | Prevents crashes |
-| 19 | **Fix missing returns** (Finding 27) | Low | Prevents double-response |
-| 20 | **Reduce session lifetime** (Finding 30) | Low | Session security |
-| 21 | **Fix saveUninitialized** (Finding 29) | Low | GDPR compliance |
+| 12 | **Fix SQL logic bug** (Finding 20) | Low | Correct search results |
+| 13 | **Fix race condition** (Finding 18) | Medium | Reliable data loading |
+| 14 | **HTTP status codes** (Finding 22) | Low | Correct API semantics |
+| 15 | **TLS verification** (Finding 11) | Low | Email transport security |
+| 16 | **Enable cron jobs** (Finding 24 cron) | Low | Features actually run |
+| 17 | **Add global error handler** (Finding 32) | Low | Prevents crashes |
+| 18 | **Fix missing returns** (Finding 27) | Low | Prevents double-response |
+| 19 | **Reduce session lifetime** (Finding 30) | Low | Session security |
+| 20 | **Fix saveUninitialized** (Finding 29) | Low | GDPR compliance |
+| 21 | **Clean up failed media persistence** (Finding 52) | Medium | Prevents orphaned files and ambiguous upload outcomes |
+| 22 | **Strengthen PDF/MP4 content inspection** (Finding 53) | Medium–High | Reduces parser and active-content risk |
 
 ### Low Priority (Within 1-3 Months — Maintainability / Code Quality)
 
 | # | Finding | Effort | Impact |
 |---|---------|--------|--------|
-| 22 | **Consolidate email service** (Finding 16) | Medium | DRY, maintainability |
-| 23 | **Dynamic media queries** (Finding 13, 17) | High | Massive duplication reduction |
+| 23 | **Consolidate email service** (Finding 16) | Medium | DRY, maintainability |
+| 24 | **Dynamic media queries** (Finding 13, 17) | High | Massive duplication reduction |
 | 24 | **Extract server.js modules** (Finding 14, 15) | High | Code organization |
 | 25 | **Centralize UUID encryption** (Finding 25) | Low | Consistency |
 | 26 | **Replace ORDER BY RAND** (Finding 21) | Low | Performance |
@@ -1509,7 +1525,8 @@ Mobile/UI work is out of scope here; see `UI_UX_MOBILE_RECOMMENDATIONS.md`. Do n
 |------|-----------|
 | `app/src/server.js` | Monolithic (1587 lines), duplicated session data, dead routes, no error handler |
 | `app/routes/index.js` | No auth middleware on most routes |
-| `app/routes/upload-file.js` | 30+ duplicate handlers (1878 lines), no file validation |
+| `app/routes/upload-file.js` | 30+ duplicate handlers; DB-write failure cleanup (Finding 52) |
+| `app/middleware/business-media-upload.middleware.js` | PDF/MP4 structural checks are not full parsing or malware scanning (Finding 53) |
 | `app/routes/forgot-password.js` | Plaintext password storage, JWT with password, null crash, global variable, TLS disabled |
 | `app/routes/password.js` | Public bcrypt oracle — DELETE THIS FILE |
 | `app/routes/encrypt.route.js` | Debug endpoints with hardcoded data — DELETE THIS FILE |
