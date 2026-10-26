@@ -311,7 +311,7 @@ tls: { rejectUnauthorized: false }
 
 **Location:** `app/routes/upload-file.js`; `app/middleware/business-media-upload.middleware.js`
 
-**Current Status:** The upload path now uses shared server-side field policies, finite per-file and request limits, generated filenames, temporary staging outside `public/`, and image decode/re-encoding. Current policy: JPEG/PNG images up to 1 MiB, PDF brochures up to 10 MiB, and MP4 video up to 50 MiB. The existing media URL path is preserved.
+**Current Status:** The upload path now uses shared server-side field policies, finite per-file and request limits, generated filenames, temporary staging outside `public/`, and image decode/re-encoding. Current policy: JPEG/PNG images up to 2 MiB per file, PDF brochures up to 10 MiB, and MP4 video up to 50 MiB. The existing media URL path is preserved.
 
 The remaining reliability and content-inspection gaps are tracked separately in Findings 52 and 53. The PDF and MP4 checks are structural screening, not full document/media parsing; database write failures in the legacy callbacks can leave already-published files orphaned.
 
@@ -1276,6 +1276,8 @@ Migrate one API family (login/registration) then the rest.
 
 **Current Approach:** Uploaded images are decoded and re-encoded by Sharp. PDFs are checked using a header, catalog marker, cross-reference pointer, and EOF marker. MP4s are checked for top-level box structure, a video handler, and media data. These checks reject common spoofed or malformed inputs, but they do not parse and validate every object, stream, codec, or media payload.
 
+**Implementation Status:** This finding remains unresolved. Product requirements confirmed for this task require retaining original PDF bytes and all existing PDF features, and original MP4 bytes/codecs without narrowing the codec set currently accepted by structural screening. Sanitization, rasterization, or transcoding, and new codec restrictions, would violate those requirements. The checked-in dependencies and deployment configuration do not provide a maintained PDF sanitizer or MP4 decoder/transcoder running with enforceable isolation and resource limits. Full parsing/decoding alone would also leave active PDF features intact and would not establish safety across downstream consumers. Do not treat the current structural checks as full validation; a compatible, production-operable assurance strategy requires further product and deployment review.
+
 **Why This Is Suboptimal:** A file can satisfy basic structural checks while containing malformed structures or active/hostile content that a downstream browser or media decoder handles differently. Public serving increases the impact of parser discrepancies. The current checks should not be represented as full standards validation or malware scanning.
 
 **Recommended Approach:** Decide the required assurance based on the public-media threat model. For higher assurance, use maintained parsers/decoders in a resource-constrained isolated worker; sanitize PDFs to remove scripts, actions, and embedded files or rasterize them where product behavior permits; and fully decode/transcode video into a supported output profile before publication. Keep `X-Content-Type-Options: nosniff` enabled and use explicit content types when serving uploads.
@@ -1283,8 +1285,8 @@ Migrate one API family (login/registration) then the rest.
 **Why Better:** Reduces reliance on shallow signatures and limits exposure to parser discrepancies and active document features.
 
 **Implementation:**
-1. Confirm whether users need original PDF/video bytes or whether sanitized/transcoded output is acceptable.
-2. Select and pin maintained parsing/transcoding tools only after confirming supported codecs, deployment resources, and operational capacity.
+1. Preserve the confirmed requirement to retain original PDF bytes and features, and original MP4 bytes/codecs without narrowing the currently accepted codec set. Do not sanitize, rasterize, transcode, or impose new codec restrictions without an approved product change.
+2. Identify maintained read-only PDF parsing and MP4 decoding tools that can meet these compatibility requirements, then verify deployment resources and enforceable isolation before selecting or pinning them. If no suitable strategy exists, leave this finding unresolved rather than weakening the upload contract.
 3. Run parsing, sanitization, or transcoding outside the request's unbounded execution path, with CPU, memory, and wall-clock limits.
 4. Publish a file only after the selected parser/decoder completes successfully; remove rejected temporary artifacts.
 5. Add representative valid and adversarial fixtures, including malformed object/box structures, embedded PDF actions, and codec/decoder failures.
