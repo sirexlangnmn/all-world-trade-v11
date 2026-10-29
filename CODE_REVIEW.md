@@ -321,23 +321,11 @@ The remaining reliability and content-inspection gaps are tracked separately in 
 
 ### Finding 13: Massive Code Duplication in File Upload Routes
 
-**Location:** `app/routes/upload-file.js` (1,878 lines), `app/query/users_business_medias.query.js` (460 lines)
+**Location:** `app/routes/upload-file.js`, `app/query/users_business_medias.query.js`
 
-**Current Approach:** 30+ near-identical route handlers in `upload-file.js` — one for each permutation of media fields (logo, banner, video, brochure, webinar). Each handler: (1) creates a multer middleware for its specific field combination, (2) parses the uploaded files, (3) constructs a query key based on which fields are present, (4) executes the matching INSERT query. The query file contains 35+ INSERT variants, one for every possible subset of fields.
+**Status:** Registration, upgrade, and standalone upload combinations share configuration-driven field mappings and handlers where their persistence semantics match. Existing URLs, endpoint-specific Multer field allowlists, success responses, and UUID sources remain intact. The banner profile workflow retains its distinct read-before-write upsert while using the shared banner mapping. Media CREATE and UPDATE statements use a fixed column allowlist with parameterized values, replacing the per-combination SQL variants.
 
-**Why This Is Suboptimal:** Adding a new media type or field requires creating 2^n new route handlers and query strings. The current 5 media types produce 35+ query variants. This is unmaintainable and error-prone.
-
-**Recommended Approach:** Replace with a single dynamic route that: (1) uses a single multer middleware accepting all fields, (2) dynamically constructs an INSERT/UPDATE from the fields actually present in the request.
-
-**Why Better:** Reduces 30+ handlers to 1. Reduces 35+ queries to 2 (INSERT and UPDATE). Adding a new field requires zero new routes.
-
-**Implementation:**
-1. Create a single multer middleware: `upload.fields([{ name: 'companyLogo', maxCount: 1 }, { name: 'companyBanner', maxCount: 1 }, ...])` for all possible fields
-2. In the route handler, iterate over `req.files` keys to determine which fields were uploaded
-3. Dynamically build the INSERT query: construct column names and values arrays from the present fields
-4. Use parameterized queries with the dynamically built placeholders
-5. Replace all 30+ route handlers with this single dynamic route
-6. Delete all 35+ query variants from `users_business_medias.query.js`
+**Compatibility note:** This upload path remains on its existing mysql2 callback stack to avoid a broad persistence migration during this behavior-preserving refactor. The existing Sequelize media model does not define the `video` attribute written by standalone video uploads, so switching this path to Sequelize requires a separately verified model/schema change.
 
 ---
 
@@ -436,27 +424,11 @@ transporter.use('compile', hbs(handlebarOptions));
 
 ### Finding 17: SQL Query String Explosion in Media Queries
 
-**Location:** `app/query/users_business_medias.query.js` (460 lines)
+**Location:** `app/query/users_business_medias.query.js`
 
-**Current Approach:** 35+ hardcoded INSERT query strings, one for every possible subset of 5 media fields (logo, banner, video, brochure, webinar). Examples: `CREATE_ALL`, `CREATE_ALL_BUT_NO_LOGO`, `CREATE_ALL_BUT_NO_BANNER`, `CREATE_LOGO_BANNER`, `CREATE_LOGO_VIDEO`, etc.
+**Status:** The per-combination SQL constants have been replaced by `buildInsert` and `buildUpdate`. Both helpers accept only fixed media-table columns and bind every value through mysql2 placeholders. The route configuration and tests cover INSERT and UPDATE generation, including rejection of request-controlled column names.
 
-**Why This Is Suboptimal:** This is a combinatorial explosion. 5 fields produce 31 non-empty subsets (2^5 - 1). Currently 35+ variants are hand-maintained. Adding a 6th field would double this to 63+ variants.
-
-**Recommended Approach:** Use a single dynamic INSERT query that accepts an object of field-value pairs and constructs the SQL at runtime using parameterized queries.
-
-**Why Better:** Reduces 35+ queries to 1. Adding/removing fields requires zero query changes.
-
-**Implementation:**
-1. Create a utility function:
-```js
-function buildInsertQuery(tableName, fields) {
-    const columns = Object.keys(fields).join(', ');
-    const placeholders = Object.keys(fields).map(() => '?').join(', ');
-    return `INSERT INTO ${tableName} (${columns}) VALUES (${placeholders})`;
-}
-```
-2. In the route handlers, construct the fields object from present files: `const fields = { uuid, date_created }; if (files.logo) fields.logo = path; ...`
-3. Call `db.query(buildInsertQuery('users_business_medias', fields), Object.values(fields), callback)`
+**Remaining Risk:** This remains a narrow compatibility helper on the legacy mysql2 stack. Keep identifiers constrained by the explicit allowlist, and preserve the route-specific set of columns on UPDATE so omitted media fields remain unchanged.
 
 ---
 

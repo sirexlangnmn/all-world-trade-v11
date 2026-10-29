@@ -22,7 +22,7 @@ Monolithic Express SSR marketplace (EJS + MySQL) for B2B trade networking: busin
   - `index.js` — legacy `/api/` controllers (categories/sub-categories/minor, global-region, languages, login-process, selection, visitors-of-traders, get-count, etc.).
   - `sequelize.route.js` — `/api/v2/` + `/api/v3/` (per-tier registrations, registration-v2, communicator/support links+waiting rooms, updates, export-users-businesses).
   - `password.js` — `/api/post/password-hashing`, `/api/post/compare-password` (bcrypt oracle, see debt).
-  - `upload-file.js` (1,878 lines) — 30+ near-identical multer POST handlers for media combos; no file filter/size validation.
+  - `upload-file.js` — configuration-driven media upload routes using shared field mappings, upload validation, and persistence-failure cleanup.
   - `email-marketing.js` — `/api/v3/post/submit-client-email-to-the-trader`, `/api/post/emails/introduction`, `/api/post/emails/notify-trader-on-client-contact`.
   - `forgot-password.js` — `/forgot-password`, `/reset-password/:token`, `/api/post/create-reset-token`, `/api/post/send-email-for-change-password`.
   - `encrypt.route.js` — `/api/v2/post/ec`, `/api/v2/post/dc` (debug CryptoJS AES endpoints; dead/dev artifact).

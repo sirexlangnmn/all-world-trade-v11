@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 53: PDF and MP4 Upload Checks Are Structural Screening, Not Full Content Validation
-{file_name} = 053-PDF-and-MP4-Upload-Checks-Are-Structural-Screening-Not-Full-Content-Validation.md
+{findings} = Finding 13: Massive Code Duplication in File Upload Routes
+{file_name} = 013-Massive-Code-Duplication-in-File-Upload-Routes.md
 
 read the file
 

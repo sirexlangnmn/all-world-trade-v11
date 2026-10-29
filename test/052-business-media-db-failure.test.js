@@ -330,13 +330,26 @@ test('cleanup refuses paths outside the configured upload directory', async (t) 
     assert.match(logger.entries[1][1].message, /outside the upload directory/);
 });
 
-test('all active database queries in the upload route use the failure helper except no-upload registration', async () => {
+test('configured media routes share handlers and retain no-upload registration', async () => {
     const routePath = path.join(__dirname, '../app/routes/upload-file.js');
     const routeSource = await fs.readFile(routePath, 'utf8');
-    const directQueries = routeSource.match(/^\s*db\.query\(/gm) || [];
-    const wrappedQueries = routeSource.match(/runBusinessMediaQuery\(req, res,/g) || [];
+    const {
+        REGISTRATION_UPLOAD_ROUTES,
+        STANDALONE_UPLOAD_ROUTES,
+        UPGRADE_UPLOAD_ROUTES,
+    } = require('../app/utils/business-media-upload-config.js');
+    const noUploadRouteStart = routeSource.indexOf("app.post('/api/post/registration-no-upload'");
+    const noUploadRouteEnd = routeSource.indexOf('const getUploadUuid', noUploadRouteStart);
+    const noUploadRoute = routeSource.slice(noUploadRouteStart, noUploadRouteEnd);
 
-    assert.equal(directQueries.length, 1);
-    assert.match(routeSource, /db\.query\(USERS_BUSINESS_MEDIAS\.CREATE_NO/);
-    assert.equal(wrappedQueries.length, 47);
+    assert.notEqual(noUploadRouteStart, -1);
+    assert.match(noUploadRoute, /db\.query\(query, values/);
+    assert.doesNotMatch(noUploadRoute, /upload\.fields/);
+    assert.match(routeSource, /for \(const \[route, groups\] of REGISTRATION_UPLOAD_ROUTES\)/);
+    assert.match(routeSource, /for \(const \[route, groups\] of UPGRADE_UPLOAD_ROUTES\)/);
+    assert.match(routeSource, /for \(const routeConfiguration of STANDALONE_UPLOAD_ROUTES\)/);
+    assert.match(routeSource, /STANDALONE_UPLOAD_ROUTES\.find\(\(\{ operation \}\) => operation === 'upsert'\)/);
+    assert.equal(REGISTRATION_UPLOAD_ROUTES.length, 30);
+    assert.equal(UPGRADE_UPLOAD_ROUTES.length, 7);
+    assert.equal(STANDALONE_UPLOAD_ROUTES.length, 8);
 });

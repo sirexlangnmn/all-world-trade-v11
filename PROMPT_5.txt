@@ -62,3 +62,17 @@ Finding 52: Business Media Files Can Be Orphaned When Database Writes Fail
 Finding 53: PDF and MP4 Upload Checks Are Structural Screening, Not Full Content Validation
 053-PDF-and-MP4-Upload-Checks-Are-Structural-Screening-Not-Full-Content-Validation.md
 053-PDF-and-MP4-Upload-Checks-Are-Structural-Screening-Not-Full-Content-Validation-Test-Result.md
+
+
+Finding 13: Massive Code Duplication in File Upload Routes
+013-Massive-Code-Duplication-in-File-Upload-Routes.md
+013-Massive-Code-Duplication-in-File-Upload-Routes-Test-Result.md
+
+
+
+
+Finding 14: Monolithic server.js (1,587 Lines)
+Finding 15: Duplicated Session Data Construction Pattern
+Finding 16: Duplicated Email Transporter Configuration
+Finding 17: SQL Query String Explosion in Media Queries
+Finding 18: Race Condition in getCurrentTrader
