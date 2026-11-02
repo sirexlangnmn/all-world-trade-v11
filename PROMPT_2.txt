@@ -1,5 +1,5 @@
 placeholders value:
-{file_name} = 015-Duplicated-Session-Data-Construction-Pattern.md
+{file_name} = 016-Duplicated-Email-Transporter-Configuration.md
 
 read the file
 

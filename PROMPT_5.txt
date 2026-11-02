@@ -80,10 +80,16 @@ Finding 14: Monolithic server.js (1,587 Lines)
 
 Finding 15: Duplicated Session Data Construction Pattern
 015-Duplicated-Session-Data-Construction-Pattern.md
-015-Duplicated-Session-Data-Construction-Pattern.md
+015-Duplicated-Session-Data-Construction-Pattern-Test-Result.md
 
 
 
 Finding 16: Duplicated Email Transporter Configuration
+016-Duplicated-Email-Transporter-Configuration.md
+016-Duplicated-Email-Transporter-Configuration-Test-Result.md
+
+
+
+
 Finding 17: SQL Query String Explosion in Media Queries
 Finding 18: Race Condition in getCurrentTrader

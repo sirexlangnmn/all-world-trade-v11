@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 15: Duplicated Session Data Construction Pattern
-{file_name} = 015-Duplicated-Session-Data-Construction-Pattern.md
+{findings} = Finding 16: Duplicated Email Transporter Configuration
+{file_name} = 016-Duplicated-Email-Transporter-Configuration.md
 
 read the file
 

@@ -1,7 +1,7 @@
 
 placeholders value:
-{file_name} = 015-Duplicated-Session-Data-Construction-Pattern.md
-{file_test_result} = 015-Duplicated-Session-Data-Construction-Pattern-Test-Result.md
+{file_name} = 016-Duplicated-Email-Transporter-Configuration.md
+{file_test_result} = 016-Duplicated-Email-Transporter-Configuration-Test-Result.md
 
 read the file
 

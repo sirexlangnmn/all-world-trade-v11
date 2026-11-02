@@ -4,6 +4,7 @@ module.exports = (app) => {
     const USERS_ACCOUNTS = require('../query/users_accounts.query.js');
     const RESET_TOKENS = require('../query/reset_tokens.query.js');
     const { PasswordResetService } = require('../services/password-reset.service.js');
+    const emailService = require('../services/email.service.js');
     const middleware = require('../middleware');
 
     const passwordResetService = new PasswordResetService();
@@ -16,10 +17,6 @@ module.exports = (app) => {
 
     const express = require('express');
     const path = require('path');
-    const nodemailer = require('nodemailer');
-    // const hbs = require('nodemailer-express-handlebars');
-    const hbs = require('nodemailer-express-handlebars').default;
-    const { EMAIL_TLS_OPTIONS } = require('../config/email.config');
     app.use(express.static(path.join(__dirname, '../../', 'public')));
 
     const mysql = require('mysql2');
@@ -94,57 +91,21 @@ module.exports = (app) => {
         });
     });
 
-    app.post('/api/post/send-email-for-change-password', sendResetEmailLimiter, (req, res) => {
-        let uuid = req.body.uuid;
-        let link = req.body.link;
-        let receiverEmailAddress = req.body.receiverEmailAddress;
+    app.post('/api/post/send-email-for-change-password', sendResetEmailLimiter, async (req, res) => {
+        const { uuid, link, receiverEmailAddress } = req.body;
 
-        // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_SERVERHOST,
-            port: process.env.EMAIL_PORT,
-            secure: false,
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASSWORD,
-            },
-            tls: EMAIL_TLS_OPTIONS,
-        });
+        try {
+            await emailService.sendPasswordResetEmail({
+                to: receiverEmailAddress,
+                uuid,
+                link,
+            });
 
-        const handlebarOptions = {
-            viewEngine: {
-                extName: '.handlebars',
-                partialsDir: path.resolve('./public/view/email'),
-                defaultLayout: false,
-            },
-            viewPath: path.resolve('./public/view/email'),
-            extName: '.handlebars',
-        };
-
-        transporter.use('compile', hbs(handlebarOptions));
-
-        // setup email data with unicode symbols
-        let mailOptions = {
-            from: process.env.EMAIL_SENDER_ADDRESS,
-            to: receiverEmailAddress,
-            subject: 'Request For Change Password',
-            template: 'request-for-change-password',
-            context: {
-                code: uuid,
-                link: link,
-            },
-        };
-
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log(error);
-                // return error;
-            } else {
-                res.send('email sent');
-                console.log('Email has been sent');
-            }
-        });
+            res.send('email sent');
+            console.log('Email has been sent');
+        } catch (error) {
+            console.log(error);
+        }
     });
 
     User = (req, res) => {

@@ -23,22 +23,64 @@ function buildEmailTlsOptions(env = process.env) {
 
 const EMAIL_TLS_OPTIONS = buildEmailTlsOptions();
 
-const EMAIL_CONFIG = {
-    host: process.env.EMAIL_SERVERHOST,
-    port: parseInt(process.env.EMAIL_PORT, 10) || 587,
-    secure: false,
-    auth: {
-        user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
-        pass: process.env.SUPPORT_RECEIVER_PASSWORD,
-    },
-    tls: EMAIL_TLS_OPTIONS,
-};
+// The application authenticates three independent mailboxes. Keep every
+// credential group explicit so a flow can never silently send from the wrong
+// mailbox when its environment variables are missing.
+function buildEmailProfiles(env = process.env) {
+    return {
+        support: {
+            auth: {
+                user: env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
+                pass: env.SUPPORT_RECEIVER_PASSWORD,
+            },
+            from: env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
+        },
+        registration: {
+            auth: {
+                user: env.EMAIL_USER,
+                pass: env.EMAIL_PASSWORD,
+            },
+            from: env.EMAIL_SENDER_ADDRESS,
+        },
+        payment: {
+            auth: {
+                user: env.PAYMENT_EMAIL_ADDRESS,
+                pass: env.PAYMENT_EMAIL_ADDRESS_PASSWORD,
+            },
+            from: env.PAYMENT_EMAIL_ADDRESS,
+        },
+    };
+}
+
+const EMAIL_PROFILES = buildEmailProfiles();
+
+// Build the shared SMTP transport options for a named credential profile.
+// Unknown profile names intentionally resolve to the support profile, matching
+// the historical default transport; missing variables stay undefined instead
+// of falling back to another mailbox.
+function buildEmailTransportConfig(profileName = 'support', env = process.env) {
+    const profiles = env === process.env ? EMAIL_PROFILES : buildEmailProfiles(env);
+    const profile = profiles[profileName] || profiles.support;
+
+    return {
+        host: env.EMAIL_SERVERHOST,
+        port: parseInt(env.EMAIL_PORT, 10) || 587,
+        secure: false,
+        auth: profile.auth,
+        tls: buildEmailTlsOptions(env),
+    };
+}
+
+const EMAIL_CONFIG = buildEmailTransportConfig('support');
 
 module.exports = {
     CLIENT_EMAIL_RECIPIENTS,
     MIDNIGHT_REPORT_SUBJECT,
     EMAIL_CONFIG,
+    EMAIL_PROFILES,
     EMAIL_TLS_OPTIONS,
+    buildEmailProfiles,
+    buildEmailTransportConfig,
     buildEmailTlsOptions,
     isProductionEnvironment,
 };
