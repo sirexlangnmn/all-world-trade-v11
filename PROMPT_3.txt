@@ -1,7 +1,7 @@
 
 placeholders value:
-{file_name} = 014-Monolithic-server-js-1587-Lines.md
-{file_test_result} = 014-Monolithic-server-js-1587-Lines-Test-Result.md
+{file_name} = 015-Duplicated-Session-Data-Construction-Pattern.md
+{file_test_result} = 015-Duplicated-Session-Data-Construction-Pattern-Test-Result.md
 
 read the file
 

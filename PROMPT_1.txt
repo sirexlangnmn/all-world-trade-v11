@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 14: Monolithic server.js (1,587 Lines)
-{file_name} = 014-Monolithic-server-js-1587-Lines.md
+{findings} = Finding 15: Duplicated Session Data Construction Pattern
+{file_name} = 015-Duplicated-Session-Data-Construction-Pattern.md
 
 read the file
 
