@@ -215,6 +215,112 @@ test('insert and update builders bind values and reject request-controlled colum
     assert.throws(() => USERS_BUSINESS_MEDIAS.buildUpdate({}, 'business-uuid'), /Invalid business media columns/);
 });
 
+test('builders reject hostile keys and bind malicious values', () => {
+    // Hostile keys - should be rejected
+    assert.throws(
+        () => USERS_BUSINESS_MEDIAS.buildInsert({ 'logo; DROP TABLE users_business_medias': 'x' }),
+        /Invalid business media columns/,
+    );
+    assert.throws(() => USERS_BUSINESS_MEDIAS.buildInsert({ 'uuid --': 'x' }), /Invalid business media columns/);
+    assert.throws(() => USERS_BUSINESS_MEDIAS.buildInsert({ unknown_column: 'x' }), /Invalid business media columns/);
+    assert.throws(
+        () => USERS_BUSINESS_MEDIAS.buildUpdate({ 'logo, status': 'unsafe' }, 'business-uuid'),
+        /Invalid business media columns/,
+    );
+
+    // Update payload containing only uuid should be rejected
+    assert.throws(
+        () => USERS_BUSINESS_MEDIAS.buildUpdate({ uuid: 'business-uuid' }, 'business-uuid'),
+        /At least one business media column must be updated/,
+    );
+
+    // Malicious values remain bound parameters and never appear in query text
+    const payload = {
+        logo: "logo.png' OR 1=1 --",
+        uuid: 'business-uuid',
+    };
+    const insert = USERS_BUSINESS_MEDIAS.buildInsert(payload);
+    assert.equal(insert.query, 'INSERT INTO users_business_medias (logo, uuid) VALUES (?, ?)');
+    assert.deepEqual(insert.values, ["logo.png' OR 1=1 --", 'business-uuid']);
+    assert.doesNotMatch(insert.query, /OR 1=1/);
+
+    const insert2 = USERS_BUSINESS_MEDIAS.buildInsert({
+        brochure: "file.pdf'; UPDATE users_accounts SET type=1; --",
+        banner: 'banner.png',
+    });
+    assert.doesNotMatch(insert2.query, /UPDATE users_accounts/);
+    assert.deepEqual(insert2.values, ["file.pdf'; UPDATE users_accounts SET type=1; --", 'banner.png']);
+
+    // Values with commas, quotes, semicolons, backslashes, newlines, Unicode
+    const insert3 = USERS_BUSINESS_MEDIAS.buildInsert({
+        video_title: 'Test, with "quotes"; and \\ backslash\nnewline ✓',
+    });
+    assert.equal(insert3.values[0], 'Test, with "quotes"; and \\ backslash\nnewline ✓');
+    assert.match(insert3.query, /\(\?\)/);
+
+    // buildUpdate uuid not in SET, only in predicate
+    const update = USERS_BUSINESS_MEDIAS.buildUpdate({ logo: 'new.png', uuid: 'ignored' }, 'target-uuid');
+    assert.equal(update.query, 'UPDATE users_business_medias SET logo = ? WHERE uuid = ?');
+    assert.deepEqual(update.values, ['new.png', 'target-uuid']);
+});
+
+test('builders accept every allowlisted media column and preserve value order', () => {
+    const mediaColumns = [
+        'logo',
+        'banner',
+        'video',
+        'video_thumbnail',
+        'video_link',
+        'video_title',
+        'video_description',
+        'brochure',
+        'brochure_title',
+        'webinars_thumbnail',
+        'webinars_title',
+        'webinars_description',
+        'webinars_link',
+        'webinars_schedule',
+    ];
+    const values = Object.fromEntries(mediaColumns.map((column) => [column, `value-for-${column}`]));
+
+    const insert = USERS_BUSINESS_MEDIAS.buildInsert(values);
+
+    assert.equal(
+        insert.query,
+        `INSERT INTO users_business_medias (${mediaColumns.join(', ')}) VALUES (${mediaColumns
+            .map(() => '?')
+            .join(', ')})`,
+    );
+    assert.deepEqual(
+        insert.values,
+        mediaColumns.map((column) => values[column]),
+    );
+
+    const update = USERS_BUSINESS_MEDIAS.buildUpdate({ ...values, uuid: 'ignored' }, 'target-uuid');
+    assert.equal(
+        update.query,
+        `UPDATE users_business_medias SET ${mediaColumns.map((column) => `${column} = ?`).join(', ')} WHERE uuid = ?`,
+    );
+    assert.deepEqual(update.values, [...mediaColumns.map((column) => values[column]), 'target-uuid']);
+});
+
+test('builders reject empty, non-object, mixed-case, and whitespace-padded input', () => {
+    assert.throws(() => USERS_BUSINESS_MEDIAS.buildInsert({}), /Invalid business media columns/);
+    assert.throws(() => USERS_BUSINESS_MEDIAS.buildInsert(null), TypeError);
+    assert.throws(() => USERS_BUSINESS_MEDIAS.buildInsert({ LOGO: 'logo.png' }), /Invalid business media columns/);
+    assert.throws(() => USERS_BUSINESS_MEDIAS.buildInsert({ 'logo ': 'logo.png' }), /Invalid business media columns/);
+    assert.throws(() => USERS_BUSINESS_MEDIAS.buildInsert({ ' logo': 'logo.png' }), /Invalid business media columns/);
+});
+
+test('bound values with excessive length stay out of the generated SQL', () => {
+    const longValue = `${'a'.repeat(100_000)}' OR 1=1 --`;
+    const result = USERS_BUSINESS_MEDIAS.buildInsert({ brochure_title: longValue });
+
+    assert.equal(result.query, 'INSERT INTO users_business_medias (brochure_title) VALUES (?)');
+    assert.equal(result.values[0], longValue);
+    assert.equal(result.query.includes(longValue), false);
+});
+
 test('shared upload handler preserves the success response and update UUID predicate', () => {
     const calls = [];
     const response = {

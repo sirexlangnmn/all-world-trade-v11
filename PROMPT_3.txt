@@ -1,7 +1,7 @@
 
 placeholders value:
-{file_name} = 016-Duplicated-Email-Transporter-Configuration.md
-{file_test_result} = 016-Duplicated-Email-Transporter-Configuration-Test-Result.md
+{file_name} = 017-SQL-Query-String-Explosion-in-Media-Queries.md
+{file_test_result} = 017-SQL-Query-String-Explosion-in-Media-Queries-Test-Result.md
 
 read the file
 

@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 16: Duplicated Email Transporter Configuration
-{file_name} = 016-Duplicated-Email-Transporter-Configuration.md
+{findings} = Finding 17: SQL Query String Explosion in Media Queries
+{file_name} = 017-SQL-Query-String-Explosion-in-Media-Queries.md
 
 read the file
 
