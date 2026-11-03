@@ -92,4 +92,10 @@ Finding 16: Duplicated Email Transporter Configuration
 
 
 Finding 17: SQL Query String Explosion in Media Queries
+017-SQL-Query-String-Explosion-in-Media-Queries.md
+017-SQL-Query-String-Explosion-in-Media-Queries-Test-Result.md
+
+
 Finding 18: Race Condition in getCurrentTrader
+018-Race-Condition-in-getCurrentTrader.md
+018-Race-Condition-in-getCurrentTrader-Test-Result.md

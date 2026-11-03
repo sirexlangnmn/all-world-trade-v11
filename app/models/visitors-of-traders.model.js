@@ -221,49 +221,125 @@ Model.connectVisitorAndTrader = async (newModel, result) => {
     }
 };
 
+const CURRENT_TRADER_CATEGORY_LOOKUPS = [
+    {
+        idField: 'business_major_category',
+        table: 'trade_categories',
+        sessionField: 'current_trader_major_category',
+    },
+    {
+        idField: 'business_sub_category',
+        table: 'sub_categories',
+        sessionField: 'current_trader_sub_category',
+    },
+    {
+        idField: 'business_minor_sub_category',
+        table: 'minor_sub_categories',
+        sessionField: 'current_trader_minor_sub_category',
+    },
+];
+
+const queryRows = (query, parameters) =>
+    new Promise((resolve, reject) => {
+        sql.query(query, parameters, (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            resolve(rows);
+        });
+    });
+
+const clearCurrentTraderSession = (session) => {
+    session.items = [];
+    delete session.current_trader;
+    delete session.current_trader_business_characteristics;
+    delete session.current_trader_date_created;
+
+    CURRENT_TRADER_CATEGORY_LOOKUPS.forEach(({ sessionField }) => {
+        delete session[sessionField];
+    });
+};
+
+const getCurrentTraderData = async (traderUuid) => {
+    const characteristicsRows = await queryRows(USERS_BUSINESS_CHARACTERISTICS.BUSINESS_CHARACTERISTIC, [traderUuid]);
+    const characteristics = characteristicsRows[0];
+
+    if (!characteristics) {
+        throw new Error('Current trader business characteristics were not found.');
+    }
+
+    const titleLookups = CURRENT_TRADER_CATEGORY_LOOKUPS.map(async ({ idField, table, sessionField }) => {
+        const categoryId = characteristics[idField];
+
+        if (!categoryId) {
+            return { sessionField, title: null };
+        }
+
+        const rows = await queryRows(`SELECT title FROM ${table} WHERE id = ?`, [categoryId]);
+        return { sessionField, title: rows[0]?.title ?? null };
+    });
+
+    const [detailsRows, ...categoryTitles] = await Promise.all([
+        queryRows(USERS_BUSINESS.DETAILS, [traderUuid]),
+        ...titleLookups,
+    ]);
+    const traderDetails = detailsRows[0];
+
+    if (!traderDetails) {
+        throw new Error('Current trader details were not found.');
+    }
+
+    return { characteristics, categoryTitles, traderDetails, detailsRows };
+};
+
 Model.getCurrentTrader = (newModel, result) => {
-    newModel.session.items = [];
+    const { session } = newModel;
+    clearCurrentTraderSession(session);
 
-    let trader_uuid = newModel.trader_uuid;
+    let callbackCalled = false;
+    const complete = (err, data) => {
+        if (callbackCalled) {
+            return;
+        }
 
-    newModel.session.current_trader_date_created = date_time();
-    sql.query(USERS_BUSINESS_CHARACTERISTICS.BUSINESS_CHARACTERISTIC, [trader_uuid], (err, res) => {
-        if (err) return;
-        let { business_major_category, business_sub_category, business_minor_sub_category } = res[0];
-        newModel.session.current_trader_business_characteristics = res[0];
-        const fetchTitle = (table, id, target) => {
-            // if (!id) return;
-            if (id && id != null) {
-                sql.query(`SELECT title FROM ${table} WHERE id = "${id}"`, (err, res) => {
-                    if (err) {
-                        console.log('fetchTitle err' + table + ': ', err);
-                    } else {
-                        console.log('fetchTitle res[0]' + table + ': ', res[0]);
-                        newModel.session.items.push({ [target]: res[0].title });
+        callbackCalled = true;
+        result(err, data);
+    };
+
+    getCurrentTraderData(newModel.trader_uuid).then(
+        ({ characteristics, categoryTitles, traderDetails, detailsRows }) => {
+            try {
+                const items = categoryTitles
+                    .filter(({ title }) => title !== null)
+                    .map(({ sessionField, title }) => ({ [sessionField]: title }));
+                items.push(traderDetails);
+
+                const sessionData = {
+                    items,
+                    current_trader_date_created: date_time(),
+                    current_trader_business_characteristics: characteristics,
+                    current_trader: traderDetails,
+                };
+
+                categoryTitles.forEach(({ sessionField, title }) => {
+                    if (title === null) {
+                        sessionData[sessionField] = null;
                     }
                 });
-            } else {
-                newModel.session[target] = null;
+
+                Object.assign(session, sessionData);
+            } catch (err) {
+                clearCurrentTraderSession(session);
+                complete(err, null);
+                return;
             }
-        };
 
-        fetchTitle('trade_categories', business_major_category, 'current_trader_major_category');
-        fetchTitle('sub_categories', business_sub_category, 'current_trader_sub_category');
-        fetchTitle('minor_sub_categories', business_minor_sub_category, 'current_trader_minor_sub_category');
-
-        setTimeout(() => {
-            sql.query(USERS_BUSINESS.DETAILS, [trader_uuid], (err, res) => {
-                if (err) {
-                    newModel.session.current_trader = null;
-                    result(null, err);
-                } else {
-                    newModel.session.current_trader = res[0];
-                    newModel.session.items.push(res[0]);
-                    result(null, res);
-                }
-            });
-        }, 1500);
-    });
+            complete(null, detailsRows);
+        },
+        (err) => complete(err, null),
+    );
 };
 
 function date_time() {

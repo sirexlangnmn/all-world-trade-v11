@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 17: SQL Query String Explosion in Media Queries
-{file_name} = 017-SQL-Query-String-Explosion-in-Media-Queries.md
+{findings} = Finding 18: Race Condition in getCurrentTrader
+{file_name} = 018-Race-Condition-in-getCurrentTrader.md
 
 read the file
 
