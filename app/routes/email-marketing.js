@@ -8,9 +8,7 @@ module.exports = (app) => {
     const express = require('express');
     const path = require('path');
     const CryptoJS = require('crypto-js');
-    const nodemailer = require('nodemailer');
-    const hbs = require('nodemailer-express-handlebars').default;
-    const { EMAIL_TLS_OPTIONS } = require('../config/email.config');
+    const emailService = require('../services/email.service.js');
 
     app.use(express.static(path.join(__dirname, '../../', 'public')));
 
@@ -76,54 +74,9 @@ module.exports = (app) => {
     function sendIntroductionEmail(receiverEmailAddress, index) {
         console.log('Number to be send: ', index);
 
-        // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_SERVERHOST,
-            port: process.env.EMAIL_PORT,
-            secure: false,
-            auth: {
-                user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
-                pass: process.env.SUPPORT_RECEIVER_PASSWORD,
-            },
-            tls: EMAIL_TLS_OPTIONS,
-        });
-
-        const handlebarOptions = {
-            viewEngine: {
-                extName: '.handlebars',
-                partialsDir: path.resolve('./public/view/email'),
-                defaultLayout: false,
-            },
-            viewPath: path.resolve('./public/view/email'),
-            extName: '.handlebars',
-        };
-
-        transporter.use('compile', hbs(handlebarOptions));
-
-        // setup email data with unicode symbols
-        let mailOptions = {
-            from: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
-            to: receiverEmailAddress,
-            subject: 'All World Trade - Introduction to AllWorldTrade platform for boosting market and sales',
-            template: 'introduction2',
-            // context: {
-            //     code: verification_code
-            // },
-        };
-
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log('transporter.sendMail error: ', error);
-                // return error;
-            } else {
-                // res.send('email sent');
-                console.log('Email has been sent to: ', receiverEmailAddress);
-            }
-            // console.log('Message sent info: ', info);
-            // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-            // res.render('Email has been sent');
-        });
+        emailService
+            .sendIntroductionEmail(receiverEmailAddress)
+            .catch((error) => console.error('Introduction email failed:', error.message));
     }
 
     const decryptUuid = (encryptedUuid) => {
@@ -160,157 +113,20 @@ module.exports = (app) => {
         console.log('sendEmailToTrader receiverEmailAddress :', receiverEmailAddress);
         console.log('sendEmailToTrader emailData :', emailData);
 
-        // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_SERVERHOST,
-            port: process.env.EMAIL_PORT,
-            secure: false,
-            auth: {
-                user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
-                pass: process.env.SUPPORT_RECEIVER_PASSWORD,
-            },
-            tls: EMAIL_TLS_OPTIONS,
-        });
-
-        const handlebarOptions = {
-            viewEngine: {
-                extName: '.handlebars',
-                partialsDir: path.resolve('./public/view/email'),
-                defaultLayout: false,
-            },
-            viewPath: path.resolve('./public/view/email'),
-            extName: '.handlebars',
-        };
-
-        transporter.use('compile', hbs(handlebarOptions));
-
-        // setup email data with unicode symbols
-        let mailOptions = {
-            from: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
-            to: receiverEmailAddress,
-            subject: 'All World Trade - Client tries to connect.',
-            template: 'notifyTraderOnClientContact',
-            context: {
-                emailData: emailData,
-            },
-        };
-
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log('transporter.sendMail error: ', error);
-                // return error;
-            } else {
-                // res.send('email sent');
-                console.log('Email has been sent to: ', receiverEmailAddress);
-            }
-            // console.log('Message sent info: ', info);
-            // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-            // res.render('Email has been sent');
-        });
+        emailService
+            .sendTraderContactNotification(receiverEmailAddress, emailData)
+            .catch((error) => console.error('Trader contact email failed:', error.message));
     }
 
     function sendEmailToClient(receiverEmailAddress, emailData) {
-        // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_SERVERHOST,
-            port: process.env.EMAIL_PORT,
-            secure: false,
-            auth: {
-                user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
-                pass: process.env.SUPPORT_RECEIVER_PASSWORD,
-            },
-            tls: EMAIL_TLS_OPTIONS,
-        });
-
-        const handlebarOptions = {
-            viewEngine: {
-                extName: '.handlebars',
-                partialsDir: path.resolve('./public/view/email'),
-                defaultLayout: false,
-            },
-            viewPath: path.resolve('./public/view/email'),
-            extName: '.handlebars',
-        };
-
-        transporter.use('compile', hbs(handlebarOptions));
-
-        // setup email data with unicode symbols
-        let mailOptions = {
-            from: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
-            to: receiverEmailAddress,
-            subject: "All World Trade - Traders you're trying to connect with.",
-            template: 'notifyClientOnTraderTheyContact',
-            context: {
-                emailData: emailData,
-            },
-        };
-
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log('transporter.sendMail error: ', error);
-                // return error;
-            } else {
-                // res.send('email sent');
-                console.log('Email has been sent to: ', receiverEmailAddress);
-            }
-            // console.log('Message sent info: ', info);
-            // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-            // res.render('Email has been sent');
-        });
+        emailService
+            .sendClientContactNotification(receiverEmailAddress, emailData)
+            .catch((error) => console.error('Client contact email failed:', error.message));
     }
 
     function sendEmailToAllWorldTrade(traderEmail, clientEmail) {
-        const receiverEmailAddress = 'allworldtrade.com@gmail.com';
-        // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_SERVERHOST,
-            port: process.env.EMAIL_PORT,
-            secure: false,
-            auth: {
-                user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
-                pass: process.env.SUPPORT_RECEIVER_PASSWORD,
-            },
-            tls: EMAIL_TLS_OPTIONS,
-        });
-
-        const handlebarOptions = {
-            viewEngine: {
-                extName: '.handlebars',
-                partialsDir: path.resolve('./public/view/email'),
-                defaultLayout: false,
-            },
-            viewPath: path.resolve('./public/view/email'),
-            extName: '.handlebars',
-        };
-
-        transporter.use('compile', hbs(handlebarOptions));
-
-        // setup email data with unicode symbols
-        let mailOptions = {
-            from: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
-            to: receiverEmailAddress,
-            subject: 'All World Trade - Client trying to connect to a Trader',
-            template: 'notifyAWTwhenClientConnectToTrader',
-            context: {
-                traderEmail: traderEmail,
-                clientEmail: clientEmail,
-            },
-        };
-
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log('transporter.sendMail error: ', error);
-                // return error;
-            } else {
-                // res.send('email sent');
-                console.log('Email has been sent to: ', receiverEmailAddress);
-            }
-            // console.log('Message sent info: ', info);
-            // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-            // res.render('Email has been sent');
-        });
+        emailService
+            .sendAllWorldTradeContactNotification(traderEmail, clientEmail)
+            .catch((error) => console.error('All World Trade contact email failed:', error.message));
     }
 };

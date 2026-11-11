@@ -1,8 +1,7 @@
 const { v4: uuidV4 } = require('uuid');
 const { check, validationResult } = require('express-validator');
-const nodemailer = require('nodemailer');
 const db = require('../db_models');
-const { EMAIL_TLS_OPTIONS } = require('../config/email.config');
+const emailService = require('../services/email.service.js');
 const sequelizeConfig = require('../config/sequelize.config.js');
 
 const Support_messages = db.support_messages;
@@ -34,44 +33,11 @@ exports.create = async (req, res) => {
         messages: sender_message,
     };
 
-    // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_SERVERHOST,
-        port: process.env.EMAIL_PORT,
-        secure: false,
-        auth: {
-            user: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
-            pass: process.env.SUPPORT_RECEIVER_PASSWORD,
-        },
-        tls: EMAIL_TLS_OPTIONS,
-    });
-
-    // setup email data with unicode symbols
-    let mailOptions = {
-        from: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
-        to: process.env.SUPPORT_RECEIVER_EMAIL_ADDRESS,
-        subject: 'HELP AND SUGGESTIONS from: ' + sender_email,
-        template: 'HELP AND SUGGESTIONS from: ' + sender_email,
-        // text: "Hello world?", // plain text body
-        html: '<b>SENDER EMAIL: </b>' + ' ' + sender_email + ' <br>' + '<b>SENDER MESSAGE: </b>' + ' ' + sender_message,
-        // context: {
-        //     code: verification_code
-        // },
-    };
-
-    // send mail with defined transport object
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log(error);
-            // return error;
-        } else {
-            // res.send('email sent');
-            console.log('Email has been sent');
-        }
-        // console.log('Message sent info: ', info);
-        // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-        // res.render('Email has been sent');
-    });
+    // Keep the historical fire-and-forget behavior; log failures instead of
+    // leaving an unhandled promise rejection.
+    emailService
+        .sendSupportMessage({ senderEmail: sender_email, senderMessage: sender_message })
+        .catch((error) => console.error('Support message email failed:', error.message));
 
     Support_messages.create(dataObjects)
         .then((data) => {

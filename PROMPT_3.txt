@@ -1,7 +1,7 @@
 
 placeholders value:
-{file_name} = 013-Massive-Code-Duplication-in-File-Upload-Routes.md
-{file_test_result} = 013-Massive-Code-Duplication-in-File-Upload-Routes-Test-Result.md
+{file_name} = 018-Race-Condition-in-getCurrentTrader.md
+{file_test_result} = 018-Race-Condition-in-getCurrentTrader-Test-Result.md
 
 read the file
 

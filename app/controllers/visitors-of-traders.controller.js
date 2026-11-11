@@ -28,7 +28,7 @@ exports.findCurrentTrader = (req, res) => {
     Model.getCurrentTrader(parameters, (err, data) => {
         if (err)
             res.status(500).send({
-                message: err.message || 'Some error occurred while retrieving current trader.',
+                message: 'Some error occurred while retrieving current trader.',
             });
         else res.send(data);
     });

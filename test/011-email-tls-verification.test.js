@@ -137,7 +137,8 @@ test('every Nodemailer transport uses the shared secure configuration', () => {
 
     for (const { relativePath, source } of transportFiles) {
         const transportCount = (source.match(/nodemailer\.createTransport\s*\(/g) || []).length;
-        const usesSharedConfig = /nodemailer\.createTransport\s*\(\s*EMAIL_CONFIG\s*\)/.test(source);
+        const usesSharedConfig =
+            /nodemailer\.createTransport\s*\(\s*(EMAIL_CONFIG|buildEmailTransportConfig\s*\()/.test(source);
 
         if (usesSharedConfig) {
             continue;
@@ -152,33 +153,30 @@ test('every Nodemailer transport uses the shared secure configuration', () => {
     }
 });
 
-test('each inline transport keeps its original SMTP credentials', () => {
-    const expectedCredentials = {
-        'app/routes/email-marketing.js': ['SUPPORT_RECEIVER_EMAIL_ADDRESS', 'SUPPORT_RECEIVER_PASSWORD'],
-        'app/routes/forgot-password.js': ['EMAIL_USER', 'EMAIL_PASSWORD'],
-        'app/routes/upload-file.js': [
-            'EMAIL_USER',
-            'EMAIL_PASSWORD',
-            'PAYMENT_EMAIL_ADDRESS',
-            'PAYMENT_EMAIL_ADDRESS_PASSWORD',
-        ],
-        'app/shared/email-template.js': ['SUPPORT_RECEIVER_EMAIL_ADDRESS', 'SUPPORT_RECEIVER_PASSWORD'],
-        'app/db_controllers/support_messages.controller.js': [
-            'SUPPORT_RECEIVER_EMAIL_ADDRESS',
-            'SUPPORT_RECEIVER_PASSWORD',
-        ],
+test('the centralized SMTP profiles keep the original credentials', () => {
+    const source = readSource('app/config/email.config.js');
+    const expectedProfiles = {
+        support: ['SUPPORT_RECEIVER_EMAIL_ADDRESS', 'SUPPORT_RECEIVER_PASSWORD'],
+        registration: ['EMAIL_USER', 'EMAIL_PASSWORD'],
+        payment: ['PAYMENT_EMAIL_ADDRESS', 'PAYMENT_EMAIL_ADDRESS_PASSWORD'],
     };
 
-    for (const [relativePath, variables] of Object.entries(expectedCredentials)) {
-        const source = readSource(relativePath);
-
+    for (const variables of Object.values(expectedProfiles)) {
         for (const variable of variables) {
             assert.match(
                 source,
-                new RegExp(`process\\.env\\.${variable}`),
-                `${relativePath} must still read process.env.${variable}`,
+                new RegExp(`(?:process\\.env|env)\\.${variable}`),
+                `app/config/email.config.js must still read ${variable} from the environment`,
             );
         }
+    }
+
+    for (const profile of Object.keys(expectedProfiles)) {
+        assert.match(
+            source,
+            new RegExp(`${profile}:\\s*{`),
+            `app/config/email.config.js must define the ${profile} profile`,
+        );
     }
 });
 

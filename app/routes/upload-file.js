@@ -7,10 +7,7 @@ module.exports = (app) => {
 
     const express = require('express');
     const path = require('path');
-    const nodemailer = require('nodemailer');
-    // const hbs = require('nodemailer-express-handlebars');
-    const hbs = require('nodemailer-express-handlebars').default;
-    const { EMAIL_TLS_OPTIONS } = require('../config/email.config');
+    const emailService = require('../services/email.service.js');
     app.use(express.static(path.join(__dirname, '../../', 'public')));
 
     const createBusinessMediaUpload = require('../middleware/business-media-upload.middleware.js');
@@ -148,174 +145,56 @@ module.exports = (app) => {
     // upgrade to traders upload media files [END]
     // ======================================================
 
-    app.post('/api/post/registration-email-verification', (req, res) => {
-        let verification_code;
-        verification_code = req.body.verification_code;
-        verification_code = Number(verification_code);
-        let receiverEmailAddress = req.body.email_or_social_media;
+    app.post('/api/post/registration-email-verification', async (req, res) => {
+        const verification_code = Number(req.body.verification_code);
+        const receiverEmailAddress = req.body.email_or_social_media;
 
-        // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_SERVERHOST,
-            port: process.env.EMAIL_PORT,
-            secure: false,
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASSWORD,
-            },
-            tls: EMAIL_TLS_OPTIONS,
-        });
-
-        const handlebarOptions = {
-            viewEngine: {
-                extName: '.handlebars',
-                partialsDir: path.resolve('./public/view/email'),
-                defaultLayout: false,
-            },
-            viewPath: path.resolve('./public/view/email'),
-            extName: '.handlebars',
-        };
-
-        transporter.use('compile', hbs(handlebarOptions));
-
-        // setup email data with unicode symbols
-        let mailOptions = {
-            from: process.env.EMAIL_SENDER_ADDRESS,
-            to: receiverEmailAddress,
-            subject: 'verification subject',
-            template: 'registration-email-verification',
-            context: {
+        try {
+            await emailService.sendRegistrationVerificationEmail({
+                to: receiverEmailAddress,
                 code: verification_code,
-            },
-        };
+            });
 
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log(error);
-                // return error;
-            } else {
-                res.send('email sent');
-                console.log('Email has been sent');
-            }
-            // console.log('Message sent info: ', info);
-            // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-            // res.render('Email has been sent');
-        });
+            res.send('email sent');
+            console.log('Email has been sent');
+        } catch (error) {
+            console.log(error);
+        }
     });
 
-    app.post('/api/post/resend-email-verification', (req, res) => {
+    app.post('/api/post/resend-email-verification', async (req, res) => {
         console.log('req.session sa server resend-email-verification');
         console.log(req.session.verification_code);
         console.log(req.session.registration_uuid);
         console.log(req.session.registration_email_address);
 
-        let verification_code;
-        verification_code = req.session.verification_code;
-        verification_code = Number(verification_code);
-        let receiverEmailAddress = req.session.registration_email_address;
+        const verification_code = Number(req.session.verification_code);
+        const receiverEmailAddress = req.session.registration_email_address;
 
-        // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_SERVERHOST,
-            port: process.env.EMAIL_PORT,
-            secure: false,
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASSWORD,
-            },
-            tls: EMAIL_TLS_OPTIONS,
-        });
-
-        const handlebarOptions = {
-            viewEngine: {
-                extName: '.handlebars',
-                partialsDir: path.resolve('./public/view/email'),
-                defaultLayout: false,
-            },
-            viewPath: path.resolve('./public/view/email'),
-            extName: '.handlebars',
-        };
-
-        transporter.use('compile', hbs(handlebarOptions));
-
-        // setup email data with unicode symbols
-        let mailOptions = {
-            from: process.env.EMAIL_SENDER_ADDRESS,
-            to: receiverEmailAddress,
-            subject: 'verification subject',
-            template: 'registration-email-verification',
-            context: {
+        try {
+            await emailService.sendRegistrationVerificationEmail({
+                to: receiverEmailAddress,
                 code: verification_code,
-            },
-        };
+            });
 
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log(error);
-                // return error;
-            } else {
-                res.send('email sent');
-                console.log('Email has been sent');
-            }
-            // console.log('Message sent info: ', info);
-            // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-            // res.render('Email has been sent');
-        });
+            res.send('email sent');
+            console.log('Email has been sent');
+        } catch (error) {
+            console.log(error);
+        }
     });
 
-    app.post('/api/post/email-payment-account', (req, res) => {
+    app.post('/api/post/email-payment-account', async (req, res) => {
         console.log('email-payment-account');
-        let receiverEmailAddress = req.body.email;
+        const receiverEmailAddress = req.body.email;
 
-        // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_SERVERHOST,
-            port: process.env.EMAIL_PORT,
-            secure: false,
-            auth: {
-                user: process.env.PAYMENT_EMAIL_ADDRESS,
-                pass: process.env.PAYMENT_EMAIL_ADDRESS_PASSWORD,
-            },
-            tls: EMAIL_TLS_OPTIONS,
-        });
+        try {
+            await emailService.sendPaymentAccountEmail(receiverEmailAddress);
 
-        const handlebarOptions = {
-            viewEngine: {
-                extName: '.handlebars',
-                partialsDir: path.resolve('./public/view/email'),
-                defaultLayout: false,
-            },
-            viewPath: path.resolve('./public/view/email'),
-            extName: '.handlebars',
-        };
-
-        transporter.use('compile', hbs(handlebarOptions));
-
-        // setup email data with unicode symbols
-        let mailOptions = {
-            from: process.env.PAYMENT_EMAIL_ADDRESS,
-            to: receiverEmailAddress,
-            subject: 'All World Trade - Trade Show Payment Information',
-            template: 'payment-account',
-            // context: {
-            //     code: verification_code
-            // },
-        };
-
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log(error);
-                // return error;
-            } else {
-                res.send('email sent');
-                console.log('Email has been sent');
-            }
-            // console.log('Message sent info: ', info);
-            // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-            // res.render('Email has been sent');
-        });
+            res.send('email sent');
+            console.log('Email has been sent');
+        } catch (error) {
+            console.log(error);
+        }
     });
 };

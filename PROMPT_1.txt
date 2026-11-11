@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 13: Massive Code Duplication in File Upload Routes
-{file_name} = 013-Massive-Code-Duplication-in-File-Upload-Routes.md
+{findings} = Finding 18: Race Condition in getCurrentTrader
+{file_name} = 018-Race-Condition-in-getCurrentTrader.md
 
 read the file
 

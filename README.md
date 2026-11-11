@@ -390,14 +390,16 @@ all-world-trade-v11/
 │   │   ├── users_business_medias.query.js
 │   │   └── ...
 │   │
-│   ├── routes/                   # Route definitions (7 files)
+│   ├── routes/                   # API and page route definitions
 │   │   ├── index.js              # Legacy API routes
 │   │   ├── sequelize.route.js    # v2/v3 API routes
 │   │   ├── upload-file.js        # File upload routes (30+ variants)
 │   │   ├── password.js           # Hash/compare routes
 │   │   ├── forgot-password.js    # Password reset routes
 │   │   ├── encrypt.route.js      # AES encrypt/decrypt routes
-│   │   └── email-marketing.js    # Email marketing routes
+│   │   ├── email-marketing.js    # Email marketing routes
+│   │   └── pages/
+│   │       └── public-pages.routes.js # Login, verification, legal, pricing pages
 │   │
 │   ├── service/                  # PDF generation
 │   │   ├── pdf-service.js
@@ -412,7 +414,7 @@ all-world-trade-v11/
 │   │   └── email-template.js
 │   │
 │   ├── src/                      # Server entry point
-│   │   ├── server.js             # Main Express app (~1582 lines)
+│   │   ├── server.js             # Express bootstrap and route orchestration
 │   │   └── Logger.js             # Logging utility
 │   │
 │   ├── ssl/                      # SSL certificates
@@ -485,7 +487,7 @@ all-world-trade-v11/
 | `app/db_models/` | Sequelize model definitions | Defines table schemas, associations, and defaults |
 | `app/models/` | Legacy data access | Contains raw SQL via mysql2 pool |
 | `app/query/` | Isolated SQL strings | Keeps SQL out of model files for maintainability |
-| `app/routes/` | Route definitions | Maps HTTP methods+paths to controller functions |
+| `app/routes/` | API and page route definitions | Maps HTTP methods+paths to controllers and SSR page handlers |
 | `app/middleware/` | Cross-cutting concerns | Validation, session, auth checks, CSP nonces |
 | `app/services/` | Business logic | Email sending, analytics aggregation |
 | `app/service/` | PDF generation | Creates downloadable PDF documents |
@@ -531,7 +533,7 @@ graph LR
 
 ### 6.3 Routing
 
-Routes are defined server-side in `app/routes/`. Navigation is standard HTTP GET requests that trigger full page reloads (except where AJAX is used for dynamic interactions).
+Routes are defined server-side in `app/routes/`. API routes remain in the established route modules; login, verification, legal, and pricing page routes are grouped in `app/routes/pages/public-pages.routes.js` and mounted by the server entry point. Navigation is standard HTTP GET requests that trigger full page reloads (except where AJAX is used for dynamic interactions).
 
 ### 6.4 Client-Side Data Flow
 
