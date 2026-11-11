@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 18: Race Condition in getCurrentTrader
-{file_name} = 018-Race-Condition-in-getCurrentTrader.md
+{findings} = Finding 20: SQL Logic Bug in Search Filter
+{file_name} = 020-SQL-Logic-Bug-in-Search-Filter.md
 
 read the file
 

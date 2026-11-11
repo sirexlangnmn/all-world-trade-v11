@@ -522,6 +522,8 @@ if (param.product_service_input) {
 2. Wrap OR conditions in parentheses: `AND (users_business_characteristics.business_industry_belong_to LIKE ? OR users_businesses.business_name LIKE ?)`
 3. This is best fixed during the Sequelize migration (Finding 1)
 
+**Status:** All three logic bugs are fixed in every active code path. The search endpoint runs on the Sequelize stack (`app/services/business-search.service.js`): `buildBaseMediaWhere` emits `banner/logo != '' AND IS NOT NULL` on an INNER-JOINed `users_business_medias` include, and facets compose as `WHERE isPaid = 1 AND (facet1 OR facet2 ...)`, so no search facet (free-text included) can bypass the base visibility conditions. The four legacy selection queries (`getCompaniesRelatedToCurrentUser`, `getPrevFiveCompanies`, `getNextFiveCompanies`, `getRandomCompanies` in `app/models/selection.model.js`) use the corrected AND-chained `IS NOT NULL` form. The buggy pattern's last surviving copies (dead commented-out drafts in `app/models/selection.model.js`) were removed, and regression tests pinning the "base conditions cannot be bypassed" invariant were added in `test/search-businesses.test.js`. Note: OR-facet (union) composition is deliberately preserved legacy behavior; moving to AND (intersection) semantics is a separate product decision.
+
 ---
 
 ### Finding 21: `ORDER BY RAND()` Performance

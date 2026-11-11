@@ -119,6 +119,55 @@ test('facets are OR-composed under the base conditions (company + minor + city)'
     assert.ok(!values.some((v) => v.includes('${')), 'no template interpolation');
 });
 
+// --- Finding 20 regression: base conditions cannot be bypassed -----------
+
+test('Finding 20: facet payloads never relax the media base conditions', () => {
+    const options = buildSearchOptions({
+        product_service_input: 'coffee',
+        minor_sub_categories: '148',
+        selectionCity: 'Manila',
+    });
+
+    // The medias include where must stay exactly the fixed base form and keep
+    // the INNER join, no matter which facets the request carries.
+    const medias = options.include.find((i) => i.as === 'business_medias');
+    assert.ok(medias, 'medias include present');
+    assert.strictEqual(medias.required, true, 'medias join stays INNER');
+    assert.deepStrictEqual(medias.where, {
+        banner: { [Op.ne]: '', [Op.not]: null },
+        logo: { [Op.ne]: '', [Op.not]: null },
+    });
+
+    const mediaValues = collectValues(medias.where);
+    assert.ok(
+        !mediaValues.some((v) => v.includes('coffee') || v.includes('148') || v.includes('Manila')),
+        'user facet values never land on the medias include where',
+    );
+});
+
+test('Finding 20: free-text-only facets stay inside the single OR group after the base condition', () => {
+    const options = buildSearchOptions({ product_service_input: 'coffee' });
+
+    const whereAnd = options.where[Op.and];
+    assert.deepStrictEqual(whereAnd[0], { isPaid: 1 }, 'base condition stays ANDed first');
+    assert.strictEqual(whereAnd.length, 2, 'exactly base conditions + one facet group');
+
+    // The legacy bug appended unparenthesized OR branches after the base
+    // conditions, letting free-text matches bypass isPaid/banner/logo. Every
+    // facet value must live inside the single [Op.or] group, never outside it.
+    const orGroup = whereAnd[1];
+    assert.ok(orGroup && Array.isArray(orGroup[Op.or]), 'facet group is one OR group');
+    assert.ok(collectValues(orGroup).includes('%coffee%'), 'facet value survives as LIKE data');
+
+    for (const [index, condition] of whereAnd.entries()) {
+        if (index === 1) continue;
+        assert.ok(
+            !collectValues(condition).some((v) => String(v).includes('coffee')),
+            `no facet value outside the OR group (index ${index})`,
+        );
+    }
+});
+
 // --- Pure: input whitelist and value coercion -----------------------------
 
 test('mapSearchParams forwards only whitelisted keys', () => {
@@ -238,6 +287,33 @@ test('OR semantics: company + minor search returns the union of both facet resul
     }
     for (const row of byMinor) {
         assert.ok(bothIds.has(row.id), `minor match "${row.business_name}" included in union`);
+    }
+});
+
+test('Finding 20 regression: free-text-only results satisfy the banner/logo base conditions', async (t) => {
+    const rows = await runLive({ product_service_input: 'All World' }).catch((e) => {
+        t.diagnostic('DB unavailable, skipping: ' + e.message);
+        return null;
+    });
+    if (rows === null) return;
+
+    assert.ok(Array.isArray(rows), 'bare array response');
+    if (rows.length === 0) {
+        t.diagnostic('no matching rows in local DB; row-level assertions not exercised');
+        return;
+    }
+
+    // The legacy unparenthesized-OR bug returned unpaid/media-less businesses
+    // whenever a free-text term matched them. Every row must carry media.
+    for (const row of rows) {
+        assert.ok(
+            typeof row.banner === 'string' && row.banner !== '',
+            `banner is a non-empty string for "${row.business_name}"`,
+        );
+        assert.ok(
+            typeof row.logo === 'string' && row.logo !== '',
+            `logo is a non-empty string for "${row.business_name}"`,
+        );
     }
 });
 
