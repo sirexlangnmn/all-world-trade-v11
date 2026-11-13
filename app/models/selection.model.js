@@ -228,9 +228,26 @@ Model.getNextFiveCompanies = (param, result) => {
     );
 };
 
+// Returns an integer in [0, max(total - limit, 0)] so a bounded window never
+// starts past the last eligible row. `random` is injectable for tests.
+function computeRandomOffset(total, limit, random = Math.random) {
+    const size = Number(total);
+    const window = Number(limit);
+    if (!Number.isFinite(size) || !Number.isFinite(window) || size <= 0 || window <= 0) return 0;
+
+    const maxOffset = Math.max(Math.floor(size) - Math.floor(window), 0);
+    if (maxOffset === 0) return 0;
+
+    const sample = typeof random === 'function' ? random() : random;
+    const r = Number(sample);
+    const clamped = Number.isFinite(r) ? Math.min(Math.max(r, 0), 0.999999999999) : 0;
+    return Math.floor(clamped * (maxOffset + 1));
+}
+
+Model.computeRandomOffset = computeRandomOffset;
+
 Model.getRandomCompanies = (result) => {
-    sql.query(
-        `SELECT 
+    const selectColumns = `SELECT
         users_businesses.id, 
         users_businesses.business_name, 
         users_businesses.business_tagline,
@@ -258,26 +275,44 @@ Model.getRandomCompanies = (result) => {
         users_business_characteristics.business_minor_sub_category,
         users_business_characteristics.business_scale,
         users_business_medias.banner,
-        users_business_medias.logo
-        FROM users_businesses 
+        users_business_medias.logo`;
+
+    const fromClause = `FROM users_businesses
         JOIN users_business_characteristics 
         ON users_businesses.uuid = users_business_characteristics.uuid 
         JOIN users_business_medias 
         ON users_businesses.uuid = users_business_medias.uuid 
         WHERE users_business_medias.banner != ''
         AND users_business_medias.logo != ''
-        AND users_businesses.isPaid = 1
-        ORDER BY RAND()  
-        LIMIT 5`,
-        (err, res) => {
+        AND users_businesses.isPaid = 1`;
+
+    const limit = 5;
+    const countQuery = `SELECT COUNT(*) AS total ${fromClause}`;
+    const pageQuery = `${selectColumns} ${fromClause} ORDER BY users_businesses.id ASC LIMIT ? OFFSET ?`;
+
+    sql.query(countQuery, (err, countRows) => {
+        if (err) {
+            result(null, err);
+            return;
+        }
+
+        const total = Number(countRows?.[0]?.total) || 0;
+        if (total === 0) {
+            result(null, []);
+            return;
+        }
+
+        const offset = computeRandomOffset(total, limit);
+
+        sql.query(pageQuery, [limit, offset], (err, rows) => {
             if (err) {
                 result(null, err);
                 return;
-            } else {
-                result(null, res);
             }
-        },
-    );
+
+            result(null, rows);
+        });
+    });
 };
 
 module.exports = Model;

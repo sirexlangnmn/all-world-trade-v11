@@ -543,6 +543,8 @@ if (param.product_service_input) {
 2. If random sampling is truly needed, use the `WHERE id >= FLOOR(RAND() * MAX(id))` pattern
 3. Better yet, fetch the total count and use `OFFSET FLOOR(RAND() * count) LIMIT 5`
 
+**Status:** Fixed in the active code path. The stale location metadata above is superseded by the working tree: the only active `ORDER BY RAND()` was `getRandomCompanies` in `app/models/selection.model.js`. It now runs a `COUNT(*)` over the existing eligibility joins/filters, computes a clamped random offset via the pure `computeRandomOffset(total, limit, random)` helper, and reads the same column list through `ORDER BY users_businesses.id ASC LIMIT ? OFFSET ?` (offset never exceeds `total - 5`). The callback contract, bare-array response, `isPaid = 1`/banner/logo filters, INNER joins, and ≤5-row cap are unchanged. `getCompaniesRelatedToCurrentUser`, `getPrevFiveCompanies`, and `getNextFiveCompanies` were already id-paginated and are untouched. Regression tests live in `test/021-ORDER-BY-RAND-Performance.test.js`. Remaining scope: large `OFFSET` values still scan within the eligible window; the constant-time random-start-id pattern remains a separately benchmarked follow-up. Do not migrate this legacy endpoint to Sequelize under this finding (Finding 34).
+
 ---
 
 ### Finding 22: Validation Errors Return HTTP 200

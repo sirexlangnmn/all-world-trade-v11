@@ -109,6 +109,10 @@ Finding 20: SQL Logic Bug in Search Filter
 
 
 Finding 21: ORDER BY RAND() Performance
+021-ORDER-BY-RAND-Performance.md
+021-ORDER-BY-RAND-Performance-Test-Result.md
+
+
 Finding 22: Validation Errors Return HTTP 200
 Finding 24: Dead Code and Development Artifacts
 Finding 25: Inconsistent Cryptographic Approach

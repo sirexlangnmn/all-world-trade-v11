@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 20: SQL Logic Bug in Search Filter
-{file_name} = 020-SQL-Logic-Bug-in-Search-Filter.md
+{findings} = Finding 21: ORDER BY RAND() Performance
+{file_name} = 021-ORDER-BY-RAND-Performance.md
 
 read the file
 

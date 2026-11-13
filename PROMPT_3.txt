@@ -1,7 +1,7 @@
 
 placeholders value:
-{file_name} = 020-SQL-Logic-Bug-in-Search-Filter.md
-{file_test_result} = 020-SQL-Logic-Bug-in-Search-Filter-Test-Result.md
+{file_name} = 021-ORDER-BY-RAND-Performance.md
+{file_test_result} = 021-ORDER-BY-RAND-Performance-Test-Result.md
 
 read the file
 
