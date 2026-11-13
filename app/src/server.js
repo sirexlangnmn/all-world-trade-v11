@@ -299,26 +299,28 @@ app.use(viewDataMiddleware);
 
 // home
 app.get(['/'], async (req, res) => {
-    try {
-        const sessionUser = req.session.user;
+    // try {
+    //     const sessionUser = req.session.user;
 
-        console.log('home req.session.user:', sessionUser);
+    //     console.log('home req.session.user:', sessionUser);
 
-        if (!sessionUser) {
-            return renderLogin(res);
-        }
+    //     if (!sessionUser) {
+    //         return renderLogin(res);
+    //     }
 
-        const loggedIn = await isUserLoggedIn(sessionUser);
+    //     const loggedIn = await isUserLoggedIn(sessionUser);
 
-        if (!loggedIn) {
-            return renderLogin(res);
-        }
+    //     if (!loggedIn) {
+    //         return renderLogin(res);
+    //     }
 
-        return renderPage(res, 'home', req.viewData);
-    } catch (error) {
-        console.error('Error in home route:', error);
-        return renderLogin(res);
-    }
+    //     return renderPage(res, 'home', req.viewData);
+    // } catch (error) {
+    //     console.error('Error in home route:', error);
+    //     return renderLogin(res);
+    // }
+
+    return renderPage(res, 'home', req.viewData);
 });
 
 app.get(['/all-about-events'], (req, res) => {
