@@ -99,3 +99,25 @@ Finding 17: SQL Query String Explosion in Media Queries
 Finding 18: Race Condition in getCurrentTrader
 018-Race-Condition-in-getCurrentTrader.md
 018-Race-Condition-in-getCurrentTrader-Test-Result.md
+
+
+
+
+Finding 20: SQL Logic Bug in Search Filter
+020-SQL-Logic-Bug-in-Search-Filter.md
+020-SQL-Logic-Bug-in-Search-Filter-Test-Result.md
+
+
+Finding 21: ORDER BY RAND() Performance
+021-ORDER-BY-RAND-Performance.md
+021-ORDER-BY-RAND-Performance-Test-Result.md
+
+
+Finding 22: Validation Errors Return HTTP 200
+Finding 24: Dead Code and Development Artifacts
+Finding 25: Inconsistent Cryptographic Approach
+Finding 26: Global Variable Pollution
+Finding 27: Missing return After Response
+Finding 28: Duplicate exports.create Definition
+Finding 29: saveUninitialized: true in Session Config
+Finding 30: Long Session Cookie Lifetime

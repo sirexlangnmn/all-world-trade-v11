@@ -522,6 +522,8 @@ if (param.product_service_input) {
 2. Wrap OR conditions in parentheses: `AND (users_business_characteristics.business_industry_belong_to LIKE ? OR users_businesses.business_name LIKE ?)`
 3. This is best fixed during the Sequelize migration (Finding 1)
 
+**Status:** All three logic bugs are fixed in every active code path. The search endpoint runs on the Sequelize stack (`app/services/business-search.service.js`): `buildBaseMediaWhere` emits `banner/logo != '' AND IS NOT NULL` on an INNER-JOINed `users_business_medias` include, and facets compose as `WHERE isPaid = 1 AND (facet1 OR facet2 ...)`, so no search facet (free-text included) can bypass the base visibility conditions. The four legacy selection queries (`getCompaniesRelatedToCurrentUser`, `getPrevFiveCompanies`, `getNextFiveCompanies`, `getRandomCompanies` in `app/models/selection.model.js`) use the corrected AND-chained `IS NOT NULL` form. The buggy pattern's last surviving copies (dead commented-out drafts in `app/models/selection.model.js`) were removed, and regression tests pinning the "base conditions cannot be bypassed" invariant were added in `test/search-businesses.test.js`. Note: OR-facet (union) composition is deliberately preserved legacy behavior; moving to AND (intersection) semantics is a separate product decision.
+
 ---
 
 ### Finding 21: `ORDER BY RAND()` Performance
@@ -540,6 +542,8 @@ if (param.product_service_input) {
 1. Add pagination support (offset/limit) to replace the random sample approach
 2. If random sampling is truly needed, use the `WHERE id >= FLOOR(RAND() * MAX(id))` pattern
 3. Better yet, fetch the total count and use `OFFSET FLOOR(RAND() * count) LIMIT 5`
+
+**Status:** Fixed in the active code path. The stale location metadata above is superseded by the working tree: the only active `ORDER BY RAND()` was `getRandomCompanies` in `app/models/selection.model.js`. It now runs a `COUNT(*)` over the existing eligibility joins/filters, computes a clamped random offset via the pure `computeRandomOffset(total, limit, random)` helper, and reads the same column list through `ORDER BY users_businesses.id ASC LIMIT ? OFFSET ?` (offset never exceeds `total - 5`). The callback contract, bare-array response, `isPaid = 1`/banner/logo filters, INNER joins, and ≤5-row cap are unchanged. `getCompaniesRelatedToCurrentUser`, `getPrevFiveCompanies`, and `getNextFiveCompanies` were already id-paginated and are untouched. Regression tests live in `test/021-ORDER-BY-RAND-Performance.test.js`. Remaining scope: large `OFFSET` values still scan within the eligible window; the constant-time random-start-id pattern remains a separately benchmarked follow-up. Do not migrate this legacy endpoint to Sequelize under this finding (Finding 34).
 
 ---
 

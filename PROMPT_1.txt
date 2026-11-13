@@ -1,6 +1,6 @@
 placeholders value:
-{findings} = Finding 18: Race Condition in getCurrentTrader
-{file_name} = 018-Race-Condition-in-getCurrentTrader.md
+{findings} = Finding 21: ORDER BY RAND() Performance
+{file_name} = 021-ORDER-BY-RAND-Performance.md
 
 read the file
 
